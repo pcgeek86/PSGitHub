@@ -72,8 +72,9 @@
         <div class="container">
             <h2>About</h2>
             <p>
-                Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat. Fusce tempus, est sit amet efficitur viverra, justo lectus imperdiet sem, sit amet accumsan risus nulla non urna. Sed condimentum ex id pulvinar feugiat. Ut convallis
-                rhoncus purus eget sodales. Curabitur semper sagittis massa non accumsan. Sed euismod vel magna feugiat consequat. Vivamus odio nunc, ornare eu lobortis vel, varius efficitur nunc.
+                In your PowerShell automation scripts, you probably wish you had the ability to automate tasks inside of GitHub. Common operations include opening, closing, and searching
+                through issues and pull requests, merging code, creating or deleting repositories, and much more. The PSGitHub module's goal is to enable these operations and simplify the
+                interaction with GitHub from a PowerShell environment!
             </p>
         </div>
     </section>
@@ -88,7 +89,7 @@
                       <i class="fa fa-cogs fa-stack-1x text-success"></i>
                     </span>
                         <h4>Automation</h4>
-                        <p>Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.</p>
+                        <p>Automate common tasks inside the popular GitHub platform!</p>
                     </div>
                     <div class="col-sm-6 col-lg-4 text-center">
                         <span class="fa-stack fa-3x">
@@ -96,15 +97,15 @@
                       <i class="fa fa-user fa-stack-1x text-success"></i>
                     </span>
                         <h4>Token Management</h4>
-                        <p>Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.</p>
+                        <p>Authenticate to GitHub using a Personal Access Token and one or more user accounts! Tokens are encrypted and cached locally.</p>
                     </div>
                     <div class="col-sm-6 col-lg-4 text-center">
                         <span class="fa-stack fa-3x">
                       <i class="fa fa-circle fa-stack-2x"></i>
                       <i class="fa fa-connectdevelop fa-stack-1x text-success"></i>
                     </span>
-                        <h4>REST API</h4>
-                        <p>Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.</p>
+                        <h4>Objects</h4>
+                        <p>In PowerShell, objects are first-class citizens; it's easy to filter issues, repositories, and other GitHub data!</p>
                     </div>
                 </div>
             </div>
@@ -119,7 +120,7 @@
                         <i class="fa fa-circle fa-stack-2x"></i>
                         <strong class="fa-stack-1x fa-inverse">1</strong>
                     </span>
-                    Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.
+                    Launch PowerShell v5.0, or later.
                 </p>
             </li>
             <li class="list-group-item">
@@ -128,16 +129,7 @@
                         <i class="fa fa-circle fa-stack-2x"></i>
                         <strong class="fa-stack-1x fa-inverse">2</strong>
                     </span>
-                    Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.
-                </p>
-            </li>
-            <li class="list-group-item">
-                <p>
-                    <span class="fa-stack">  
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <strong class="fa-stack-1x fa-inverse">3</strong>
-                    </span>
-                    Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.
+                    Install the module: Install-Module -Name PSGitHub -Scope CurrentUser -Force
                 </p>
             </li>
         </ul>
@@ -153,10 +145,10 @@
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <strong class="fa-stack-1x fa-inverse">1</strong>
                             </span>
-                            Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.
+                            First, we need to generate a GitHub Personal Access Token and configure it in the module
                         </p>
                         <pre class="prettyprint linenums"><code class="language-csh">
-                            Set-GitHubToken
+Set-GitHubToken
                         </code></pre>
                     </li>
                     <li class="list-group-item">
@@ -165,24 +157,13 @@
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <strong class="fa-stack-1x fa-inverse">2</strong>
                             </span>
-                            Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.
+                            Now we can start calling GitHub commands!
                         </p>
-                        <pre class="prettyprint linenums"><code class="language-csh">
-                            $variable = ""
-                            $anothervar = ""
-                            New-GitHubRepository $variable $anothervar
-                        </code></pre>
-                    </li>
-                    <li class="list-group-item">
-                        <p>
-                            <span class="fa-stack">  
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <strong class="fa-stack-1x fa-inverse">3</strong>
-                            </span>
-                            Praesent faucibus tincidunt porttitor. Nulla porta nunc vestibulum finibus consequat.
-                            <pre class="prettyprint linenums"><code class="language-csh">
-                            </code></pre>
-                        </p>
+                        <pre class="prettyprint linenums"><code class="language-csh">$Repository = @{
+    Name = 'GitHubRocks';
+    Description = 'This is a new GitHub repository.';
+}
+New-GitHubRepository @Repository</code></pre>
                     </li>
                 </ul>
             </div>
@@ -209,39 +190,21 @@
                 <h2>Links</h2>
                 <div class="list-group">
                     <a href="http://trevorsullivan.net/" target="_blank" class="list-group-item">
-                        <h4 class="list-group-item-heading">Trevor Sullivan</h4>
+                        <h4 class="list-group-item-heading">Trevor Sullivan's Website</h4>
                         <p class="list-group-item-text">
-                            http://trevorsullivan.net/
+                            https://trevorsullivan.net/
+                        </p>
+                    </a>
+                    <a href="https://twitter.com/pcgeek86" target="_blank" class="list-group-item">
+                        <h4 class="list-group-item-heading">Trevor Sullivan on Twitter</h4>
+                        <p class="list-group-item-text">
+                            https://twitter.com/pcgeek86
                         </p>
                     </a>
                     <a href="https://github.com/pcgeek86/PSGitHub" target="_blank" class="list-group-item">
                         <h4 class="list-group-item-heading">GitHub</h4>
                         <p class="list-group-item-text">
                             https://github.com/pcgeek86/PSGitHub 
-                        </p>
-                    </a>
-                    <a href="#" target="_blank" class="list-group-item">
-                        <h4 class="list-group-item-heading">Website</h4>
-                        <p class="list-group-item-text">
-                            https://example.com 
-                        </p>
-                    </a>
-                    <a href="#" target="_blank" class="list-group-item">
-                        <h4 class="list-group-item-heading">Website</h4>
-                        <p class="list-group-item-text">
-                            https://example.com 
-                        </p>
-                    </a>
-                    <a href="#" target="_blank" class="list-group-item">
-                        <h4 class="list-group-item-heading">Website</h4>
-                        <p class="list-group-item-text">
-                            https://example.com 
-                        </p>
-                    </a>
-                    <a href="#" target="_blank" class="list-group-item">
-                        <h4 class="list-group-item-heading">Website</h4>
-                        <p class="list-group-item-text">
-                            https://example.com 
                         </p>
                     </a>
                 </div>
