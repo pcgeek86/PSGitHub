@@ -5,6 +5,6 @@
     )
 
     $RestMethod = 'user';
-    $Result = Invoke-GitHubApi -RestMethod  -Method Default;
+    $Result = Invoke-GitHubApi -RestMethod $RestMethod -Method Default;
     $Result | ConvertFrom-Json
 }
