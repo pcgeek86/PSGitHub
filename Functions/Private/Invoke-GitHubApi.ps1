@@ -50,8 +50,11 @@
         Headers = $Headers;
         Uri = 'https://api.github.com/{0}' -f $RestMethod;
         Method = $Method;
-        Body = $Body;
-        };
+    };
+        
+    if ($Body) {
+        $ApiRequest.Body = $Body;
+    }
 
     ### Invoke the REST API
     Invoke-RestMethod @ApiRequest;
