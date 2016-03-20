@@ -26,6 +26,8 @@ function Set-GitHubIssue {
     .Parameter Milestone
     The number of the milestone that the issue will be assigned to. Use Get-GitHubMilestone to retrieve a list of milestones. 
     
+    .Parameter Number
+    The GitHub issue number, in the specified GitHub repository, that will be updated.
     .Link
     https://trevorsullivan.net
     https://developer.github.com/v3/issues    
@@ -39,6 +41,8 @@ function Set-GitHubIssue {
         [string] $Repository
       , [Parameter(Mandatory = $true)]
         [string] $Title
+      , [Parameter(Mandatory = $true)]
+        [string] $Number
       , [Parameter(Mandatory = $false)]
         [string] $Body
       , [Parameter(Mandatory = $false)]
@@ -51,8 +55,10 @@ function Set-GitHubIssue {
     
     ### Build the core message body -- we'll add more properties soon
     $ApiBody = @{
-        title = $Title;
     };
+    
+    ### Add the updated title, to the message payload
+    if ($Title) { $ApidBody.Add('title', $Title);
     
     ### Add an issue body to the message payload (optional)
     if ($Body) { $ApiBody.Add('body', $Body); }
