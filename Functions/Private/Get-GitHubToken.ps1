@@ -12,7 +12,7 @@
     )
 
     ### Detect if we are running inside the Microsoft Azure Automation service
-    if (!(Get-Command -Name Get-AutomationPSCredential) -or (Get-Process -Name System)) {
+    if (!(Get-Command -Name Get-AutomationPSCredential -ErrorAction Ignore) -or (Get-Process -Name System)) {
         ### Read the token from disk
         $Token = Get-Content -Path ('{0}\token.json' -f (Split-Path -Path $MyInvocation.MyCommand.Module.Path -Parent)) -Raw | ConvertFrom-Json;
     
