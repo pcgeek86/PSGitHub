@@ -1,4 +1,4 @@
-function New-GitHubIssue {
+function Set-GitHubIssue {
     <#
     .Synopsis
     Creates a new GitHub issue.
@@ -70,8 +70,8 @@ function New-GitHubIssue {
     ### Set up the API call
     $ApiCall = @{
         Body = $ApiBody | ConvertTo-Json
-        RestMethod = '/repos/{0}/{1}/issues' -f $Owner, $Repository;
-        Method = 'Post';
+        RestMethod = '/repos/{0}/{1}/issues/{2}' -f $Owner, $Repository, $Number;
+        Method = 'Patch';
     }
     
     ### Invoke the GitHub REST method
