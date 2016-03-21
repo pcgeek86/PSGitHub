@@ -16,6 +16,7 @@ function Get-GitHubGist {
       
     .Link
     https://trevorsullivan.net
+    http://dotps1.github.io
     https://developer.github.com/v3/gists/
     #>
     [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
@@ -24,10 +25,8 @@ function Get-GitHubGist {
     Param (
         [Parameter(ParameterSetName = 'Owner')]
         [String]$Owner = (Get-GitHubAuthenticatedUser).login,
-
         [Parameter(ParameterSetName = 'Id')]
         [String]$Id,
-
         [Parameter(ParameterSetName = 'Target')]
         [ValidateSet('Public', 'Starred')]
         [String]$Target
