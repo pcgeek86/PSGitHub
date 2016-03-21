@@ -18,15 +18,69 @@ function Get-GitHubGist {
     https://trevorsullivan.net
     https://developer.github.com/v3/gists/
     #>
-    [CmdletBinding()]
-    param (
+    [CmdletBinding(
+        DefaultParameterSetName = '__AllParameterSets'
+    )]
+
+    Param (
+        [Parameter(
+            ParameterSetName = 'Owner'
+        )]
+        [String]
+        $Owner = (Get-GitHubAuthenticatedUser).login,
+
+        [Parameter(
+            ParameterSetName = 'Target'
+        )]
+        [ValidateSet(
+            'Public',
+            'Starred'
+        )]
+        [String]
+        $Target,
+
+        [Parameter(
+            ParameterSetName = 'Id'
+        )]
+        [String]
+        $Id
     )
     
-    $ApiCall = @{
-        Body = '';
-        RestMethod = '';
-        Method = '';
+    switch ($PSCmdlet.ParameterSetName) {
+        'Owner' {
+            $uri = 'users/{0}/gists' -f $Owner
+
+            break
+        }
+        
+        'Id' {
+            $uri = 'gists/{0}' -f $Id
+
+            break
+        }
+
+        'Target' {
+            if ($Target -eq 'Public') {
+                $uri = 'gists/public'
+            } else {
+                $uri = 'gists/starred'
+            }
+
+            break
+        }
+
+        default {
+            $uri = 'gists'
+
+            break
+        }
+    }
+
+    $apiCall = @{
+        Body = ''
+        RestMethod = $uri
+        Method = 'Get'
     }
     
-    Invoke-GitHubApi @ApiCall;
+    Invoke-GitHubApi @apiCall
 }
