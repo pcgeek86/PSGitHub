@@ -37,6 +37,8 @@
         [string] $Body
       , [switch] $Anonymous
     )
+    
+    ### TODO: Truncate leading forward slashes for the -RestMethod parameter value.
 
     ### If the caller hasn't specified the -Anonymouse switch parameter, then add the HTTP Authorization header
     ### to authenticate the HTTP request.
@@ -51,11 +53,12 @@
         Uri = 'https://api.github.com/{0}' -f $RestMethod;
         Method = $Method;
     };
+    Write-Verbose -Message ('Invoking the REST method: {0}' -f $ApiRequest.Uri)
         
-    if ($Body) {
-        $ApiRequest.Body = $Body;
-    }
+    ### Append the HTTP message body (payload), if the caller specified one.
+    if ($Body) { $ApiRequest.Body = $Body; }
 
     ### Invoke the REST API
     Invoke-RestMethod @ApiRequest;
 }
+
