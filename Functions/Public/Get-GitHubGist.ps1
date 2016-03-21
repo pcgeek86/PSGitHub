@@ -18,67 +18,53 @@ function Get-GitHubGist {
     https://trevorsullivan.net
     https://developer.github.com/v3/gists/
     #>
-    [CmdletBinding(
-        DefaultParameterSetName = '__AllParameterSets'
-    )]
+    [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
+    [OutputType([System.Object])]
 
     Param (
-        [Parameter(
-            ParameterSetName = 'Owner'
-        )]
-        [String]
-        $Owner = (Get-GitHubAuthenticatedUser).login,
+        [Parameter(ParameterSetName = 'Owner')]
+        [String]$Owner = (Get-GitHubAuthenticatedUser).login,
 
-        [Parameter(
-            ParameterSetName = 'Target'
-        )]
-        [ValidateSet(
-            'Public',
-            'Starred'
-        )]
-        [String]
-        $Target,
+        [Parameter(ParameterSetName = 'Id')]
+        [String]$Id,
 
-        [Parameter(
-            ParameterSetName = 'Id'
-        )]
-        [String]
-        $Id
+        [Parameter(ParameterSetName = 'Target')]
+        [ValidateSet('Public', 'Starred')]
+        [String]$Target
     )
     
     switch ($PSCmdlet.ParameterSetName) {
         'Owner' {
-            $uri = 'users/{0}/gists' -f $Owner
+            $restMethod = 'users/{0}/gists' -f $Owner
 
             break
         }
         
         'Id' {
-            $uri = 'gists/{0}' -f $Id
+            $restMethod = 'gists/{0}' -f $Id
 
             break
         }
 
         'Target' {
             if ($Target -eq 'Public') {
-                $uri = 'gists/public'
+                $restMethod = 'gists/public'
             } else {
-                $uri = 'gists/starred'
+                $restMethod = 'gists/starred'
             }
 
             break
         }
 
         default {
-            $uri = 'gists'
+            $restMethod = 'gists'
 
             break
         }
     }
 
     $apiCall = @{
-        Body = ''
-        RestMethod = $uri
+        RestMethod = $restMethod
         Method = 'Get'
     }
     
