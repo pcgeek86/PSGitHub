@@ -58,7 +58,7 @@ function Set-GitHubIssue {
     };
     
     ### Add the updated title, to the message payload
-    if ($Title) { $ApidBody.Add('title', $Title);
+    if ($Title) { $ApidBody.Add('title', $Title); }
     
     ### Add an issue body to the message payload (optional)
     if ($Body) { $ApiBody.Add('body', $Body); }
