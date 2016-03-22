@@ -4,7 +4,7 @@ Function Save-GitHubGist {
     This command saves all files from a gist.
 
     .Description
-    This command is responsable for saving each file that is assosiated with a gist to the local machine.
+    This command is responsible for saving each file that is associated with a gist to the local machine.
 
     .Notes
     This cmdlet will compliment Get-GitHubGist nicely.
