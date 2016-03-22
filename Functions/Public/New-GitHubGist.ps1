@@ -31,13 +31,11 @@ function New-GitHubGist {
         }
 
         for ($i = 0; $i -lt $Path.Length; $i++) {
-            $gist.Files.Add($(Split-Path -Path $Path[$i] -Leaf), @{ content = ((Get-Content -Path $Path[$i] -Raw).PSObject.BaseObject) })
+            $gist.files.Add($(Split-Path -Path $Path[$i] -Leaf), @{ content = ((Get-Content -Path $Path[$i] -Raw).PSObject.BaseObject) })
         }
 
-        $body = ConvertTo-Json -InputObject $gist
-
         $apiCall = @{
-            Body = $body
+            Body = ConvertTo-Json -InputObject $gist
             RestMethod = 'gists'
             Method = 'Post'
         }
