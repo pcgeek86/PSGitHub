@@ -33,36 +33,14 @@ function Get-GitHubGist {
     )
     
     switch ($PSCmdlet.ParameterSetName) {
-        'Owner' {
-            $restMethod = 'users/{0}/gists' -f $Owner
-
-            break
-        }
-        
-        'Id' {
-            $restMethod = 'gists/{0}' -f $Id
-
-            break
-        }
-
-        'Target' {
-            if ($Target -eq 'Public') {
-                $restMethod = 'gists/public'
-            } else {
-                $restMethod = 'gists/starred'
-            }
-
-            break
-        }
-
-        default {
-            $restMethod = 'gists'
-
-            break
-        }
+        'Owner' { $restMethod = 'users/{0}/gists' -f $Owner; break; }
+        'Id' { $restMethod = 'gists/{0}' -f $Id; break; }
+        'Target' { if ($Target -eq 'Public') { $restMethod = 'gists/public'} else { $restMethod = 'gists/starred' }; break; }
+        default { $restMethod = 'gists'; break; }
     }
 
     $apiCall = @{
+        Body = ''
         RestMethod = $restMethod
         Method = 'Get'
     }

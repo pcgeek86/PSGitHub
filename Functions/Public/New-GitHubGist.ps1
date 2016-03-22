@@ -7,6 +7,7 @@ function New-GitHubGist {
     This command is responsible for creating new GitHub Gist code snippets.
     
     .Notes
+     Would like to make it so you can send data right from the ise script pane to a new Gist.
       
     .Link
     https://trevorsullivan.net
@@ -17,25 +18,25 @@ function New-GitHubGist {
     Param (
         [Parameter(ValueFromPipeline = $true, Mandatory = $true)]
         [String[]]$Path,
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [String]$Description,
         [Parameter()]
         [Switch] $Public
     )
     
     Process {
-        [PSCustomObject]$gist = @{
+        [HashTable]$body = @{
             description = $Description
             public = $Public.IsPresent
             files = @{}
         }
 
-        for ($i = 0; $i -lt $Path.Length; $i++) {
-            $gist.files.Add($(Split-Path -Path $Path[$i] -Leaf), @{ content = ((Get-Content -Path $Path[$i] -Raw).PSObject.BaseObject) })
+        foreach ( $item in $Path) {
+            $body.files.Add($(Split-Path -Path $item -Leaf), @{ content = ((Get-Content -Path $item -Raw).PSObject.BaseObject) })
         }
 
         $apiCall = @{
-            Body = ConvertTo-Json -InputObject $gist
+            Body = ConvertTo-Json -InputObject $body
             RestMethod = 'gists'
             Method = 'Post'
         }
