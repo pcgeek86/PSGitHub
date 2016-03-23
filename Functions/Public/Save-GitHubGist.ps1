@@ -6,8 +6,11 @@ Function Save-GitHubGist {
     .Description
     This command is responsible for saving each file that is associated with a gist to the local machine.
 
-    .Notes
-    This cmdlet will compliment Get-GitHubGist nicely.
+    .Parameter Path
+    Path to create a parent folder named the 'ID' of the Gist, then places all Gist Content files that that directory.
+
+    .Parameter Gist
+    The Gist object to be saved.  Returned from Get-GitHubGist.
 
     .Example
     Get-GitHubGist -Id 62f8f608bdfec5d08552 | Save-GitHubGist
@@ -20,16 +23,20 @@ Function Save-GitHubGist {
     ----                -------------         ------ ----                                                                                                                                                                                                                                     
     -a----        3/21/2016   3:11 PM           2080 Register-SophosWebIntelligenceService.ps1  
     
+    .Notes
+    This cmdlet will compliment Get-GitHubGist nicely.
+
     .Link
     https://trevorsullivan.net
     http://dotps1.github.io
     https://developer.github.com/v3/gists/
     #>
+
     [CmdletBinding()]
     [OutputType()]
     Param (
         [Parameter()]
-        [String]$Path = "$env:USERPROFILE\Documents\GitHub\Gists",
+        [String]$Path = "$env:APPDATA\PSGitHub\Gists",
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [System.Object[]]$Gist
     )

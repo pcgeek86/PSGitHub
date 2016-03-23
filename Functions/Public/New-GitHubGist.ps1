@@ -19,8 +19,35 @@ function New-GitHubGist {
     This parameter is only avaialbe in the PowerShell ISE, if used the content of the Gist file will be set to the current active Script Tab.
 
     .Parameter GistFileName
-    This parameter is only availabe in the PowerShell ISE, the name of the file in the Gist, defaults to 'untitled.ps1'.
-    
+    This parameter is only availabe in the PowerShell ISE, the name of the file in the Gist, defaults to name in the tab.
+
+    .Example
+    PS C:\> New-GitHubGist -IseScriptPane -Public
+
+
+    url          : https://api.github.com/gists/a26026bea6f85f377276
+    forks_url    : https://api.github.com/gists/a26026bea6f85f377276/forks
+    commits_url  : https://api.github.com/gists/a26026bea6f85f377276/commits
+    id           : a26026bea6f85f377276
+    git_pull_url : https://gist.github.com/a26026bea6f85f377276.git
+    git_push_url : https://gist.github.com/a26026bea6f85f377276.git
+    html_url     : https://gist.github.com/a26026bea6f85f377276
+    files        : @{New-GitHubGist.ps1=}
+    public       : True
+    created_at   : 2016-03-23T16:00:59Z
+    updated_at   : 2016-03-23T16:00:59Z
+    description  : 
+    comments     : 0
+    user         : 
+    comments_url : https://api.github.com/gists/a26026bea6f85f377276/comments
+    owner        : @{login=dotps1; id=1016996; avatar_url=https://avatars.githubusercontent.com/u/1016996?v=3; gravatar_id=; url=https://api.github.com/users/dotps1; html_url=https://github.com/dotps1; followers_url=https://api.github.com/users/dotps1/followers; 
+                   following_url=https://api.github.com/users/dotps1/following{/other_user}; gists_url=https://api.github.com/users/dotps1/gists{/gist_id}; starred_url=https://api.github.com/users/dotps1/starred{/owner}{/repo}; 
+                   subscriptions_url=https://api.github.com/users/dotps1/subscriptions; organizations_url=https://api.github.com/users/dotps1/orgs; repos_url=https://api.github.com/users/dotps1/repos; events_url=https://api.github.com/users/dotps1/events{/privacy}; 
+                   received_events_url=https://api.github.com/users/dotps1/received_events; type=User; site_admin=False}
+    forks        : {}
+    history      : {@{user=; version=f4ad1eac3a3eb7ffc656e4b3a40875cf5fb9e539; committed_at=2016-03-23T16:00:59Z; change_status=; url=https://api.github.com/gists/a26026bea6f85f377276/f4ad1eac3a3eb7ffc656e4b3a40875cf5fb9e539}}
+    truncated    : False
+
     .Notes
     The IseScriptPane ParameterSet can only be used from with the PowerShell ISE.  
 
@@ -29,6 +56,7 @@ function New-GitHubGist {
     http://dotps1.github.io
     https://developer.github.com/v3/gists
     #>
+
     [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
     [OutputType([System.Object])]
     Param (
@@ -69,8 +97,6 @@ function New-GitHubGist {
             $gistFileNameCollection.Add($gistFileNameAttributes)
             # Build Runtime Parameter with Collection Parameter Attributes.
             $gistFileNameParameter = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter -ArgumentList ('GistFileName', [String], $gistFileNameCollection)
-            # Default Value of GistFileName to 'untitled.ps1'.
-            $gistFileNameParameter.Value = 'untitled.ps1'
             
             # Build Runtime Dictionary and add Runtime Parameters to it.
             $dictionary = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameterDictionary
@@ -96,6 +122,9 @@ function New-GitHubGist {
                 $body.files.Add($(Split-Path -Path $item -Leaf), @{ content = ((Get-Content -Path $item -Raw).PSObject.BaseObject) })
             }
         } else {
+            if ([String]::IsNullOrEmpty($PSBoundParameters.GistFileName)) {
+                $PSBoundParameters.GistFileName = $psISE.CurrentPowerShellTab.Files.SelectedFile.DisplayName.Replace('*','')
+            }
             $body.files.Add($PSBoundParameters.GistFileName, @{ content = $psISE.CurrentPowerShellTab.Files.SelectedFile.Editor.Text })
         }
 
