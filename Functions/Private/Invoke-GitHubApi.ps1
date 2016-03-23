@@ -61,3 +61,4 @@
     ### Invoke the REST API
     Invoke-RestMethod @ApiRequest;
 }
+

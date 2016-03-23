@@ -4,7 +4,7 @@
     param (
     )
 
-    $RestMethod = 'user';
-    $Result = Invoke-GitHubApi -RestMethod $RestMethod -Method Default;
-    $Result | ConvertFrom-Json
+    $RestMethod = 'user'
+    $Result = Invoke-GitHubApi -RestMethod $RestMethod -Method Default
+    $Result
 }
