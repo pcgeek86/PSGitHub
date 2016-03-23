@@ -40,7 +40,7 @@ function Get-GitHubGist {
     }
 
     $apiCall = @{
-        Body = ''
+        #Body = ''
         RestMethod = $restMethod
         Method = 'Get'
     }
