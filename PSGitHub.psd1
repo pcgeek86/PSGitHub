@@ -109,7 +109,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Added support for GitHub Gists, thanks to Thomas Rayner! @dotps1'
+        ReleaseNotes = 'Added support for GitHub Gists, thanks to Thomas Malkewitz! @dotps1'
 
     } # End of PSData hashtable
 
