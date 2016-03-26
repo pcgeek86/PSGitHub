@@ -71,7 +71,7 @@ deploy_script:
       $null = New-Item -Path $VersionFolder -Type directory
       
       # Populate Version Folder
-      $null = Copy-Item -Path $buildFolder -Destination $VersionFolder -Recurse -Exclude '.*'
+      $null = Copy-Item -Path "$buildFolder\*" -Destination $VersionFolder -Recurse -Exclude '.*','AppVeyor.yml'
 
       # Create and Push zip Artifact
       $zipFilePath = Join-Path -Path $buildFolder -ChildPath "${env:APPVEYOR_PROJECT_NAME}_${env:APPVEYOR_BUILD_VERSION}.zip"
