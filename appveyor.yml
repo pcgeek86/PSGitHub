@@ -64,7 +64,7 @@ deploy_script:
   - ps: |
       # Creating project artifact
       $buildFolder = $ENV:APPVEYOR_BUILD_FOLDER
-      $StagingFolder = Join-Path -Path $buildFolder -ChildPath 'Staging'
+      $StagingFolder = Join-Path -Path $ENV:Temp -ChildPath 'Staging'
       $null = New-Item -Path $StagingFolder -Type directory
       $ModuleFolder = Join-Path -Path $StagingFolder -ChildPath 'PSGitHub'
       $null = New-Item -Path $ModuleFolder -Type directory
