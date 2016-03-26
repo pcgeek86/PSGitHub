@@ -31,8 +31,7 @@ install:
       # Set version number
       $ManifestContent = $ManifestContent -replace '(?<=ModuleVersion\s+=\s+'')(?<ModuleVersion>.*)(?='')', ('${{ModuleVersion}}.{0}' -f $env:APPVEYOR_BUILD_NUMBER)
       Set-Content -Path $ManifestPath -Value $ManifestContent
-      
-      Install-WindowsFeature -Name hyper-v-powershell
+
       Get-PackageProvider -Name nuget -ForceBootStrap -Force
 
 #---------------------------------# 
