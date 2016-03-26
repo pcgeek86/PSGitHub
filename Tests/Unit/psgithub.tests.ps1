@@ -14,7 +14,7 @@ if (Get-Module PSGitHub -All)
 }
 
 Import-Module "$Global:ModuleRoot\PSGitHub.psd1" -Force -DisableNameChecking
-$Global:ArtifactPath = "$Global:PSGitHub\Artifacts"
+$Global:ArtifactPath = "$Global:ModuleRoot\Artifacts"
 $null = New-Item -Path "$Global:ArtifactPath" -ItemType Directory -Force -ErrorAction SilentlyContinue
 
 # Perform PS Script Analyzer tests on module code only
@@ -23,7 +23,7 @@ $null = Install-Module -Name 'PSScriptAnalyzer' -Confirm:$False
 Import-Module -Name 'PSScriptAnalyzer'
 
 Describe 'PSScriptAnalyzer' {
-    Context 'PSGitHub Module code and Lib Functions' {
+    Context 'PSGitHub Module, Functions and TabCompleters' {
         It 'Passes Invoke-ScriptAnalyzer' {
             # Perform PSScriptAnalyzer scan.
             $PSScriptAnalyzerResult = Invoke-ScriptAnalyzer `
@@ -31,7 +31,15 @@ Describe 'PSScriptAnalyzer' {
                 -Severity Warning `
                 -ErrorAction SilentlyContinue
             $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
-                -path "$ModuleRoot\Functions\*.ps1" `
+                -path "$ModuleRoot\Functions\Public\*.ps1" `
+                -Severity Warning `
+                -ErrorAction SilentlyContinue
+            $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
+                -path "$ModuleRoot\Functions\Private\*.ps1" `
+                -Severity Warning `
+                -ErrorAction SilentlyContinue
+            $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
+                -path "$ModuleRoot\TabCompleters\*.ps1" `
                 -Severity Warning `
                 -ErrorAction SilentlyContinue
             $PSScriptAnalyzerErrors = $PSScriptAnalyzerResult | Where-Object { $_.Severity -eq 'Error' }
