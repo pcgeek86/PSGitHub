@@ -22,7 +22,6 @@ function Remove-GitHubGist {
 
     .Notes
     This cmdlet will compliment Get-GitHubGist nicely.
-    This will remove the entire Gist, including all files, commits, and comments.
       
     .Link
     https://trevorsullivan.net
@@ -45,7 +44,6 @@ function Remove-GitHubGist {
             if ($PSCmdlet.ShouldProcess($item)) {
                 if ($FileName -ne $null) {
                     [HashTable]$body = @{
-                        description = (Get-GitHubGist -Id $item).description
                         files = @{}
                     }
                     foreach ($file in $FileName) {
