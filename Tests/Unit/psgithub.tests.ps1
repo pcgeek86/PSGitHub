@@ -4,7 +4,7 @@
 # You can download Pester from http://go.microsoft.com/fwlink/?LinkID=534084
 #
 
-$ModuleRoot = "..\..\$($Script:MyInvocation.MyCommand.Path)"
+$ModuleRoot = "$($Script:MyInvocation.MyCommand.Path)\..\..\.."
 
 Push-Location `
     -Path $ModuleRoot
@@ -47,8 +47,8 @@ Describe 'PSScriptAnalyzer' {
                 -Severity Warning `
                 -ErrorAction SilentlyContinue
             $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
-                -path "$ModuleRoot\Functions\Private\*.ps1" `
-                -Peverity Warning `
+                -Path "$ModuleRoot\Functions\Private\*.ps1" `
+                -Severity Warning `
                 -ErrorAction SilentlyContinue
             $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
                 -Path "$ModuleRoot\TabCompleters\*.ps1" `
