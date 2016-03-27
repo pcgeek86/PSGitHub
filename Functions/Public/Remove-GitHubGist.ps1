@@ -12,8 +12,6 @@ function Remove-GitHubGist {
     .Example
     PS C:\> Get-GitHubGist -Id 265482c76983daedc83f | Remove-GitHubGist -Confirm:$false
 
-
-
     .Notes
     This cmdlet will compliment Get-GitHubGist nicely.
     This will remove the entire Gist, including all files, commits, and comments.
