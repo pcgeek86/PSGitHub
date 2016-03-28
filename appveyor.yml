@@ -6,7 +6,7 @@ os: WMF 5
 version: 1.0.0.{build}
 environment:
   PowerShellGalleryApiKey:
-    secure: <ToDo>
+    secure: 91WlCn2hlOMWHxSRh3pNANAxkB+Ji5drxv9xSKjYDD31cjShwRf0kWPvfVMBvmbV
 install: 
   - cinst -y pester
   - ps: |
