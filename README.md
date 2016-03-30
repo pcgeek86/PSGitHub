@@ -33,3 +33,10 @@ This module was originally developed by Trevor Sullivan. You can contact Trevor 
 - Website: https://trevorsullivan.net
 - Twitter: https://twitter.com/pcgeek86
 - GitHub: https://github.com/pcgeek86
+
+## Core Contributors
+
+- Thomas Malkewitz
+  - Skype: thomasmalkewitz
+  - Twitter: @dotps1
+  - Website: https://dotps1.github.io
