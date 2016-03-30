@@ -5,6 +5,7 @@ class GitHubGist {
     [string] $Name
     [string] $Description
     [string] $Owner
+    [GitHubGistFile[]] $Files;
     
     GitHubGist() {
     }
