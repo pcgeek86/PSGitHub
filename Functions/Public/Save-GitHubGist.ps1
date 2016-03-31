@@ -21,7 +21,7 @@ Function Save-GitHubGist {
 
     Mode                LastWriteTime         Length Name                                                                                                                                                                                                                                     
     ----                -------------         ------ ----                                                                                                                                                                                                                                     
-    -a----        3/21/2016   3:11 PM           2080 Register-SophosWebIntelligenceService.ps1  
+    -a----        3/21/2016   3:11 PM           2080 Register-SophosWebIntelligenceService.ps1
     
     .Notes
     This cmdlet will compliment Get-GitHubGist nicely.
