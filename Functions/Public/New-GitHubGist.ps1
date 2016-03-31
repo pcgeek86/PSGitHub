@@ -1,4 +1,4 @@
-function New-GitHubGist {
+Function New-GitHubGist {
     <#
     .Synopsis
     This command creates a new GitHub Gist code snippet.

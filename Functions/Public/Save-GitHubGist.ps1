@@ -13,7 +13,7 @@ Function Save-GitHubGist {
     The Gist object to be saved.  Returned from Get-GitHubGist.
 
     .Example
-    Get-GitHubGist -Id 62f8f608bdfec5d08552 | Save-GitHubGist
+    Get-GitHubGist -Id 62f8f608bdfec5d08552 | Save-GitHubGist -Path C:\Users\me\Documents\GitHub\Gists
     
 
         Directory: C:\Users\me\Documents\GitHub\Gists\62f8f608bdfec5d08552
@@ -38,13 +38,13 @@ Function Save-GitHubGist {
         [Parameter()]
         [String]$Path = "$env:APPDATA\PSGitHub\Gists",
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [System.Object[]]$Gist
+        [GitHubGist[]]$Gist
     )
 
     Process {
         foreach ($item in $Gist) {
             $directory = New-Item -Path $Path -Name $item.Id -ItemType Directory -Force
-            foreach ($file in ($item.files.PSObject.Properties.Value)) {
+            foreach ($file in ($item.Files)) {
                 New-Item -Path $directory -Name $file.filename -ItemType File -Value $file.content
             }
         }

@@ -81,9 +81,7 @@ function Get-GitHubGist {
         Method = 'Get'
     }
     
-    $ResultList = Invoke-GitHubApi @apiCall
-    
-    foreach ($Result in $ResultList) {
-        [GitHubGist]::new($Result.name, $Result.description);
+    foreach ($result in (Invoke-GitHubApi @apiCall)) {
+        [GitHubGist]::new($result)
     }
 }
