@@ -1,10 +1,14 @@
+# Class for a GitHubPlan.
+# This object is only used within the GitHubOwner class.
 Class GitHubPlan {
     [Int]$Collaborators
     [String]$Name
     [Int]$PriavteRepos
     [Int]$Space
 
-    # The plan object returned from the API call to a Gistcan be passed directly into this constructor.
+    # The plan property of the object returend for fetching an authenticated user can be passed directly into this.
+    # https://developer.github.com/v3/users/
+    # GET /user
     GitHubPlan([Object]$object) {
         $this.Collaborators = $object.collaborators
         $this.Name = $object.name
@@ -16,24 +20,26 @@ Class GitHubPlan {
     GitHubPlan() { }
 }
 
+# Class for a GitHubUser.
+# This object can exist in multipule places through the Gist object, depending on the api call used.
 Class GitHubUser {
-    [String]$AvatarUrl
-    [String]$EventsUrl
-    [String]$FollowersUrl
-    [String]$FollowingUrl
-    [String]$GistsUrl
+    [Uri]$AvatarUrl
+    [Uri]$EventsUrl
+    [Uri]$FollowersUrl
+    [Uri]$FollowingUrl
+    [Uri]$GistsUrl
     [String]$GravatarId
-    [String]$HtmlUrl
+    [Uri]$HtmlUrl
     [String]$Id
     [String]$Login
-    [String]$OrganizationsUrl
-    [String]$ReceivedEventsUrl
-    [String]$ReposUrl
+    [Uri]$OrganizationsUrl
+    [Uri]$ReceivedEventsUrl
+    [Uri]$ReposUrl
     [Bool]$SiteAdmin
-    [String]$StarredUrl
-    [String]$SubscriptionsUrl
+    [Uri]$StarredUrl
+    [Uri]$SubscriptionsUrl
     [String]$Type
-    [String]$Url
+    [Uri]$Url
 
     # The owner object returned from the API call to a Gist can be passed directly into this constructor.
     GitHubUser([Object]$object) {
@@ -62,7 +68,7 @@ Class GitHubUser {
 
 # The Owner object returned from a Gist shares many of the properties of the Owner object returned from Get-GitHubAuthenticatedUser.
 # Thus, the GitHubOwner class is derived from the GitHubGistOwner class.
-Class GitHubOwner : GitHubUser{
+Class GitHubOwner : GitHubUser {
     [String]$Bio
     [String]$Blog
     [Int]$Collaborators
@@ -127,11 +133,12 @@ Class GitHubOwner : GitHubUser{
     GitHubOwner() { }
 }
 
+# Class for GitHubGistFile.
 Class GitHubGistFile {
     [String[]]$Content
     [String]$FileName
     [String]$Language
-    [String]$RawUrl
+    [Uri]$RawUrl
     [Int]$Size
     [String]$Type
     [Bool]$Truncated
@@ -139,6 +146,7 @@ Class GitHubGistFile {
     # These properties are hard to locate, but they are the ones we care about.
     # <GistObject>.files.PSObject.Properties.Value
     # If a Gist is retreived by any means other then the Id, the content is stripped, hence the invoke rest method.
+    # This files property of the Gist object can be passed directoy into this constructor.
     GitHubGistFile([Object]$object) {
         $this.FileName = $object.filename
         $this.Language = $object.language
@@ -153,29 +161,44 @@ Class GitHubGistFile {
     GitHubGistFile() { }
 
     # Adds a method to get the content of a Gist file.
+    # (Get-GitHubGist | Select -First 1).Files[0].GetContent()
     [String[]] GetFileContent() {
         return Invoke-RestMethod -Method Post -Uri $this.RawUrl
     }
 }
 
-# Object may not be only used for Gists.
+# Class for GitHubFork.
+# This object only exists in the Gist object if it was called using the -Id parameter
+# Object may not be only used for Gists, so please rename is used with repos as well.
 Class GitHubGistFork {
+    [DateTime]$CreatedAt
+    [String]$Id
+    [DateTime]$UpdatedAt
     [GitHubUser]$User
+    [Uri]$Url
 
+    # The forks property of the Gist object can be passed directly into this constructor.
     GitHubGistForks([Object]$object) {
-        $this.User = $object.forks
+        $this.CreatedAt = $object.created_at
+        $this.Id = $object.id
+        $this.UpdatedAt = $object.updated_at
+        $this.User = $object.user
+        $this.Url = $object.url
     }
 
     # Empty Constructor.
     GitHubGistForks() { }
 }
 
-# Object may not be only used for Gists.
+# Class for GitHubGistChangeStatus.
+# This object only exists in the Gist object if it was called using the -Id parameter
+# Object may not be only used for Gists, so please rename is used with repos as well.
 Class GitHubGistChangeStatus {
     [Int]$Additions
     [Int]$Deletions
     [Int]$Total
 
+    # The change_status property of the Gist object can be passed directly into this constructor.
     GitHubGistChangeStatus([Object]$object) {
         $this.Additions = $object.additions
         $this.Deletions = $object.deletions
@@ -186,13 +209,17 @@ Class GitHubGistChangeStatus {
     GitHubChangeStatus() { }
 }
 
-# Object may not be only used for Gists.
-Class GitHubGistHistory : GitHubGistFork {
+# GitHubGistHistory
+# This object only exists in the Gist object if it was called using the -Id parameter
+# Object may not be only used for Gists, so please rename is used with repos as well.
+Class GitHubGistHistory {
     [GitHubGistChangeStatus]$ChangeStatus
     [DateTime]$CommittedAt
     [String]$Url
+    [GitHubUser]$User
     [String]$Version
 
+    # The history propty of the Gist object can be passed directly into this constructor.
     GitHubGistHistory([Object]$object) {
         $this.ChangeStatus = $object.change_status
         $this.CommittedAt = $object.committed_at
@@ -205,25 +232,26 @@ Class GitHubGistHistory : GitHubGistFork {
     GitHubGistHistory() { }
 }
 
+# Class for GitHubGist.
 Class GitHubGist {
     [Int]$Comments
-    [String]$CommentsUrl
-    [String]$CommitsUrl
+    [Uri]$CommentsUrl
+    [Uri]$CommitsUrl
     [DateTime]$CreatedAt
     [string]$Description
     [GitHubGistFile[]]$Files
     [GitHubGistFork[]]$Forks
-    [String]$ForksUrl
+    [Uri]$ForksUrl
     [GitHubGistHistory[]]$History
-    [String]$HtmlUrl
+    [Uri]$HtmlUrl
     [String]$Id
     [GitHubUser]$Owner
     [Bool]$Public
-    [String]$PullUrl
-    [String]$PushUrl
+    [Uri]$PullUrl
+    [Uri]$PushUrl
     [Bool]$Truncated
     [DateTime]$UpdatedAt
-    [String]$Url
+    [Uri]$Url
     
     # This contructor works passing a gist response from the API directly into it.
     GitHubGist([Object]$object) {
@@ -254,4 +282,6 @@ Class GitHubGist {
         $this.Files = $Files
         $this.Public = $Public
     }
+
+    # TODO: develope Create() and Delete() methods.
 }
