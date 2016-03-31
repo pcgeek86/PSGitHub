@@ -44,8 +44,8 @@ Function Save-GitHubGist {
     Process {
         foreach ($item in $Gist) {
             $directory = New-Item -Path $Path -Name $item.Id -ItemType Directory -Force
-            foreach ($file in ($item.Files)) {
-                New-Item -Path $directory -Name $file.filename -ItemType File -Value $file.content
+            foreach ($file in $item.Files) {
+                New-Item -Path $directory -Name $file.FileName -ItemType File -Value $($file.Content)
             }
         }
     }
