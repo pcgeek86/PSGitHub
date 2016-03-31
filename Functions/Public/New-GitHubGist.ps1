@@ -136,6 +136,6 @@ Function New-GitHubGist {
         }
         
         # Create the Gist.
-        Get-GitHubGist -Id (Invoke-GitHubApi @apiCall).Id
+        [GitHubGist]::new((Invoke-GitHubApi @apiCall))
     }
 }

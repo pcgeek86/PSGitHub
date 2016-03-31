@@ -16,7 +16,7 @@ Class GitHubPlan {
     GitHubPlan() { }
 }
 
-Class GitHubGistOwner {
+Class GitHubUser {
     [String]$AvatarUrl
     [String]$EventsUrl
     [String]$FollowersUrl
@@ -36,7 +36,7 @@ Class GitHubGistOwner {
     [String]$Url
 
     # The owner object returned from the API call to a Gist can be passed directly into this constructor.
-    GitHubGistOwner([Object]$object) {
+    GitHubUser([Object]$object) {
         $this.AvatarUrl = $object.avatar_url
         $this.EventsUrl = $object.events_url
         $this.FollowersUrl = $object.followers_url
@@ -57,12 +57,12 @@ Class GitHubGistOwner {
     }
 
     # Empty Constructor.
-    GitHubGistOwner() { }
+    GitHubUser() { }
 }
 
 # The Owner object returned from a Gist shares many of the properties of the Owner object returned from Get-GitHubAuthenticatedUser.
 # Thus, the GitHubOwner class is derived from the GitHubGistOwner class.
-Class GitHubOwner : GitHubGistOwner {
+Class GitHubOwner : GitHubUser{
     [String]$Bio
     [String]$Blog
     [Int]$Collaborators
@@ -124,7 +124,7 @@ Class GitHubOwner : GitHubGistOwner {
     }
 
     # Empty constructor.
-    GitHubGistOwner() { }
+    GitHubOwner() { }
 }
 
 Class GitHubGistFile {
@@ -158,6 +158,53 @@ Class GitHubGistFile {
     }
 }
 
+# Object may not be only used for Gists.
+Class GitHubGistFork {
+    [GitHubUser]$User
+
+    GitHubGistForks([Object]$object) {
+        $this.User = $object.forks
+    }
+
+    # Empty Constructor.
+    GitHubGistForks() { }
+}
+
+# Object may not be only used for Gists.
+Class GitHubGistChangeStatus {
+    [Int]$Additions
+    [Int]$Deletions
+    [Int]$Total
+
+    GitHubGistChangeStatus([Object]$object) {
+        $this.Additions = $object.additions
+        $this.Deletions = $object.deletions
+        $this.Total = $object.total
+    }
+
+    # Empty Constructor.
+    GitHubChangeStatus() { }
+}
+
+# Object may not be only used for Gists.
+Class GitHubGistHistory : GitHubGistFork {
+    [GitHubGistChangeStatus]$ChangeStatus
+    [DateTime]$CommittedAt
+    [String]$Url
+    [String]$Version
+
+    GitHubGistHistory([Object]$object) {
+        $this.ChangeStatus = $object.change_status
+        $this.CommittedAt = $object.committed_at
+        $this.Url = $object.url
+        $this.User = $object.user
+        $this.Version = $object.version
+    }
+
+    # Empty Constructor.
+    GitHubGistHistory() { }
+}
+
 Class GitHubGist {
     [Int]$Comments
     [String]$CommentsUrl
@@ -165,10 +212,12 @@ Class GitHubGist {
     [DateTime]$CreatedAt
     [string]$Description
     [GitHubGistFile[]]$Files
+    [GitHubGistFork[]]$Forks
     [String]$ForksUrl
+    [GitHubGistHistory[]]$History
     [String]$HtmlUrl
     [String]$Id
-    [GitHubGistOwner]$Owner
+    [GitHubUser]$Owner
     [Bool]$Public
     [String]$PullUrl
     [String]$PushUrl
@@ -184,7 +233,9 @@ Class GitHubGist {
         $this.CreatedAt = $object.created_at
         $this.Description = $object.Description
         $this.Files = $object.files.PSObject.Properties.Value
+        $this.Forks = $object.forks
         $this.ForksUrl = $object.forks_url
+        $this.History = $object.history
         $this.HtmlUrl = $object.html_url
         $this.Id = $object.id
         $this.Owner = $object.owner
