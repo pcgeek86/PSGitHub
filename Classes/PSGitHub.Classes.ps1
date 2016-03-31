@@ -83,7 +83,7 @@ Class GitHubOwner : GitHubGistOwner {
     [Int]$TotalPrivateRepos
     [DateTime]$UpdatedAt
 
-    # The owner object returned from the Get-AuthenticatedUser can be passed directly into this constructor.
+    # The owner object returned from the Get-GitHubAuthenticatedUser can be passed directly into this constructor.
     GitHubOwner([Object]$object) {
         $this.AvatarUrl = $object.avatar_url
         $this.Bio = $object.bio
@@ -196,7 +196,7 @@ Class GitHubGist {
         $this.Url = $object.url
     }
 
-    # Constructor for manually defining proeprties.
+    # Constructor for manually defining properties.
     # these are the properties that are settable when creating a new Gist via the API.
     GitHubGist([String]$Description, [GitHubGistFile[]]$Files, [Bool]$Public) {
         $this.Description = $Description
