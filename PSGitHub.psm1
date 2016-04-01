@@ -1,7 +1,7 @@
 ﻿### Created by Trevor Sullivan <trevor@trevorsullivan.net>
 
 #region Import Class definitions
-$ClassList = Get-ChildItem -Path $PSScriptRoot\Classes;
+$ClassList = Get-ChildItem -Path $PSScriptRoot\Classes
 
 foreach ($File in $ClassList) {
     . $File.FullName;
@@ -27,5 +27,11 @@ foreach ($File in $FunctionList) {
 }
 #endregion
 
+#region aliases
+
+New-Alias -Name Fork-GitHubGist -Value Copy-GitHubGist
+
+#endregion aliases
+
 ### Export all functions
-Export-ModuleMember -Function *;
+Export-ModuleMember -Function * -Alias *

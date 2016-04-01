@@ -65,9 +65,10 @@ FunctionsToExport = @(
     'Remove-GitHubRepository',
 
     ### GitHub Gist commands
+    'Copy-GitHubGist', #Fork-GitHubGist
+    'Get-GitHubGist',
     'New-GitHubGist',
     'Remove-GitHubGist',
-    'Get-GitHubGist',
     'Save-GitHubGist',
     'Set-GitHubGist'
     

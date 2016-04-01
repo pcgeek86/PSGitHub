@@ -52,6 +52,7 @@
         Headers = $Headers;
         Uri = 'https://api.github.com/{0}' -f $RestMethod;
         Method = $Method;
+        ErrorAction = 'Stop'
     };
     Write-Verbose -Message ('Invoking the REST method: {0}' -f $ApiRequest.Uri)
         
@@ -59,6 +60,12 @@
     if ($Body) { $ApiRequest.Body = $Body; }
 
     ### Invoke the REST API
-    Invoke-RestMethod @ApiRequest;
+    ### If an error occurs, the error message returned from the web server is returned to the calling function.
+    ### This just makes the error much more friendly rather then all the Json that is returned.
+    try {
+        Invoke-RestMethod @ApiRequest;
+    } catch {
+        throw (ConvertFrom-Json -InputObject $_.ErrorDetails.Message).message
+    }
 }
 

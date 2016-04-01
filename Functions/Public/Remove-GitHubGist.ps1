@@ -55,13 +55,13 @@ function Remove-GitHubGist {
                     $restMethod = 'DELETE'
                 }
                 
-                $ApiCall = @{
+                $apiCall = @{
                     Body = ConvertTo-Json -InputObject $body
                     RestMethod = 'gists/{0}' -f $item
                     Method = $restMethod
                 }
     
-                Invoke-GitHubApi @ApiCall
+                Invoke-GitHubApi @apiCall
             }
         }
     }

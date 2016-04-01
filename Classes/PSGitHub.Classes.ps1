@@ -178,7 +178,7 @@ Class GitHubGistFork {
     [Uri]$Url
 
     # The forks property of the Gist object can be passed directly into this constructor.
-    GitHubGistForks([Object]$object) {
+    GitHubGistFork([Object]$object) {
         $this.CreatedAt = $object.created_at
         $this.Id = $object.id
         $this.UpdatedAt = $object.updated_at
@@ -187,7 +187,7 @@ Class GitHubGistFork {
     }
 
     # Empty Constructor.
-    GitHubGistForks() { }
+    GitHubGistFork() { }
 }
 
 # Class for GitHubGistChangeStatus.
