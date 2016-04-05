@@ -56,7 +56,7 @@ function Get-GitHubGist {
     #>
 
     [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
-    [OutputType([System.Object])]
+    [OutputType([GitHubGist])]
 
     Param (
         [Parameter(ParameterSetName = 'Owner')]

@@ -1,10 +1,10 @@
 ﻿function Get-GitHubAuthenticatedUser {
-    [OutputType([System.Object])]
+    [OutputType([GitHubOwner])]
     [CmdletBinding()]
     param (
     )
 
     $RestMethod = 'user'
     $Result = Invoke-GitHubApi -RestMethod $RestMethod -Method Default
-    $Result
+    [GitHubOwner]::new($Result)
 }

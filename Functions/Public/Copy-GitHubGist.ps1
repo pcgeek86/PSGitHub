@@ -61,6 +61,7 @@
     https://developer.github.com/v3/gists
     #>
 
+    [CmdletBinding()]
     [OutputType([GitHubGist])]
 
     Param (

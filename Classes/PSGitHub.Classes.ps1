@@ -90,8 +90,7 @@ Class GitHubOwner : GitHubUser {
     [DateTime]$UpdatedAt
 
     # The owner object returned from the Get-GitHubAuthenticatedUser can be passed directly into this constructor.
-    GitHubOwner([Object]$object) {
-        $this.AvatarUrl = $object.avatar_url
+    GitHubOwner([Object]$object) : Base([Object]$object) {
         $this.Bio = $object.bio
         $this.Blog = $object.blog
         $this.Collaborators - $object.collaborators
@@ -102,31 +101,16 @@ Class GitHubOwner : GitHubUser {
         $this.EventsUrl = $object.events_url
         $this.Followers = $object.followers
         $this.Following = $object.following
-        $this.FollowersUrl = $object.followers_url
-        $this.FollowingUrl = $object.following_url
-        $this.GistsUrl = $object.gists_url
-        $this.GravatarId = $object.gravatar_id
         $this.Hireable = $object.hireable
-        $this.HtmlUrl = $object.html_url
-        $this.Id = $object.Id
         $this.Location = $object.location
-        $this.Login = $object.login
         $this.Name = $object.name
         $this.Plan = $object.plan
         $this.PrivateGists = $object.private_gists
         $this.PublicGists = $object.public_gists
         $this.PublicRepos = $object.public_repos
-        $this.OrganizationsUrl = $object.organizations_url
-        $this.ReceivedEventsUrl = $object.received_events_url
-        $this.ReposUrl = $object.repos_url
-        $this.SiteAdmin = $object.site_admin
-        $this.StarredUrl = $object.starred_url
-        $this.SubscriptionsUrl = $object.subscriptions_url
         $this.TotalOwnedRepos = $object.total_owend_repos
         $this.TotalPrivateRepos = $object.total_private_repos
-        $this.Type = $object.type
         $this.UpdatedAt = $object.updated_at
-        $this.Url = $object.url
     }
 
     # Empty constructor.

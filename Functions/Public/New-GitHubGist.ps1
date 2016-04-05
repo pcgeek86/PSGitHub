@@ -58,7 +58,7 @@ Function New-GitHubGist {
     #>
 
     [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
-    [OutputType([System.Object])]
+    [OutputType([GitHubGist])]
     Param (
         [Parameter(HelpMessage = 'Path to file(s) where the content will be used for the Gist.', Mandatory = $true, ParameterSetName = 'Files', ValueFromPipeline = $true)]
         [ValidateScript({ if (Test-Path -Path $_) { $true } else { throw "Cannot find path: '$_' because it does not exist." }})]
