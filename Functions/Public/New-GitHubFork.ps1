@@ -12,13 +12,13 @@ function New-GitHubFork {
     .PARAMETER Repository
         the name of the repo that you want to fork, mandatory
 
-    .PARAMETER organization
+    .PARAMETER Organization
         the organization you want to fork the upstream repository to, optional
         leave this blank if you want to fork to your account
 
     .EXAMPLE
         fork the repo 'pcgeek86/PSGitHub' to my 'test-orgnization'
-        PS C:\> New-GitHubFork -Owner pcgeek86 -Repository PSGitHub -organization test-orgnization -verbose
+        PS C:\> New-GitHubFork -Owner pcgeek86 -Repository PSGitHub -Organization test-orgnization -verbose
 
         fork the repo 'pcgeek86/PSGitHub' to my account 
         PS C:\> New-GitHubFork -Owner pcgeek86 -Repository PSGitHub
@@ -26,12 +26,12 @@ function New-GitHubFork {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string] $Owner,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string] $Repository,
-        [Parameter(Mandatory=$False)]
-        [string] $organization
+        [Parameter(Mandatory = $False)]
+        [string] $Organization
     )
     
     begin {
