@@ -55,14 +55,30 @@ PowerShellVersion = '5.0'
 
 # Functions to export from this module
 FunctionsToExport = @(
+
+    ### GitHub Authentication and Account commands
     'Get-GitHubAuthenticatedUser',
     'Set-GitHubAuthenticatedUser',
     'Set-GitHubToken'
 
     ### GitHub Repository commands
-    'Get-GitHubMilestone',
     'New-GitHubRepository',
     'Remove-GitHubRepository',
+    'Find-GitHubRepository',
+
+    ### GitHub Issue commands
+    'New-GitHubIssue',
+    'Set-GitHubIssue',
+    'Get-GitHubMilestone',
+    'Get-GitHubAssignee',
+    'Test-GitHubAssignee',
+
+    ### GitHub Release commands
+    'Get-GitHubRelease',
+
+    ### GitHub Fork and Pull Request commands
+    'New-GitHubFork',
+    'New-GitHubPullRequest',
 
     ### GitHub Gist commands
     'New-GitHubGist',
