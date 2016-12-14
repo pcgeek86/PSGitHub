@@ -75,6 +75,7 @@ FunctionsToExport = @(
 
     ### GitHub Release commands
     'Get-GitHubRelease',
+    'New-GithubRelease',
 
     ### GitHub Fork and Pull Request commands
     'New-GitHubFork',
