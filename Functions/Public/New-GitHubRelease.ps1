@@ -21,7 +21,7 @@ function New-GitHubRelease {
     .PARAMETER CommitSHA
         Optional, the SHA of the commit that correspond to the tag
 
-    .PARAMETER name
+    .PARAMETER Name
         Optional, the name (title) of the release
     
     .PARAMETER ReleaseNote
