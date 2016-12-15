@@ -1,10 +1,10 @@
 function New-GitHubRelease {
     <#
     .SYNOPSIS
-        Create a new github release
+        Create a new GitHub release
     
     .DESCRIPTION
-        create a github release for a given tag and this function will not creates the tag or upload assets
+        Create a GitHub release for a given tag and this function will not creates the tag or upload assets
     
     .PARAMETER Owner
         Optional, the Owner of the repo that you want to create the release on, default to the authenticated user
@@ -34,12 +34,12 @@ function New-GitHubRelease {
         Optional, a switch to indicate whether this release is a pre-release
 
     .EXAMPLE
-        create a new draft relase in my 'test-orgnization/test-repo'
-        PS C:\> New-GitHubRelease -Owner 'test-orgnization' -Repository 'test-repo' -TagName 'v1.0' -name 'awesome release' -ReleaseNote 'great release note'
+        Create a new draft release in my 'test-organization/test-repo'
+        PS C:\> New-GitHubRelease -Owner 'test-organization' -Repository 'test-repo' -TagName 'v1.0' -name 'awesome release' -ReleaseNote 'great release note'
 
     .NOTES
-        1. this cmdlet will not help you create a tag, you need to use git to do that.
-        2. this cmdlet will not help you to upload assets to the release, you need to use other functions to do that
+        1. This cmdlet will not help you create a tag, you need to use git to do that.
+        2. This cmdlet will not help you to upload assets to the release, you need to use other functions to do that
         3. If both `Branch` and `CommitSHA` are provided, the release will be created based on the `Branch`
         4. If a relase with the same tag already exist and it is not a draft, this method will fail
 
