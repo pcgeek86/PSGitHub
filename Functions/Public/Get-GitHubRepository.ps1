@@ -40,7 +40,7 @@ function Get-GitHubRepository
     process
     {
         $apiCall = @{
-            RestMethod = "repos/$Owner/$Repository"
+            RestMethod = "repos/{0}/{1}" -f $Owner, $Repository
             Method = 'Get'
         }
     }
