@@ -65,6 +65,7 @@ FunctionsToExport = @(
     'New-GitHubRepository',
     'Remove-GitHubRepository',
     'Find-GitHubRepository',
+    'Get-GitHubRepository'
 
     ### GitHub Issue commands
     'New-GitHubIssue',
