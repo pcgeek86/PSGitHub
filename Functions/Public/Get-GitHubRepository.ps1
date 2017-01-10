@@ -39,8 +39,6 @@ function Get-GitHubRepository
         [string] $Owner = (Get-GitHubAuthenticatedUser).login,
         [Parameter(Mandatory = $true)]
         [string] $Repository,
-        [Parameter(ParameterSetName = 'general')]
-        [switch] $General,
         [Parameter(ParameterSetName = 'license')]
         [switch] $License,
         [Parameter(ParameterSetName = 'readme')]
@@ -49,12 +47,13 @@ function Get-GitHubRepository
     
     begin 
     {
-        switch ($PSCmdlet.ParameterSetName) {
-            'general' { $restMethod = "repos/{0}/{1}" -f $Owner, $Repository}
-            'license' { $restMethod = "repos/{0}/{1}/license" -f $Owner, $Repository}
-            'readme' { $restMethod = "repos/{0}/{1}/readme" -f $Owner, $Repository}
-            Default {}
-        }
+      $restMethod = 'repos/{0}/{1}' -f $Owner, $Repository
+      
+      switch ($PSCmdlet.ParameterSetName) {
+          'license' { $restMethod += '/license'; break; }
+          'readme' { $restMethod += '/readme'; break; }
+          Default { break; }
+      }
     }
     
     process
