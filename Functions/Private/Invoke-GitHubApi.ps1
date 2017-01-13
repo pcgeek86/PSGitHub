@@ -68,7 +68,10 @@
     Write-Verbose -Message ('Invoking the REST method: {0}' -f $ApiRequest.Uri)
         
     ### Append the HTTP message body (payload), if the caller specified one.
-    if ($Body) { $ApiRequest.Body = $Body; }
+    if ($Body) { 
+        $ApiRequest.Body = $Body 
+        Write-Verbose "the request body is {0}" -f $Body
+    }
 
     ### Invoke the REST API
     Invoke-RestMethod @ApiRequest;
