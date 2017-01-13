@@ -17,6 +17,10 @@
     This parameter is a mandatory parameter that specifies the URL part, after the API's DNS name, that
     will be invoked. By default, all
 
+    .Parameter Preview
+    This will retrive the preview api, 
+    by adding `application/vnd.github.drax-preview+json` to the `Accept` header.
+
     .Parameter Anonymous
     If, for some reason, you need to ensure that the REST method is invoked anonymously, you can specify the
     -Anonymous switch parameter. This will prevent the HTTP Authorization header from being added to the 
@@ -35,6 +39,7 @@
         [string] $RestMethod
       , [Parameter(Mandatory = $false)]
         [string] $Body
+      , [switch] $Preview
       , [switch] $Anonymous
     )
     
@@ -45,6 +50,13 @@
     if (!$Anonymous) {
         $Headers.Add('Authorization', 'Basic ' + (Get-GitHubToken).GetNetworkCredential().Password);
         Write-Verbose -Message ('Authorization header is: {0}' -f $Headers['Authorization']);
+    }
+
+    ### if the user applied Preview switch, added the header to retrive the preview api
+    if ($Preview) {
+        $Headers.Add('Accept', 'application/vnd.github.drax-preview+json')
+        Write-Warning 'The API you are trying to retrive maybe preview'
+        Write-Warning 'Therefore there may be a chance that the request is unsuccessful'
     }
 
     ### Build the REST API parameters as a HashTable for PowerShell Splatting (look it up, it's easy)
