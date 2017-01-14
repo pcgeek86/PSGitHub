@@ -32,7 +32,7 @@
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]
-        [HashTable] $Headers = @{Accept = application/vnd.github.v3+json}
+        [HashTable] $Headers = @{'Accept' = 'application/vnd.github.v3+json'}
       , [Parameter(Mandatory = $false)]
         [string] $Method = 'Get'
       , [Parameter(Mandatory = $true)]
