@@ -19,7 +19,7 @@
 
     .Parameter Preview
     This will retrive the preview api, 
-    by adding `application/vnd.github.drax-preview+json` to the `Accept` header.
+    by changing `Accept` header to `application/vnd.github.drax-preview+json`.
 
     .Parameter Anonymous
     If, for some reason, you need to ensure that the REST method is invoked anonymously, you can specify the
@@ -32,7 +32,7 @@
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]
-        [HashTable] $Headers = @{ }
+        [HashTable] $Headers = @{Accept = application/vnd.github.v3+json}
       , [Parameter(Mandatory = $false)]
         [string] $Method = 'Get'
       , [Parameter(Mandatory = $true)]
@@ -54,7 +54,7 @@
 
     ### if the user applied Preview switch, added the header to retrive the preview api
     if ($Preview) {
-        $Headers.Add('Accept', 'application/vnd.github.drax-preview+json')
+        $Headers.Accept = application/vnd.github.drax-preview+json
         Write-Warning 'The API you are trying to retrive maybe preview'
         Write-Warning 'Therefore there may be a chance that the request is unsuccessful'
     }
