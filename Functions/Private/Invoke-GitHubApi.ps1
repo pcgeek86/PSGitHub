@@ -48,13 +48,26 @@
     ### If the caller hasn't specified the -Anonymouse switch parameter, then add the HTTP Authorization header
     ### to authenticate the HTTP request.
     if (!$Anonymous) {
-        $Headers.Add('Authorization', 'Basic ' + (Get-GitHubToken).GetNetworkCredential().Password);
+        if (!$Headers.Authorization) {
+            $Headers.Add('Authorization', 'Basic ' + (Get-GitHubToken).GetNetworkCredential().Password)
+        }
+        else {
+            $Headers.Authorization = 'Basic ' + (Get-GitHubToken).GetNetworkCredential().Password
+        }
+
         Write-Verbose -Message ('Authorization header is: {0}' -f $Headers['Authorization']);
     }
 
     ### if the user applied Preview switch, added the header to retrive the preview api
     if ($Preview) {
-        $Headers.Accept = application/vnd.github.drax-preview+json
+
+        if (!$Headers.Accept) {
+            $Headers.Add('Accept', 'application/vnd.github.drax-preview+json')
+        }
+        else {
+            $Headers.Accept = 'application/vnd.github.drax-preview+json'
+        }
+        
         Write-Warning 'The API you are trying to retrive maybe preview'
         Write-Warning 'Therefore there may be a chance that the request is unsuccessful'
     }
