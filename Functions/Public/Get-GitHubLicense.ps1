@@ -40,7 +40,7 @@ function Get-GitHubLicense
         }
         else 
         {
-            $restMethod = "licenses/{0}" -f $LicenseId
+            $restMethod = 'licenses/{0}' -f $LicenseId
         }
     }
     

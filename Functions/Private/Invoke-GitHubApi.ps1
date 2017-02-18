@@ -68,8 +68,8 @@
             $Headers.Accept = 'application/vnd.github.drax-preview+json'
         }
         
-        Write-Warning 'The API you are trying to retrive maybe preview'
-        Write-Warning 'Therefore there may be a chance that the request is unsuccessful'
+        Write-Warning -Message 'The API you are trying to retrive maybe preview'
+        Write-Warning -Message 'Therefore there may be a chance that the request is unsuccessful'
     }
 
     ### Build the REST API parameters as a HashTable for PowerShell Splatting (look it up, it's easy)
@@ -83,7 +83,7 @@
     ### Append the HTTP message body (payload), if the caller specified one.
     if ($Body) { 
         $ApiRequest.Body = $Body 
-        Write-Verbose "the request body is {0}" -f $Body
+        Write-Verbose -Message 'the request body is {0}' -f $Body
     }
 
     ### Invoke the REST API
