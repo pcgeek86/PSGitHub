@@ -87,7 +87,10 @@ FunctionsToExport = @(
     'Remove-GitHubGist',
     'Get-GitHubGist',
     'Save-GitHubGist',
-    'Set-GitHubGist'
+    'Set-GitHubGist',
+
+    ### Miscellaneous
+    'Get-GitHubLicense'
     
     )
 
