@@ -81,5 +81,5 @@ function Set-GitHubIssue {
     }
     
     ### Invoke the GitHub REST method
-    Invoke-GitHubApi @ApiBody;  
+    Invoke-GitHubApi @ApiCall;  
 }
