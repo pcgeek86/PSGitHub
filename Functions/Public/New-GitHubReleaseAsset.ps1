@@ -4,7 +4,7 @@ function New-GitHubReleaseAsset {
         Create a new GitHub release asset
     
     .DESCRIPTION
-        Create a GitHub release for a given tag and this function will not creates the tag or upload assets
+        Create a GitHub release asset for a given release
     
     .PARAMETER Owner
         Optional, the Owner of the repo that you want to create the release on, default to the authenticated user
@@ -12,30 +12,18 @@ function New-GitHubReleaseAsset {
     .PARAMETER Repository
         Mandatory, the name of the Repository that you want to create the release on.
     
-    .PARAMETER TagName
+    .PARAMETER ReleaseId
         Mandatory, the name of the tag of this release 
 
-    .PARAMETER Branch
+    .PARAMETER Path
         Optional, specify the branch of the tag, default to the default branch (usually `master`)
 
-    .PARAMETER CommitSHA
+    .PARAMETER ContentType
         Optional, the SHA of the commit that correspond to the tag
 
-    .PARAMETER Name
-        Optional, the name (title) of the release
-    
-    .PARAMETER ReleaseNote
-        Optional, the Release note of the release
-
-    .PARAMETER Draft
-        Optional, a switch to indicate whether this release is a draft release
-
-    .PARAMETER Prerelease
-        Optional, a switch to indicate whether this release is a pre-release
-
     .EXAMPLE
-        Create a new draft release in my 'test-organization/test-repo'
-        PS C:\> New-GitHubRelease -Owner 'test-organization' -Repository 'test-repo' -TagName 'v1.0' -name 'awesome release' -ReleaseNote 'great release note'
+        Create a new release asset in release with id 1234567 of project 'test-organization/test-repo'
+        PS C:\> New-GitHubRelease -Owner 'test-organization' -Repository 'test-repo' -ReleaseId 1234567 -Path .\myasset.zip
 
     .NOTES
         1. This cmdlet will not help you create a tag, you need to use git to do that.
@@ -79,7 +67,7 @@ function New-GitHubReleaseAsset {
             Body = Get-Content -Path $Path -Raw
             Headers = @{'Content-Type' = $ContentType}
             Method = 'post'
-            RestMethod = "https://uploads.github.com/repos/$Owner/$Repository/releases/$ReleaseId/assets?name=$Name"
+            RestMethod = "https://uploads.github.com/repos/$Owner/$Repository/releases/$ReleaseId/assets?name=$Name&label=$Name"
         }
     }
     
