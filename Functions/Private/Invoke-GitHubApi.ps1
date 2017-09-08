@@ -83,7 +83,7 @@
     ### Append the HTTP message body (payload), if the caller specified one.
     if ($Body) { 
         $ApiRequest.Body = $Body 
-        Write-Verbose -Message 'the request body is {0}' -f $Body
+        Write-Verbose -Message ('the request body is {0}' -f $Body)
     }
 
     ### Invoke the REST API
