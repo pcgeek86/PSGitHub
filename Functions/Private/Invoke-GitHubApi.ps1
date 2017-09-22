@@ -73,9 +73,13 @@
     }
 
     ### Build the REST API parameters as a HashTable for PowerShell Splatting (look it up, it's easy)
+    $LocalRestMethod = $RestMethod
+    if ($RestMethod -notlike 'https://*.github.com/*') {
+        $LocalRestMethod = "https://api.github.com/$RestMethod"
+    }
     $ApiRequest = @{
         Headers = $Headers;
-        Uri = 'https://api.github.com/{0}' -f $RestMethod;
+        Uri = $LocalRestMethod;
         Method = $Method;
     };
     Write-Verbose -Message ('Invoking the REST method: {0}' -f $ApiRequest.Uri)
