@@ -28,6 +28,14 @@ function Get-GitHubIssue {
     Retrieve all open issues from the GitHub repository with the specified name,
     owned by the GitHub user specified by -Owner.
 
+    .PARAMETER Page
+    The page number of the results to return. Default: 1
+    Note: The GitHub documentation of pagination warns to always rely on the
+    links provided in the response headers, rather than attempting to construct
+    the page URLs by hand. Unfortunately, as of PowerShell 5.1, Invoke-RestApi
+    does not provide access to the response headers.
+    https://developer.github.com/v3/guides/traversing-with-pagination/
+
     .PARAMETER Filter
     Indicates which sorts of issues to return. Valid values:
     * assigned: Issues assigned to the authenticated user.
@@ -94,6 +102,8 @@ function Get-GitHubIssue {
       , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
       , [Parameter()]
+        [int] $Page
+      , [Parameter()]
         [ValidateSet('assigned', 'created', 'mentioned', 'subscribed', 'all')]
         [string] $Filter
       , [Parameter()]
@@ -122,6 +132,10 @@ function Get-GitHubIssue {
     }
 
     $queryParameters = @()
+    if ($Page) {
+        $queryParameters += "page=$Page"
+    }
+
     if ($Filter) {
         $queryParameters += "filter=$Filter"
     }
