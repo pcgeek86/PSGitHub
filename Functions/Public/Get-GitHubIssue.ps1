@@ -43,6 +43,10 @@ function Get-GitHubIssue {
     .PARAMETER Direction
     The direction to sort. Valid values: asc, desc. Default: desc
 
+    .PARAMETER Since
+    Limit the results to issues updated at or after the specified time. The time
+    is specified in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ
+
     .EXAMPLE
     # Retrieve all open issues for the authenticated user, including issues from
     # owned, member, and organization repositories:
@@ -91,6 +95,8 @@ function Get-GitHubIssue {
       , [Parameter()]
         [ValidateSet('asc', 'desc')]
         [string] $Direction
+      , [Parameter()]
+        [string] $Since
     )
 
     if ($Repository) {
@@ -118,6 +124,10 @@ function Get-GitHubIssue {
 
     if ($Direction) {
         $queryParameters += "direction=$Direction"
+    }
+
+    if ($Since) {
+        $queryParameters += "since=$Since"
     }
 
     if ($queryParameters) {
