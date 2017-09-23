@@ -30,11 +30,15 @@ function Get-GitHubIssue {
 
     .PARAMETER State
     Limit the results to issues with the specified state. Valid values: open,
-    closed, all. If not specified, the REST API returns only open issues.
+    closed, all. Default: open.
 
     .PARAMETER Labels
     Limit the results to issues with all of of the specified, comma-separated
     list of labels.
+
+    .PARAMETER Sort
+    What to sort results by. Valid values: created, updated, comments.
+    Default: created.
 
     .EXAMPLE
     # Retrieve all open issues for the authenticated user, including issues from
@@ -78,6 +82,9 @@ function Get-GitHubIssue {
         [string] $State
       , [Parameter()]
         [string[]] $Labels
+      , [Parameter()]
+        [ValidateSet('created', 'updated', 'comments')]
+        [string] $Sort
     )
 
     if ($Repository) {
@@ -97,6 +104,10 @@ function Get-GitHubIssue {
 
     if ($Labels) {
         $queryParameters += "labels=" + ($Labels -join ',')
+    }
+
+    if ($Sort) {
+        $queryParameters += "sort=$Sort"
     }
 
     if ($queryParameters) {
