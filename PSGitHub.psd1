@@ -73,6 +73,10 @@ FunctionsToExport = @(
     'Get-GitHubMilestone',
     'Get-GitHubAssignee',
     'Test-GitHubAssignee',
+    'Get-GitHubIssue',
+
+    ### GitHub Comment commands
+    'Get-GitHubComment',
     
     ### GitHub Release commands
     'Get-GitHubRelease',
