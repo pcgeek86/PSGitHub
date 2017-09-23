@@ -40,6 +40,9 @@ function Get-GitHubIssue {
     What to sort results by. Valid values: created, updated, comments.
     Default: created.
 
+    .PARAMETER Direction
+    The direction to sort. Valid values: asc, desc. Default: desc
+
     .EXAMPLE
     # Retrieve all open issues for the authenticated user, including issues from
     # owned, member, and organization repositories:
@@ -85,6 +88,9 @@ function Get-GitHubIssue {
       , [Parameter()]
         [ValidateSet('created', 'updated', 'comments')]
         [string] $Sort
+      , [Parameter()]
+        [ValidateSet('asc', 'desc')]
+        [string] $Direction
     )
 
     if ($Repository) {
@@ -108,6 +114,10 @@ function Get-GitHubIssue {
 
     if ($Sort) {
         $queryParameters += "sort=$Sort"
+    }
+
+    if ($Direction) {
+        $queryParameters += "direction=$Direction"
     }
 
     if ($queryParameters) {
