@@ -7,7 +7,7 @@ function Get-GitHubIssue {
     This command retrieves GitHub issues either for the authenticated user or from 
     a specified repository.
 
-    .Parameter All
+    .PARAMETER All
     Retrieve "all issues assigned to the authenticated user across all visible
     repositories including owned repositories, member repositories, and organization
     repositories" (https://developer.github.com/v3/issues/).
@@ -130,16 +130,16 @@ function Get-GitHubIssue {
     )
 
     if ($Repository) {
-        $RestMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository
+        $restMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository
         if ($Number -gt 0) {
-            $RestMethod += ("/{0}" -f $Number)
+            $restMethod += ("/{0}" -f $Number)
         }
     } elseif ($Organization) {
-        $RestMethod = 'orgs/{0}/issues' -f $Organization
+        $restMethod = 'orgs/{0}/issues' -f $Organization
     } elseif ($ForUser) {
-        $RestMethod = 'user/issues'
+        $restMethod = 'user/issues'
     } else {
-        $RestMethod = 'issues'
+        $restMethod = 'issues'
     }
 
     $queryParameters = @()
@@ -172,12 +172,12 @@ function Get-GitHubIssue {
     }
 
     if ($queryParameters) {
-        $RestMethod += "?" + ($queryParameters -join '&')
+        $restMethod += "?" + ($queryParameters -join '&')
     }
 
     $apiCall = @{
         Method = 'Get';
-        RestMethod = $RestMethod
+        RestMethod = $restMethod
     }
 
     Invoke-GitHubApi @apiCall
