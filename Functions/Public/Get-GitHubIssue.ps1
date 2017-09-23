@@ -28,6 +28,10 @@ function Get-GitHubIssue {
     Retrieve all open issues from the GitHub repository with the specified name,
     owned by the GitHub user specified by -Owner.
 
+    .PARAMETER Number
+    Retrieve the single issue with the specified number from the repo specified
+    by -Owner and -Repository.
+
     .PARAMETER Page
     The page number of the results to return. Default: 1
     Note: The GitHub documentation of pagination warns to always rely on the
@@ -101,7 +105,11 @@ function Get-GitHubIssue {
         [string] $Owner
       , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
+      , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        [ValidateRange(1, [int]::MaxValue)]
+        [int] $Number
       , [Parameter()]
+        [ValidateRange(1, [int]::MaxValue)]
         [int] $Page
       , [Parameter()]
         [ValidateSet('assigned', 'created', 'mentioned', 'subscribed', 'all')]
@@ -123,6 +131,9 @@ function Get-GitHubIssue {
 
     if ($Repository) {
         $RestMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository
+        if ($Number -gt 0) {
+            $RestMethod += ("/{0}" -f $Number)
+        }
     } elseif ($Organization) {
         $RestMethod = 'orgs/{0}/issues' -f $Organization
     } elseif ($ForUser) {
