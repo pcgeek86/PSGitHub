@@ -28,6 +28,15 @@ function Get-GitHubIssue {
     Retrieve all open issues from the GitHub repository with the specified name,
     owned by the GitHub user specified by -Owner.
 
+    .PARAMETER Filter
+    Indicates which sorts of issues to return. Valid values:
+    * assigned: Issues assigned to the authenticated user.
+    * created: Issues created by the authenticated user.
+    * mentioned: Issues mentioning the authenticated user.
+    * subscribed: Issues for which the authenticated user has subscribed to updates.
+    * all: All issues the authenticated user can see, regardless of participation or creation.
+    Default: assigned
+
     .PARAMETER State
     Limit the results to issues with the specified state. Valid values: open,
     closed, all. Default: open.
@@ -85,6 +94,9 @@ function Get-GitHubIssue {
       , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
       , [Parameter()]
+        [ValidateSet('assigned', 'created', 'mentioned', 'subscribed', 'all')]
+        [string] $Filter
+      , [Parameter()]
         [ValidateSet('open', 'closed', 'all')]
         [string] $State
       , [Parameter()]
@@ -110,6 +122,10 @@ function Get-GitHubIssue {
     }
 
     $queryParameters = @()
+    if ($Filter) {
+        $queryParameters += "filter=$Filter"
+    }
+
     if ($State) {
         $queryParameters += "state=$State"
     }
