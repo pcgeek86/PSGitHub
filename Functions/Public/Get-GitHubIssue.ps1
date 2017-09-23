@@ -32,6 +32,10 @@ function Get-GitHubIssue {
     Limit the results to issues with the specified state. Valid values: open,
     closed, all. If not specified, the REST API returns only open issues.
 
+    .PARAMETER Labels
+    Limit the results to issues with all of of the specified, comma-separated
+    list of labels.
+
     .EXAMPLE
     # Retrieve all open issues for the authenticated user, including issues from
     # owned, member, and organization repositories:
@@ -72,6 +76,8 @@ function Get-GitHubIssue {
       , [Parameter()]
         [ValidateSet('open', 'closed', 'all')]
         [string] $State
+      , [Parameter()]
+        [string[]] $Labels
     )
 
     if ($Repository) {
@@ -89,8 +95,12 @@ function Get-GitHubIssue {
         $queryParameters += "state=$State"
     }
 
+    if ($Labels) {
+        $queryParameters += "labels=" + ($Labels -join ',')
+    }
+
     if ($queryParameters) {
-        $RestMethod += "?" + $queryParameters -join "&"
+        $RestMethod += "?" + ($queryParameters -join '&')
     }
 
     $apiCall = @{
