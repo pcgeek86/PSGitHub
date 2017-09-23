@@ -28,24 +28,32 @@ function Get-GitHubIssue {
     Retrieve all open issues from the GitHub repository with the specified name,
     owned by the GitHub user specified by -Owner.
 
+    .PARAMETER State
+    Limit the results to issues with the specified state. Valid values: open,
+    closed, all. If not specified, the REST API returns only open issues.
+
     .EXAMPLE
-    # Retrieve all issues for the authenticated user, including issues from
+    # Retrieve all open issues for the authenticated user, including issues from
     # owned, member, and organization repositories:
     Get-GitHubIssue -All
 
     .EXAMPLE
-    # Retrieve issues for the authenticated user, including only issues from
+    # Retrieve open issues for the authenticated user, including only issues from
     # owned and member repositories.
     Get-GitHubIssue -ForUser
 
     .EXAMPLE
-    # Retrieve issues assigned to the authenticated user in repos owned by
+    # Retrieve open issues assigned to the authenticated user in repos owned by
     # the organization ExampleOrg:
     Get-GitHubIssue -Organization ExampleOrg
 
     .EXAMPLE
-    # Retrieve all issues in the repository Mary/WebApps:
+    # Retrieve all open issues in the repository Mary/WebApps:
     Get-GitHubIssue -Owner Mary -Repository WebApps
+
+    .EXAMPLE
+    # Retrieve all issues (both open and closed) in the repository Mary/WebApps:
+    Get-GitHubIssue -Owner Mary -Repository WebApps -State all
 
     #>
     [CmdletBinding()]
@@ -61,6 +69,9 @@ function Get-GitHubIssue {
         [string] $Owner
       , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
+      , [Parameter()]
+        [ValidateSet('open', 'closed', 'all')]
+        [string] $State
     )
 
     if ($Repository) {
@@ -71,6 +82,15 @@ function Get-GitHubIssue {
         $RestMethod = 'user/issues'
     } else {
         $RestMethod = 'issues'
+    }
+
+    $queryParameters = @()
+    if ($State) {
+        $queryParameters += "state=$State"
+    }
+
+    if ($queryParameters) {
+        $RestMethod += "?" + $queryParameters -join "&"
     }
 
     $apiCall = @{
