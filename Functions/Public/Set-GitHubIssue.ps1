@@ -25,6 +25,9 @@ function Set-GitHubIssue {
     
     .Parameter Milestone
     The number of the milestone that the issue will be assigned to. Use Get-GitHubMilestone to retrieve a list of milestones. 
+
+    .Parameter State
+    Optional. The state to which the issue will be set ('open' or 'closed').
     
     .Parameter Number
     The GitHub issue number, in the specified GitHub repository, that will be updated.
@@ -51,6 +54,9 @@ function Set-GitHubIssue {
         [string[]] $Labels
       , [Parameter(Mandatory = $false)]
         [string] $Milestone
+      , [Parameter(Mandatory = $false)]
+        [ValidateSet('open', 'closed')]
+        [string] $State
     )
     
     ### Build the core message body -- we'll add more properties soon
@@ -73,10 +79,13 @@ function Set-GitHubIssue {
     ### Add the milestone to the issue message body    
     if ($Milestone) { $ApiBody.Add('milestone', $Milestone); }
 
+    ### Add the state to the issue message body.
+    if ($State) { $ApiBody.Add('state', $State); }
+
     ### Set up the API call
     $ApiCall = @{
         Body = $ApiBody | ConvertTo-Json
-        RestMethod = '/repos/{0}/{1}/issues/{2}' -f $Owner, $Repository, $Number;
+        RestMethod = 'repos/{0}/{1}/issues/{2}' -f $Owner, $Repository, $Number;
         Method = 'Patch';
     }
     

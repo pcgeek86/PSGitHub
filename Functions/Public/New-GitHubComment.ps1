@@ -11,7 +11,7 @@ function New-GitHubComment {
     The name of the GitHub repository containing the issue to which the comment
     will be added.
 
-    .PARAMETER IssueNumber
+    .PARAMETER Number
     The number of the issue to which the comment will be added.
 
     .PARAMETER Body
@@ -25,7 +25,7 @@ function New-GitHubComment {
     - A thing
     - Another thing
     "@
-    New-GitHubComment -Owner Mary -Repository WebApps -IssueNumber 42 -Body $body
+    New-GitHubComment -Owner Mary -Repository WebApps -Number 42 -Body $body
 
     #>
     [CmdletBinding()]
@@ -37,26 +37,21 @@ function New-GitHubComment {
         [string] $Repository
       , [Parameter(Mandatory = $true)]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $IssueNumber
+        [int] $Number
       , [Parameter(Mandatory = $true)]
         [string] $Body
     )
 
-    $restMethod = 'repos/{0}/{1}/issues/{2}/comments' -f $Owner, $Repository, $IssueNumber
+    $restMethod = 'repos/{0}/{1}/issues/{2}/comments' -f $Owner, $Repository, $Number
 
-    # This function's -Body parameter contains the text of the comment. But the
-    # -Body parameter to Invoke-GitHubApi is a JSON object. In this case, that
-    # object has a "body" property, which is a JSON-escaped string. So:
-    $requestBody = @"
-{
-    "body": $(ConvertTo-Json $Body)
-}
-"@
+    $apiBody = @{
+        body = $Body
+    } | ConvertTo-Json
 
     $apiCall = @{
         Method = 'Post';
         RestMethod = $restMethod;
-        Body = $requestBody;
+        Body = $apiBody;
     }
 
     Invoke-GitHubApi @apiCall

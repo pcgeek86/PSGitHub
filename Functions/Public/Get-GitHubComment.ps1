@@ -18,7 +18,7 @@ function Get-GitHubComment {
     Retrieve all comments in the GitHub repository specified by the -Owner and
     -Repository parameters.
 
-    .PARAMETER IssueNumber
+    .PARAMETER Number
     The number of the issue to retrieve.
 
     .PARAMETER CommentId
@@ -71,7 +71,7 @@ function Get-GitHubComment {
         [switch] $All
       , [Parameter(Mandatory = $true, ParameterSetName = 'InIssue')]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $IssueNumber
+        [int] $Number
       , [Parameter(Mandatory = $true, ParameterSetName = 'Single')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $CommentId
@@ -93,8 +93,8 @@ function Get-GitHubComment {
     $restMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository
     if ($All) {
         $restMethod += '/comments'
-    } elseif ($IssueNumber) {
-        $restMethod += '/{0}/comments' -f $IssueNumber
+    } elseif ($Number) {
+        $restMethod += '/{0}/comments' -f $Number
     } elseif ($CommentId) {
         $restMethod += '/comments/{0}' -f $CommentId
     }
