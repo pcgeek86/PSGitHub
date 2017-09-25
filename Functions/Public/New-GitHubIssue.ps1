@@ -70,10 +70,10 @@ function New-GitHubIssue {
     ### Set up the API call
     $ApiCall = @{
         Body = $ApiBody | ConvertTo-Json
-        RestMethod = '/repos/{0}/{1}/issues' -f $Owner, $Repository;
+        RestMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository;
         Method = 'Post';
     }
     
     ### Invoke the GitHub REST method
-    Invoke-GitHubApi @ApiBody;  
+    Invoke-GitHubApi @ApiCall;
 }
