@@ -22,7 +22,7 @@ function Get-GitHubComment {
     The number of the issue to retrieve.
 
     .PARAMETER CommentId
-    The id of the comment to retrieve. Requires -Issue to be present.
+    The id of the comment to retrieve.
 
     .PARAMETER Page
     The page number of the results to return. Default: 1
@@ -49,15 +49,15 @@ function Get-GitHubComment {
  
     .EXAMPLE
     # Retrieve all comments on Issue #42 in the repository Mary/WebApps:
-    Get-GitHubComment -Owner Mary -Repository WebApps -Issue 42
+    Get-GitHubComment -Owner Mary -Repository WebApps -Number 42
 
     .EXAMPLE
     # Retrieve all comments in the repository Mary/WebApps in 2017 or later.
     Get-GitHubComment -Owner Mary -Repository WebApps -Since 2017-01-01T00:00:00Z
 
     .EXAMPLE
-    # Retrieve comment #3 on Issue #42 in the repository Mary/WebApps:
-    Get-GitHubComment -Owner Mary -Repository WebApps -Issue 42 -Comment 3
+    # Retrieve the comment with id 332551910 in the repository Mary/WebApps:
+    Get-GitHubComment -Owner Mary -Repository WebApps -CommentId 332551910
 
     #>
     [CmdletBinding()]
