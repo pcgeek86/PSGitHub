@@ -77,6 +77,7 @@ FunctionsToExport = @(
 
     ### GitHub Comment commands
     'Get-GitHubComment',
+    'New-GitHubComment',
     
     ### GitHub Release commands
     'Get-GitHubRelease',
