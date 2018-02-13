@@ -1,6 +1,8 @@
-# What is PSGitHub?
-
 [![Join the chat at https://gitter.im/pcgeek86/PSGitHub](https://badges.gitter.im/pcgeek86/PSGitHub.svg)](https://gitter.im/pcgeek86/PSGitHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSGitHub.svg)]()
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PSGitHub.svg)]()
+
+# What is PSGitHub?
 
 The PSGitHub PowerShell module contains commands to manage GitHub through its REST API.
 
