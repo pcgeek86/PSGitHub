@@ -12,7 +12,7 @@
 RootModule = 'PSGitHub.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.13'
+ModuleVersion = '0.14'
 
 # ID used to uniquely identify this module
 GUID = '763b7f83-ea98-4424-8e09-cd336a4c1c58'
