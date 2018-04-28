@@ -78,6 +78,9 @@ function New-GitHubLabel {
         }
 
         $apiCall = @{
+            Headers =  @{
+                'Accept' = 'application/vnd.github.symmetra-preview+json'
+            }
             Method = 'Post'
             RestMethod = $restMethod
             Body = $bodyProperties | ConvertTo-Json
