@@ -84,8 +84,50 @@ Describe 'PSScriptAnalyzer' {
 }
 
 InModuleScope PSGitHub {
-#region Functions
-#endregion
+    #region *-GitHubLabel
+    Describe 'Get-GitHubLabel' {
+        BeforeAll {
+            Mock -CommandName Invoke-GitHubApi
+
+            $mockOwnerName = 'Mary'
+            $mockRepositoryName = 'WebApps'
+            $mockLabelName = 'Label1'
+        }
+
+        Context 'When getting first page of all labels in a repository' {
+            It 'Should call the mock with the correct arguments' {
+                { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Get' `
+                    -and $RestMethod -eq ('repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName)
+                }
+            }
+        }
+
+        Context 'When getting second page of all labels in a repository' {
+            It 'Should call the mock with the correct arguments' {
+                { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName -Page 2 } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Get' `
+                    -and $RestMethod -eq ('repos/{0}/{1}/labels?page=2' -f $mockOwnerName, $mockRepositoryName)
+                }
+            }
+        }
+
+        Context 'When getting a specific label in a repository' {
+            It 'Should call the mock with the correct arguments' {
+                { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName -Name $mockLabelName } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Get' `
+                    -and $RestMethod -eq ('repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName)
+                }
+            }
+        }
+    }
+    #endregion
 }
 
 Pop-Location
