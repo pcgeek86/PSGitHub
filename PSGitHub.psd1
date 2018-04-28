@@ -102,6 +102,7 @@ FunctionsToExport = @(
     ### GitHub label commands
     'Get-GitHubLabel',
     'New-GitHubLabel',
+    'Set-GitHubLabel',
 
     ### Miscellaneous
     'Get-GitHubLicense'

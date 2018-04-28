@@ -170,7 +170,7 @@ InModuleScope PSGitHub {
         Context 'When adding a new label without description' {
             It 'Should call the mock with the correct arguments' {
                 $mockTestParameters = $newGitHubLabelParameters.Clone()
-                $mockTestParameters['description'] = $mockLabelDescription
+                $mockTestParameters['Description'] = $mockLabelDescription
 
                 { New-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
 
@@ -198,6 +198,126 @@ InModuleScope PSGitHub {
                 {
                     $ConfirmPreference = 'Medium'
                     New-GitHubLabel @newGitHubLabelParameters -Force
+                } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1
+            }
+        }
+    }
+
+    Describe 'Set-GitHubLabel' {
+        BeforeAll {
+            Mock -CommandName Invoke-GitHubApi
+
+            $mockOwnerName = 'Mary'
+            $mockRepositoryName = 'WebApps'
+            $mockLabelName = 'Label1'
+            $mockNewLabelName = 'NewName'
+            $mockLabelColor = 'ffffff'
+            $mockLabelDescription = 'Label description'
+
+            $newGitHubLabelParameters = @{
+                Owner = $mockOwnerName
+                Repository = $mockRepositoryName
+                Name = $mockLabelName
+            }
+
+            $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+        }
+
+        Context 'When updating a label with a new name' {
+            It 'Should call the mock with the correct arguments' {
+                $mockTestParameters = $newGitHubLabelParameters.Clone()
+                $mockTestParameters['NewName'] = $mockNewLabelName
+
+                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+
+                $mockExpectedRequestBody = @{
+                    name = $mockNewLabelName
+                }
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Post' `
+                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
+                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                }
+            }
+        }
+
+        Context 'When updating a label with a new color' {
+            It 'Should call the mock with the correct arguments' {
+                $mockTestParameters = $newGitHubLabelParameters.Clone()
+                $mockTestParameters['Color'] = $mockLabelColor
+
+                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+
+                $mockExpectedRequestBody = @{
+                    color = $mockLabelColor
+                }
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Post' `
+                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
+                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                }
+            }
+        }
+
+        Context 'When updating a label with a new description' {
+            It 'Should call the mock with the correct arguments' {
+                $mockTestParameters = $newGitHubLabelParameters.Clone()
+                $mockTestParameters['Description'] = $mockLabelDescription
+
+                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+
+                $mockExpectedRequestBody = @{
+                    description = $mockLabelDescription
+                }
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Post' `
+                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
+                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                }
+            }
+        }
+
+        Context 'When updating a label with a new name, color and description' {
+            It 'Should call the mock with the correct arguments' {
+                $mockTestParameters = $newGitHubLabelParameters.Clone()
+                $mockTestParameters['NewName'] = $mockNewLabelName
+                $mockTestParameters['Color'] = $mockLabelColor
+                $mockTestParameters['Description'] = $mockLabelDescription
+
+                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+
+                $mockExpectedRequestBody = @{
+                    name = $mockNewLabelName
+                    color = $mockLabelColor
+                    description = $mockLabelDescription
+                }
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Post' `
+                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
+                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                }
+            }
+        }
+
+        Context 'When adding a new label and requesting explicit validation' {
+            It 'Should not not call any mock' {
+                { Set-GitHubLabel @newGitHubLabelParameters -WhatIf } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 0
+            }
+        }
+
+        Context 'When adding a new label and requesting to forcibly execute' {
+            It 'Should call the correct mock' {
+                {
+                    $ConfirmPreference = 'Medium'
+                    Set-GitHubLabel @newGitHubLabelParameters -Force
                 } | Should -Not -Throw
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1
