@@ -66,7 +66,7 @@ function Get-GitHubLabel {
     }
 
     $apiCall = @{
-        Method = 'Get';
+        Method = 'Get'
         RestMethod = $restMethod
     }
 
