@@ -4,20 +4,20 @@ function Get-GitHubLabel {
     Gets GitHub labels.
 
     .DESCRIPTION
-    This command retrieves GitHub issues either for the authenticated user or
-    from a specified repository.
+    This command retrieves GitHub labels for the specified repository using
+    the authenticated user.
 
     .PARAMETER Owner
     The GitHub username of the account or organization that owns the GitHub
-    repository specified in the -Repository parameter.
+    repository specified in the parameter -Repository parameter.
 
     .PARAMETER Repository
-    Retrieve labels from the GitHub repository with the specified name,
-    owned by the GitHub user specified by -Owner.
+    The name of the GitHub repository, that is owned by the GitHub username
+    specified by parameter -Owner.
 
     .PARAMETER Name
     Retrieve a single label with the specified name from the GitHub repository
-    specified by -Owner and -Repository.
+    specified by the parameters -Owner and -Repository.
 
     .PARAMETER Page
     The page number of the results to return. Default: 1
