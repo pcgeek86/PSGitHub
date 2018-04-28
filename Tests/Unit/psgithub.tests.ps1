@@ -324,6 +324,55 @@ InModuleScope PSGitHub {
             }
         }
     }
+
+    Describe 'Remove-GitHubLabel' {
+        BeforeAll {
+            Mock -CommandName Invoke-GitHubApi
+
+            $mockOwnerName = 'Mary'
+            $mockRepositoryName = 'WebApps'
+            $mockLabelName = 'Label1'
+
+            $newGitHubLabelParameters = @{
+                Owner = $mockOwnerName
+                Repository = $mockRepositoryName
+                Name = $mockLabelName
+            }
+
+            $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+        }
+
+        Context 'When removing a label' {
+            It 'Should call the mock with the correct arguments' {
+                { Remove-GitHubLabel @newGitHubLabelParameters -Confirm:$false } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                    $Method -eq 'Delete' `
+                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
+                    -and $null -eq $Body
+                }
+            }
+        }
+
+        Context 'When removing a label and requesting explicit validation' {
+            It 'Should not not call any mock' {
+                { Remove-GitHubLabel @newGitHubLabelParameters -WhatIf } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 0
+            }
+        }
+
+        Context 'When removing a label and requesting to forcibly execute' {
+            It 'Should call the correct mock' {
+                {
+                    $ConfirmPreference = 'Medium'
+                    Remove-GitHubLabel @newGitHubLabelParameters -Force
+                } | Should -Not -Throw
+
+                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1
+            }
+        }
+    }
     #endregion
 }
 

@@ -103,6 +103,7 @@ FunctionsToExport = @(
     'Get-GitHubLabel',
     'New-GitHubLabel',
     'Set-GitHubLabel',
+    'Remove-GitHubLabel',
 
     ### Miscellaneous
     'Get-GitHubLicense'
