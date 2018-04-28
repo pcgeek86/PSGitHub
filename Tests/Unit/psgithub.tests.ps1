@@ -237,7 +237,7 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Post' `
+                    $Method -eq 'Patch' `
                     -and $RestMethod -eq $mockExpectedDefaultRestMethod `
                     -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
@@ -256,7 +256,7 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Post' `
+                    $Method -eq 'Patch' `
                     -and $RestMethod -eq $mockExpectedDefaultRestMethod `
                     -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
@@ -275,7 +275,7 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Post' `
+                    $Method -eq 'Patch' `
                     -and $RestMethod -eq $mockExpectedDefaultRestMethod `
                     -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
@@ -298,7 +298,7 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Post' `
+                    $Method -eq 'Patch' `
                     -and $RestMethod -eq $mockExpectedDefaultRestMethod `
                     -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }

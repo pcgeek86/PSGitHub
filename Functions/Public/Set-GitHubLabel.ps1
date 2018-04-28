@@ -95,7 +95,7 @@ function Set-GitHubLabel {
             Headers =  @{
                 'Accept' = 'application/vnd.github.symmetra-preview+json'
             }
-            Method = 'Post'
+            Method = 'Patch'
             RestMethod = $restMethod
             Body = $bodyProperties | ConvertTo-Json
         }
