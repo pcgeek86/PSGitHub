@@ -1,6 +1,6 @@
 #
 # This is a PowerShell Unit Test file.
-# You need a unit test framework such as Pester to run PowerShell Unit tests. 
+# You need a unit test framework such as Pester to run PowerShell Unit tests.
 # You can download Pester from http://go.microsoft.com/fwlink/?LinkID=534084
 #
 
@@ -23,16 +23,18 @@ $null = New-Item `
     -Force `
     -ErrorAction SilentlyContinue
 
-# Perform PS Script Analyzer tests on module code only
-$null = Set-PackageSource `
-    -Name PSGallery `
-    -Trusted `
-    -Force
-$null = Install-Module `
-    -Name PSScriptAnalyzer `
-    -Confirm:$False
-Import-Module `
-    -Name PSScriptAnalyzer
+if (-not (Get-Module -Name PSScriptAnalyzer -ListAvailable)) {
+    # Perform PS Script Analyzer tests on module code only
+    $null = Set-PackageSource `
+        -Name PSGallery `
+        -Trusted `
+        -Force
+    $null = Install-Module `
+        -Name PSScriptAnalyzer `
+        -Confirm:$False
+    Import-Module `
+        -Name PSScriptAnalyzer
+}
 
 Describe 'PSScriptAnalyzer' {
     Context 'PSGitHub Module, Functions and TabCompleters' {
