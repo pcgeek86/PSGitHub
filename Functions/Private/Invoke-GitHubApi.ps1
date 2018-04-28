@@ -9,7 +9,7 @@
 
     NOTE: Do not include the HTTP Authorization header in this HashTable, as the Authorization header
           will be set by this function.
-    
+
     .Parameter Method
     The HTTP method that will be used for the request.
 
@@ -18,12 +18,12 @@
     will be invoked. By default, all
 
     .Parameter Preview
-    This will retrive the preview api, 
+    This will retrive the preview api,
     by changing `Accept` header to `application/vnd.github.drax-preview+json`.
 
     .Parameter Anonymous
     If, for some reason, you need to ensure that the REST method is invoked anonymously, you can specify the
-    -Anonymous switch parameter. This will prevent the HTTP Authorization header from being added to the 
+    -Anonymous switch parameter. This will prevent the HTTP Authorization header from being added to the
     HTTP headers prior to invoking the REST method.
 
     .Notes
@@ -42,10 +42,10 @@
       , [switch] $Preview
       , [switch] $Anonymous
     )
-    
+
     ### TODO: Truncate leading forward slashes for the -RestMethod parameter value.
 
-    ### If the caller hasn't specified the -Anonymouse switch parameter, then add the HTTP Authorization header
+    ### If the caller hasn't specified the -Anonymous switch parameter, then add the HTTP Authorization header
     ### to authenticate the HTTP request.
     if (!$Anonymous) {
         if (!$Headers.Authorization) {
@@ -58,7 +58,7 @@
         Write-Verbose -Message ('Authorization header is: {0}' -f $Headers['Authorization']);
     }
 
-    ### if the user applied Preview switch, added the header to retrive the preview api
+    ### if the user applied Preview switch, added the header to retrieve the preview api
     if ($Preview) {
 
         if (!$Headers.Accept) {
@@ -67,7 +67,7 @@
         else {
             $Headers.Accept = 'application/vnd.github.drax-preview+json'
         }
-        
+
         Write-Warning -Message 'The API you are trying to retrive maybe preview'
         Write-Warning -Message 'Therefore there may be a chance that the request is unsuccessful'
     }
@@ -83,12 +83,15 @@
         Method = $Method;
     };
     Write-Verbose -Message ('Invoking the REST method: {0}' -f $ApiRequest.Uri)
-        
+
     ### Append the HTTP message body (payload), if the caller specified one.
-    if ($Body) { 
-        $ApiRequest.Body = $Body 
+    if ($Body) {
+        $ApiRequest.Body = $Body
         Write-Verbose -Message ('the request body is {0}' -f $Body)
     }
+
+    # We need to communicate using TLS 1.2 against GitHub.
+    [Net.ServicePointManager]::SecurityProtocol = 'tls12'
 
     ### Invoke the REST API
     Invoke-RestMethod @ApiRequest;
