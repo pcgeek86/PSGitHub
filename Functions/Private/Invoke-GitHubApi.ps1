@@ -1,7 +1,7 @@
 ﻿function Invoke-GitHubApi {
     <#
     .Synopsis
-    An internal function that is responsbile for invoking various GitHub REST methods.
+    An internal function that is responsible for invoking various GitHub REST methods.
 
     .Parameter Headers
     A HashTable of the HTTP request headers as key-value pairs. Some REST methods in the GitHub
@@ -18,7 +18,7 @@
     will be invoked. By default, all
 
     .Parameter Preview
-    This will retrive the preview api,
+    This will retrieve the preview api,
     by changing `Accept` header to `application/vnd.github.drax-preview+json`.
 
     .Parameter Anonymous
@@ -32,7 +32,7 @@
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]
-        [HashTable] $Headers = @{'Accept' = 'application/vnd.github.v3+json'}
+        [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json'}
       , [Parameter(Mandatory = $false)]
         [string] $Method = 'Get'
       , [Parameter(Mandatory = $true)]
@@ -68,7 +68,7 @@
             $Headers.Accept = 'application/vnd.github.drax-preview+json'
         }
 
-        Write-Warning -Message 'The API you are trying to retrive maybe preview'
+        Write-Warning -Message 'The API you are trying to retrieve maybe preview'
         Write-Warning -Message 'Therefore there may be a chance that the request is unsuccessful'
     }
 

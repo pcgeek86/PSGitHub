@@ -67,7 +67,7 @@ function Get-GitHubLabel {
 
     $apiCall = @{
         Headers =  @{
-            'Accept' = 'application/vnd.github.symmetra-preview+json'
+            Accept = 'application/vnd.github.symmetra-preview+json'
         }
         Method = 'Get'
         RestMethod = $restMethod

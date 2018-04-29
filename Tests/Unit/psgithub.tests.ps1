@@ -101,8 +101,8 @@ InModuleScope PSGitHub {
                 { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName } | Should -Not -Throw
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Get' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod
+                    $Method -eq 'Get' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod
                 }
             }
         }
@@ -112,8 +112,8 @@ InModuleScope PSGitHub {
                 { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName -Page 2 } | Should -Not -Throw
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Get' `
-                    -and $RestMethod -eq ('{0}?page=2' -f $mockExpectedDefaultRestMethod)
+                    $Method -eq 'Get' -and
+                    $RestMethod -eq ('{0}?page=2' -f $mockExpectedDefaultRestMethod)
                 }
             }
         }
@@ -123,8 +123,8 @@ InModuleScope PSGitHub {
                 { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName -Name $mockLabelName } | Should -Not -Throw
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Get' `
-                    -and $RestMethod -eq ('{0}/{1}' -f $mockExpectedDefaultRestMethod, $mockLabelName)
+                    $Method -eq 'Get' -and
+                    $RestMethod -eq ('{0}/{1}' -f $mockExpectedDefaultRestMethod, $mockLabelName)
                 }
             }
         }
@@ -160,9 +160,9 @@ InModuleScope PSGitHub {
                 { New-GitHubLabel @newGitHubLabelParameters -Confirm:$false } | Should -Not -Throw
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Post' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
-                    -and $Body -eq ($mockExpectedDefaultRequestBody | ConvertTo-Json)
+                    $Method -eq 'Post' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Body -eq ($mockExpectedDefaultRequestBody | ConvertTo-Json)
                 }
             }
         }
@@ -178,9 +178,9 @@ InModuleScope PSGitHub {
                 $mockExpectedRequestBody['description'] = $mockLabelDescription
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Post' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
-                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                    $Method -eq 'Post' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
         }
@@ -237,9 +237,9 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Patch' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
-                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                    $Method -eq 'Patch' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
         }
@@ -256,9 +256,9 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Patch' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
-                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                    $Method -eq 'Patch' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
         }
@@ -275,9 +275,9 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Patch' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
-                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                    $Method -eq 'Patch' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
         }
@@ -298,9 +298,9 @@ InModuleScope PSGitHub {
                 }
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Patch' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
-                    -and $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
+                    $Method -eq 'Patch' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
         }
@@ -347,9 +347,9 @@ InModuleScope PSGitHub {
                 { Remove-GitHubLabel @newGitHubLabelParameters -Confirm:$false } | Should -Not -Throw
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
-                    $Method -eq 'Delete' `
-                    -and $RestMethod -eq $mockExpectedDefaultRestMethod `
-                    -and $null -eq $Body
+                    $Method -eq 'Delete' -and
+                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $null -eq $Body
                 }
             }
         }

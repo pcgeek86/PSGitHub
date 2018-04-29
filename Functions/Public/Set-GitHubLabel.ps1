@@ -93,7 +93,7 @@ function Set-GitHubLabel {
 
         $apiCall = @{
             Headers =  @{
-                'Accept' = 'application/vnd.github.symmetra-preview+json'
+                Accept = 'application/vnd.github.symmetra-preview+json'
             }
             Method = 'Patch'
             RestMethod = $restMethod

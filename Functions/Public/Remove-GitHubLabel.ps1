@@ -49,7 +49,7 @@ function Remove-GitHubLabel {
 
         $apiCall = @{
             Headers =  @{
-                'Accept' = 'application/vnd.github.symmetra-preview+json'
+                Accept = 'application/vnd.github.symmetra-preview+json'
             }
             Method = 'Delete'
             RestMethod = $restMethod
