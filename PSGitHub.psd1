@@ -78,16 +78,16 @@ FunctionsToExport = @(
     ### GitHub Comment commands
     'Get-GitHubComment',
     'New-GitHubComment',
-    
+
     ### GitHub Release commands
     'Get-GitHubRelease',
     'New-GitHubRelease',
-        
+
     ### GitHub Release commands
     'Get-GitHubReleaseAsset',
     'New-GitHubReleaseAsset',
     'Remove-GitHubReleaseAsset',
-    
+
     ### GitHub Fork and Pull Request commands
     'New-GitHubFork',
     'New-GitHubPullRequest',
@@ -99,9 +99,15 @@ FunctionsToExport = @(
     'Save-GitHubGist',
     'Set-GitHubGist',
 
+    ### GitHub label commands
+    'Get-GitHubLabel',
+    'New-GitHubLabel',
+    'Set-GitHubLabel',
+    'Remove-GitHubLabel',
+
     ### Miscellaneous
     'Get-GitHubLicense'
-    
+
     )
 
 # Cmdlets to export from this module
