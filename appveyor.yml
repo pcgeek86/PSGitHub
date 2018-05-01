@@ -5,7 +5,7 @@
 version: 1.0.0.{build}
 environment:
   PowerShellGalleryApiKey:
-    secure: 91WlCn2hlOMWHxSRh3pNANAxkB+Ji5drxv9xSKjYDD31cjShwRf0kWPvfVMBvmbV
+    secure: SlvbZKurugx1nGHlyk6VB1dXh3IJOWsY/Ds2bGBpknpze8R3os5pHGmPeyJXHv9K
 install:
   - cinst -y pester
   - ps: |
