@@ -137,10 +137,10 @@ PrivateData = @{
         Tags = 'Git', 'GitHub', 'PSMVP'
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/pcgeek86/PSGitHub/blob/master/LICENSE.md'
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://trevorsullivan.net'
+        ProjectUri = 'https://github.com/pcgeek86/PSGitHub'
 
         # A URL to an icon representing this module.
         # IconUri = ''
