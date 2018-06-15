@@ -1,12 +1,16 @@
 $ErrorActionPreference = 'Stop'
-Get-ChildItem -Recurse '*.ps*' | ForEach-Object {
-    $content = $(Get-Content -Raw -Encoding utf8 $_)
+$notFormatted = Get-ChildItem -Recurse '*.ps*' | ForEach-Object {
+    $content = [IO.File]::ReadAllText($_.FullName).Replace("`r`n", "`n")
     if (!$content) {
         return
     }
     $formatted = Invoke-Formatter -ScriptDefinition $content
     if ($formatted -ne $content) {
         Write-Warning "Not formatted: $_"
-        $formatted | Out-File -FilePath $_ -Encoding utf8
+        [IO.File]::WriteAllText($_.FullName, $formatted)
+        $_
     }
+}
+if ($notFormatted) {
+    throw "Found unformatted files"
 }

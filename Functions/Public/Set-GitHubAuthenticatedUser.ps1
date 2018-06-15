@@ -52,4 +52,3 @@ function Set-GitHubAuthenticatedUser {
     Invoke-GitHubApi -RestMethod user -Body $Body -Method Patch;
 
 }
-

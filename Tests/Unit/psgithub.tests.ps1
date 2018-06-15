@@ -62,20 +62,7 @@ Describe 'PSScriptAnalyzer' {
             }
         }
         It 'Is formatted' {
-            $notFormatted = Get-ChildItem -Recurse '*.ps*' | ForEach-Object {
-                $content = $(Get-Content -Raw -Encoding utf8 $_)
-                if (!$content) {
-                    return
-                }
-                $formatted = Invoke-Formatter -ScriptDefinition $content
-                if ($formatted -ne $content) {
-                    Write-Warning "Not formatted: $_"
-                    $_
-                }
-            }
-            if ($notFormatted) {
-                throw "Found unformatted files. Run format.ps1 to format all"
-            }
+            . $ModuleRoot/format.ps1
         }
     }
 }
@@ -374,4 +361,3 @@ InModuleScope PSGitHub {
 }
 
 Pop-Location
-

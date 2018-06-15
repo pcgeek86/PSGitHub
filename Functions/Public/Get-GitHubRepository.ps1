@@ -93,4 +93,3 @@ function Get-GitHubRepository {
         Invoke-GitHubApi @ApiCall
     }
 }
-

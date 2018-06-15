@@ -17,4 +17,3 @@ function Remove-GitHubRepository {
     $Method = 'repos/{0}/{1}' -f $Owner, $Name;
     Invoke-GitHubApi -RestMethod $Method -Method Delete;
 }
-

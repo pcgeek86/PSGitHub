@@ -1,4 +1,4 @@
-﻿function Get-GitHubToken {
+function Get-GitHubToken {
     <#
     .Synopsis
     Internal function to retrieve the GitHub Personal Access Token from disk

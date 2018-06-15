@@ -75,4 +75,3 @@ function Get-GitHubLabel {
 
     Invoke-GitHubApi @apiCall
 }
-

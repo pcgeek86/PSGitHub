@@ -106,4 +106,3 @@ function Set-GitHubLabel {
         Invoke-GitHubApi @apiCall
     }
 }
-

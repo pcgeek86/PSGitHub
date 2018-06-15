@@ -1,4 +1,4 @@
-﻿function Get-GitHubAuthenticatedUser {
+function Get-GitHubAuthenticatedUser {
     [OutputType([System.Object])]
     [CmdletBinding()]
     param (

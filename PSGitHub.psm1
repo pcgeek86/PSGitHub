@@ -1,4 +1,4 @@
-﻿### Created by Trevor Sullivan <trevor@trevorsullivan.net>
+### Created by Trevor Sullivan <trevor@trevorsullivan.net>
 
 #region Import Class definitions
 $ClassList = Get-ChildItem -Path $PSScriptRoot\Classes;

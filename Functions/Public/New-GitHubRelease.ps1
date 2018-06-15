@@ -120,4 +120,3 @@ function New-GitHubRelease {
         Invoke-GitHubApi @apiCall
     }
 }
-

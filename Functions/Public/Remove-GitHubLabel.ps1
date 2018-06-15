@@ -61,4 +61,3 @@ function Remove-GitHubLabel {
         Invoke-GitHubApi @apiCall
     }
 }
-

@@ -23,4 +23,3 @@ function Set-GitHubToken {
             PersonalAccessToken = $GitHubCredential.Password | ConvertFrom-SecureString;
         }) | ConvertTo-Json | Out-File -FilePath $TokenPath;
 }
-

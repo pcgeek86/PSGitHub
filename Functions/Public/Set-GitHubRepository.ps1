@@ -73,4 +73,3 @@ function Set-GitHubRepository {
     }
     Invoke-GitHubApi @ApiCall;
 }
-
