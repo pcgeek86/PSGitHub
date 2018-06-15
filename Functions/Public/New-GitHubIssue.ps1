@@ -1,4 +1,4 @@
-﻿function New-GitHubIssue {
+function New-GitHubIssue {
     <#
     .Synopsis
     Creates a new GitHub issue.
@@ -35,17 +35,17 @@
         [Parameter(Mandatory = $true)]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Repository
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Title
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Body
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Assignee
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string[]] $Labels
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Milestone
     )
 
@@ -69,9 +69,9 @@
 
     ### Set up the API call
     $ApiCall = @{
-        Body = $ApiBody | ConvertTo-Json
+        Body       = $ApiBody | ConvertTo-Json
         RestMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository;
-        Method = 'Post';
+        Method     = 'Post';
     }
 
     ### Invoke the GitHub REST method

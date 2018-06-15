@@ -1,4 +1,4 @@
-﻿function Test-GitHubAssignee {
+function Test-GitHubAssignee {
     <#
     .Synopsis
     This function returns a boolean value, indicating whether or not a GitHub username is a valid assignee for the specified repository.
@@ -11,9 +11,9 @@
     param ()
 
     $ApiCall = @{
-        Body = '';
+        Body       = '';
         RestMethod = '';
-        Method = '';
+        Method     = '';
     }
 
     Invoke-GitHubApi @ApiCall;

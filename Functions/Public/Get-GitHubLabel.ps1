@@ -41,11 +41,11 @@ function Get-GitHubLabel {
         [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
-      , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
         [string] $Name
-      , [Parameter()]
+        , [Parameter()]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Page
     )
@@ -66,12 +66,13 @@ function Get-GitHubLabel {
     }
 
     $apiCall = @{
-        Headers =  @{
+        Headers    = @{
             Accept = 'application/vnd.github.symmetra-preview+json'
         }
-        Method = 'Get'
+        Method     = 'Get'
         RestMethod = $restMethod
     }
 
     Invoke-GitHubApi @apiCall
 }
+

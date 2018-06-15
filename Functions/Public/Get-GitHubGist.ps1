@@ -1,4 +1,4 @@
-﻿function Get-GitHubGist {
+function Get-GitHubGist {
     <#
     .Synopsis
     This command retrieves GitHub Gist.
@@ -78,7 +78,7 @@
     $apiCall = @{
         #Body = ''
         RestMethod = $restMethod
-        Method = 'Get'
+        Method     = 'Get'
     }
 
     $ResultList = Invoke-GitHubApi @apiCall

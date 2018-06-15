@@ -1,4 +1,4 @@
-﻿function Remove-GitHubRepository {
+function Remove-GitHubRepository {
     <#
     .Synopsis
     Deletes a GitHub repository, using the specified owner and repository name.
@@ -10,10 +10,11 @@
     param (
         [Parameter(Mandatory = $true)]
         [string] $Owner
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Name
     )
 
     $Method = 'repos/{0}/{1}' -f $Owner, $Name;
     Invoke-GitHubApi -RestMethod $Method -Method Delete;
 }
+

@@ -1,4 +1,4 @@
-﻿function Get-GitHubMilestone {
+function Get-GitHubMilestone {
     <#
     .Synopsis
     Creates a new GitHub issue.
@@ -30,17 +30,17 @@
         [Parameter(Mandatory = $true)]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Repository
-      , [Parameter(ParameterSetName = 'SpecificMilestone', Mandatory = $true)]
+        , [Parameter(ParameterSetName = 'SpecificMilestone', Mandatory = $true)]
         [string] $Milestone
-      , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+        , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
         [ValidateSet('Open', 'Closed', 'All')]
         [string] $State
-      , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+        , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
         [ValidateSet('DueDate', 'Completeness')]
         [string] $Sort
-      , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+        , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
         [ValidateSet('Ascending', 'Descending')]
         [string] $Direction
     )
@@ -66,13 +66,17 @@
     if ($State) {
         switch ($State) {
             'Open' {
-                $State = 'open'; break; }
+                $State = 'open'; break; 
+            }
             'Closed' {
-                $State = 'closed'; break; }
+                $State = 'closed'; break; 
+            }
             'All' {
-                $State = 'all'; break; }
+                $State = 'all'; break; 
+            }
             default {
-                break; }
+                break; 
+            }
         }
         $ApiBody.Add('state', $State);
     }
@@ -81,28 +85,34 @@
     if ($Direction) {
         switch ($Direction) {
             'Ascending' {
-                $Direction = 'asc'; break; }
+                $Direction = 'asc'; break; 
+            }
             'Descending' {
-                $Direction = 'desc'; break; }
+                $Direction = 'desc'; break; 
+            }
             default {
-                break; }
+                break; 
+            }
         }
         $ApiBody.Add('direction', $Direction);
     }
 
     ### Determine the appropriate REST method to use
     if ($Milestone) {
-        $RestMethod = '/repos/{0}/{1}/milestones/{2}' -f $Owner, $Repository, $Milestone; }
+        $RestMethod = '/repos/{0}/{1}/milestones/{2}' -f $Owner, $Repository, $Milestone; 
+    }
     else {
-        $RestMethod = '/repos/{0}/{1}/milestones' -f $Owner, $Repository; }
+        $RestMethod = '/repos/{0}/{1}/milestones' -f $Owner, $Repository; 
+    }
 
     ### Set up the API call
     $ApiCall = @{
-        Body = $ApiBody | ConvertTo-Json
+        Body       = $ApiBody | ConvertTo-Json
         RestMethod = $RestMethod;
-        Method = 'Get';
+        Method     = 'Get';
     }
 
     ### Invoke the GitHub REST method
     Invoke-GitHubApi @ApiCall;
 }
+

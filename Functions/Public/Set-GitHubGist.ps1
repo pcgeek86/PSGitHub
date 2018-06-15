@@ -1,4 +1,4 @@
-﻿function Set-GitHubGist {
+function Set-GitHubGist {
     <#
     .Synopsis
     This command updates a GitHub Gist code snippet.
@@ -17,9 +17,9 @@
     )
 
     $ApiCall = @{
-        Body = '';
+        Body       = '';
         RestMethod = '';
-        Method = '';
+        Method     = '';
     }
 
     Invoke-GitHubApi @ApiCall;

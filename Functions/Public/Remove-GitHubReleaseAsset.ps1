@@ -1,4 +1,4 @@
-﻿function Remove-GitHubReleaseAsset {
+function Remove-GitHubReleaseAsset {
     <#
     .Synopsis
     This command deletes a GitHub release asset.
@@ -32,16 +32,14 @@
         [String] $Id
     )
 
-    Process
-    {
+    Process {
         $ApiCall = @{
             RestMethod = "repos/$Owner/$RepositoryName/releases/assets/$Id"
-            Method = 'delete'
+            Method     = 'delete'
         }
     }
 
-    end
-    {
+    end {
         if ($PSCmdlet.ShouldProcess($Id)) {
             Invoke-GitHubApi @ApiCall
         }

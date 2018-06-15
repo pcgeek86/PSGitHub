@@ -1,4 +1,4 @@
-﻿function Find-GitHubRepository {
+function Find-GitHubRepository {
     <#
     .Synopsis
     This function searches for repositories on GitHub.
@@ -25,10 +25,10 @@
     param (
         [Parameter(Mandatory = $true)]
         [string] $Keywords
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [ValidateSet('Stars', 'Forks', 'Updated')]
         [string] $SortBy
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [ValidateSet('Ascending', 'Descending')]
         [string] $SortOrder
     )
@@ -64,9 +64,9 @@
 
     ### Build the parameters for the REST API call
     $ApiCall = @{
-        Body = $ApiBody | ConvertTo-Json;
+        Body       = $ApiBody | ConvertTo-Json;
         RestMethod = 'search/repositories';
-        Method = 'Get';
+        Method     = 'Get';
     }
 
     ### Invoke the GitHub REST API

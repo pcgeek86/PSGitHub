@@ -1,4 +1,4 @@
-﻿function Get-GitHubRelease {
+function Get-GitHubRelease {
     <#
     .SYNOPSIS
     This command gets the github
@@ -50,11 +50,11 @@
         [String] $Owner,
         [Parameter(Mandatory = $true)]
         [string] $Repository,
-        [Parameter(Mandatory=$false, ParameterSetName = 'Id')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Id')]
         [String] $Id,
-        [Parameter(Mandatory=$false, ParameterSetName = 'TagName')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'TagName')]
         [String] $TagName,
-        [Parameter(Mandatory=$false, ParameterSetName = 'Latest')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Latest')]
         [Switch] $Latest
     )
 
@@ -73,7 +73,7 @@
         # set the API call parameter
         $apiCall = @{
             RestMethod = $restMethod
-            Method = 'Get'
+            Method     = 'Get'
         }
     }
 
@@ -82,3 +82,4 @@
         Invoke-GitHubApi @apiCall
     }
 }
+

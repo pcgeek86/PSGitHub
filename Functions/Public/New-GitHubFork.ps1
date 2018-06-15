@@ -1,4 +1,4 @@
-﻿function New-GitHubFork {
+function New-GitHubFork {
     <#
     .SYNOPSIS
         the cmdlet to create a fork
@@ -50,8 +50,8 @@
 
         # construct the api call
         $apiCall = @{
-            Body = $Body
-            Method = 'post'
+            Body       = $Body
+            Method     = 'post'
             RestMethod = "repos/$Owner/$Repository/forks"
         }
     }

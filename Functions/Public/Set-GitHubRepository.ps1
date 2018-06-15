@@ -1,4 +1,4 @@
-﻿function Set-GitHubRepository {
+function Set-GitHubRepository {
     <#
     .Synopsis
     Updates the details for an existing GitHub repository.
@@ -42,34 +42,35 @@
     param (
         [Parameter(Mandatory = $true)]
         [string] $Owner
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Name
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $NewName
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Description
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Homepage
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [Boolean] $DisableIssues
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [Boolean] $Private
     )
 
     $Body = @{
-        name = if ($NewName) { $NewName } else { $Name };
+        name        = if ($NewName) { $NewName } else { $Name };
         description = $Description;
-        homepage = $Homepage;
-        private = [bool]$Private;
-        has_issues = [bool]!$DisableIssues;
-        auto_init = [bool]$IncludeReadme;
-        } | ConvertTo-Json;
+        homepage    = $Homepage;
+        private     = [bool]$Private;
+        has_issues  = [bool]!$DisableIssues;
+        auto_init   = [bool]$IncludeReadme;
+    } | ConvertTo-Json;
     Write-Verbose -Message $Body;
 
     $ApiCall = @{
         RestMethod = 'repos/{0}/{1}' -f $Owner, $Name;
-        Body = $Body;
-        Method = 'Patch';
-        }
+        Body       = $Body;
+        Method     = 'Patch';
+    }
     Invoke-GitHubApi @ApiCall;
 }
+

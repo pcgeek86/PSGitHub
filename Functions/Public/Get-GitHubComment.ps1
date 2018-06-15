@@ -1,4 +1,4 @@
-﻿function Get-GitHubComment {
+function Get-GitHubComment {
     <#
     .SYNOPSIS
     Gets GitHub issue comments.
@@ -65,27 +65,27 @@
         [Parameter(Mandatory = $true)]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Repository
-      , [Parameter(Mandatory = $true, ParameterSetName = 'InRepo')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'InRepo')]
         [switch] $All
-      , [Parameter(Mandatory = $true, ParameterSetName = 'InIssue')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'InIssue')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Single')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Single')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $CommentId
-      , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [Parameter(Mandatory = $false, ParameterSetName = 'InIssue')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Page
-      , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [ValidateSet('created', 'updated')]
         [string] $Sort
-      , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [ValidateSet('asc', 'desc')]
         [string] $Direction
-      , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [Parameter(Mandatory = $false, ParameterSetName = 'InIssue')]
         [string] $Since
     )
@@ -93,9 +93,11 @@
     $restMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository
     if ($All) {
         $restMethod += '/comments'
-    } elseif ($Number) {
+    }
+    elseif ($Number) {
         $restMethod += '/{0}/comments' -f $Number
-    } elseif ($CommentId) {
+    }
+    elseif ($CommentId) {
         $restMethod += '/comments/{0}' -f $CommentId
     }
 
@@ -121,7 +123,7 @@
     }
 
     $apiCall = @{
-        Method = 'Get';
+        Method     = 'Get';
         RestMethod = $restMethod
     }
 

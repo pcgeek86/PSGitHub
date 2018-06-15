@@ -33,12 +33,12 @@ function New-GitHubComment {
         [Parameter(Mandatory = $true)]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Repository
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Body
     )
 
@@ -49,9 +49,9 @@ function New-GitHubComment {
     } | ConvertTo-Json
 
     $apiCall = @{
-        Method = 'Post';
+        Method     = 'Post';
         RestMethod = $restMethod;
-        Body = $apiBody;
+        Body       = $apiBody;
     }
 
     Invoke-GitHubApi @apiCall

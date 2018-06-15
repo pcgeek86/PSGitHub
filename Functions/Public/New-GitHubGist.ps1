@@ -1,4 +1,4 @@
-﻿function New-GitHubGist {
+function New-GitHubGist {
     <#
     .Synopsis
     This command creates a new GitHub Gist code snippet.
@@ -61,10 +61,10 @@
     [OutputType([System.Object])]
     Param (
         [Parameter(HelpMessage = 'Path to file(s) where the content will be used for the Gist.', Mandatory = $true, ParameterSetName = 'Files', ValueFromPipeline = $true)]
-        [ValidateScript({ if (Test-Path -Path $_) { $true } else { throw "Cannot find path: '$_' because it does not exist." }})]
+        [ValidateScript( { if (Test-Path -Path $_) { $true } else { throw "Cannot find path: '$_' because it does not exist." }})]
         # TODO: Perhaps allow a path to a folder, and then create one Gist with all the files in the top level of the directory?  Just a thought, but for now, no folders.
         # Get-ChildItem -Path $_ -File
-        [ValidateScript({ if (-not (Get-Item -Path $_).PSIsContainer) { $true } else { throw "Path must be to a file." }})]
+        [ValidateScript( { if (-not (Get-Item -Path $_).PSIsContainer) { $true } else { throw "Path must be to a file." }})]
         [String[]]$Path,
         [Parameter(HelpMessage = 'Description of the Gist.')]
         [String]$Description,
@@ -77,8 +77,8 @@
         if ($psISE -ne $null) {
             # Build Attributes for the IseScriptPane Parameter.
             $iseScriptPaneAttributes = New-Object -TypeName System.Management.Automation.ParameterAttribute -Property @{
-                HelpMessage = 'Captures the current active ISE Script Pane as Gist content.'
-                Mandatory = $true
+                HelpMessage      = 'Captures the current active ISE Script Pane as Gist content.'
+                Mandatory        = $true
                 ParameterSetName = 'IseScriptPane'
             }
             # Build Collection Object to hold Parameter Attributes.
@@ -89,7 +89,7 @@
 
             # Build Attributes for GistFileName Parameter.
             $gistFileNameAttributes = New-Object -TypeName System.Management.Automation.ParameterAttribute -Property @{
-                HelpMessage = 'The name of the Gist file.'
+                HelpMessage      = 'The name of the Gist file.'
                 ParameterSetName = 'IseScriptPane'
             }
             # Build Collection Object to hold Parameter Attributes.
@@ -111,8 +111,8 @@
         # Build request body template.
         [HashTable]$body = @{
             description = $Description
-            public = $Public.IsPresent
-            files = @{}
+            public      = $Public.IsPresent
+            files       = @{}
         }
 
         # If running from the console, the later else is not available.
@@ -121,18 +121,19 @@
             foreach ($item in $Path) {
                 $body.files.Add($(Split-Path -Path $item -Leaf), @{ content = ((Get-Content -Path $item -Raw).PSObject.BaseObject) })
             }
-        } else {
+        }
+        else {
             if ([String]::IsNullOrEmpty($PSBoundParameters.GistFileName)) {
-                $PSBoundParameters.GistFileName = $psISE.CurrentPowerShellTab.Files.SelectedFile.DisplayName.Replace('*','')
+                $PSBoundParameters.GistFileName = $psISE.CurrentPowerShellTab.Files.SelectedFile.DisplayName.Replace('*', '')
             }
             $body.files.Add($PSBoundParameters.GistFileName, @{ content = $psISE.CurrentPowerShellTab.Files.SelectedFile.Editor.Text })
         }
 
         # Splat API call Parameters.
         $apiCall = @{
-            Body = ConvertTo-Json -InputObject $body
+            Body       = ConvertTo-Json -InputObject $body
             RestMethod = 'gists'
-            Method = 'Post'
+            Method     = 'Post'
         }
 
         # Create the Gist.

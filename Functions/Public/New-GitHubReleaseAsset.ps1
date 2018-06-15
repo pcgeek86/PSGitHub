@@ -1,4 +1,4 @@
-﻿function New-GitHubReleaseAsset {
+function New-GitHubReleaseAsset {
     <#
     .SYNOPSIS
         Create a new GitHub release asset
@@ -46,13 +46,11 @@
         [string] $ContentType = 'application/zip'
     )
 
-    begin
-    {
+    begin {
 
     }
 
-    process
-    {
+    process {
         ### check path of asset
         if (-Not (Test-Path -Path $Path)) {
             Write-Error "Failed to locate asset at $Path"
@@ -64,16 +62,16 @@
         ### create a API call
         $apiCall =
         @{
-            Body = Get-Content -Path $Path -Raw
-            Headers = @{'Content-Type' = $ContentType}
-            Method = 'post'
+            Body       = Get-Content -Path $Path -Raw
+            Headers    = @{'Content-Type' = $ContentType}
+            Method     = 'post'
             RestMethod = "https://uploads.github.com/repos/$Owner/$Repository/releases/$ReleaseId/assets?name=$Name&label=$Name"
         }
     }
 
-    end
-    {
+    end {
         # invoke the api call
         Invoke-GitHubApi @apiCall
     }
 }
+

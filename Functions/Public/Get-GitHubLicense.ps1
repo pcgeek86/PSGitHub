@@ -1,5 +1,4 @@
-﻿function Get-GitHubLicense
-{
+function Get-GitHubLicense {
     <#
     .SYNOPSIS
         this cmdlet the the licenses that github provide
@@ -27,25 +26,20 @@
         [string] $LicenseId
     )
 
-    begin
-    {
+    begin {
 
     }
 
-    process
-    {
-        if (-Not ($LicenseId))
-        {
+    process {
+        if (-Not ($LicenseId)) {
             $restMethod = 'licenses'
         }
-        else
-        {
+        else {
             $restMethod = 'licenses/{0}' -f $LicenseId
         }
     }
 
-    end
-    {
+    end {
         Invoke-GitHubApi -Method get -RestMethod $restMethod -Preview
     }
 }

@@ -1,4 +1,4 @@
-﻿function New-GitHubPullRequest {
+function New-GitHubPullRequest {
     <#
     .SYNOPSIS
         This cmdlet creates submitts a pull request to a repo
@@ -79,17 +79,17 @@
             # send the pull request via title and body
             $ApiBody = @{
                 title = $Title
-                head = $Head
-                base = $Base
-                body = $Body
+                head  = $Head
+                base  = $Base
+                body  = $Body
             } | ConvertTo-Json
         }
         else {
             # send the pull request via existing issue
             $ApiBody = @{
                 issue = $issue
-                head = $Head
-                base = $Base
+                head  = $Head
+                base  = $Base
             } | ConvertTo-Json
         }
 
@@ -98,8 +98,8 @@
 
         # construct the parameters of the ApiCall
         $ApiCall = @{
-            Body = $ApiBody
-            Method = 'post'
+            Body       = $ApiBody
+            Method     = 'post'
             RestMethod = "repos/$Owner/$Repository/pulls"
         }
 
@@ -109,3 +109,4 @@
         Invoke-GithubApi @ApiCall
     }
 }
+

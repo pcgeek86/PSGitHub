@@ -1,4 +1,4 @@
-﻿function New-GitHubRepository {
+function New-GitHubRepository {
     <#
     .Synopsis
     Creates a new GitHub Repository, with the specified name.
@@ -28,26 +28,26 @@
     param (
         [Parameter(Mandatory = $true)]
         [string] $Name
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Description
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Homepage
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [switch] $IncludeReadme
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $DisableIssues
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Private
     )
 
     $Body = @{
-        name = $Name;
+        name        = $Name;
         description = $Description;
-        homepage = $Homepage;
-        private = [bool]$Private;
-        has_issues = [bool]!$DisableIssues;
-        auto_init = [bool]$IncludeReadme;
-        } | ConvertTo-Json;
+        homepage    = $Homepage;
+        private     = [bool]$Private;
+        has_issues  = [bool]!$DisableIssues;
+        auto_init   = [bool]$IncludeReadme;
+    } | ConvertTo-Json;
     Write-Verbose -Message $Body;
 
     Invoke-GitHubApi -RestMethod user/repos -Body $Body -Method Post;
