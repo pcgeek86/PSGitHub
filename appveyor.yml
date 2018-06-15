@@ -33,6 +33,9 @@ install:
 
       Get-PackageProvider -Name nuget -ForceBootStrap -Force
 
+      # Install up-to-date PSScriptAnalyzer
+      Install-Module PSScriptAnalyzer -RequiredVersion 1.17.1
+
 #---------------------------------#
 #      build configuration        #
 #---------------------------------#

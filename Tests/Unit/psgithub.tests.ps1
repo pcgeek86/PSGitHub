@@ -40,26 +40,9 @@ Describe 'PSScriptAnalyzer' {
     Context 'PSGitHub Module, Functions and TabCompleters' {
         It 'Passes Invoke-ScriptAnalyzer' {
             # Perform PSScriptAnalyzer scan.
-            $PSScriptAnalyzerResult = Invoke-ScriptAnalyzer `
-                -Path "$ModuleRoot\PSGitHub.psm1" `
-                -Severity Warning `
-                -ErrorAction SilentlyContinue
-            $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
-                -Path "$ModuleRoot\Functions\Public\*.ps1" `
-                -Severity Warning `
-                -ErrorAction SilentlyContinue
-            $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
-                -Path "$ModuleRoot\Functions\Private\*.ps1" `
-                -Severity Warning `
-                -ErrorAction SilentlyContinue
-            $PSScriptAnalyzerResult += Invoke-ScriptAnalyzer `
-                -Path "$ModuleRoot\TabCompleters\*.ps1" `
-                -Severity Warning `
-                -ErrorAction SilentlyContinue
-            $PSScriptAnalyzerErrors = $PSScriptAnalyzerResult `
-                | Where-Object { $_.Severity -eq 'Error' }
-            $PSScriptAnalyzerWarnings = $PSScriptAnalyzerResult `
-                | Where-Object { $_.Severity -eq 'Warning' }
+            $PSScriptAnalyzerResult = Invoke-ScriptAnalyzer -Path $ModuleRoot -Recurse -ErrorAction SilentlyContinue
+            $PSScriptAnalyzerErrors = $PSScriptAnalyzerResult | Where-Object { $_.Severity -eq 'Error' }
+            $PSScriptAnalyzerWarnings = $PSScriptAnalyzerResult | Where-Object { $_.Severity -eq 'Warning' }
             if ($PSScriptAnalyzerErrors -ne $null)
             {
                 Write-Warning `
