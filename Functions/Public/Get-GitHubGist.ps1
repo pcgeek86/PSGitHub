@@ -1,8 +1,8 @@
-function Get-GitHubGist {
+﻿function Get-GitHubGist {
     <#
     .Synopsis
     This command retrieves GitHub Gist.
-    
+
     .Description
     This command is responsible for retrieving GitHub Gist.
 
@@ -32,14 +32,14 @@ function Get-GitHubGist {
     updated_at   : 2016-03-16T14:40:08Z
     description  : Fix for missing Sophos Web Intelligence Service
     comments     : 0
-    user         : 
+    user         :
     comments_url : https://api.github.com/gists/62f8f608bdfec5d08552/comments
-    owner        : @{login=dotps1; id=1016996; avatar_url=https://avatars.githubusercontent.com/u/1016996?v=3; gravatar_id=; url=https://api.github.com/users/dotps1; html_url=https://github.com/dotps1; followers_url=https://api.github.com/users/dotps1/followers; 
-                   following_url=https://api.github.com/users/dotps1/following{/other_user}; gists_url=https://api.github.com/users/dotps1/gists{/gist_id}; starred_url=https://api.github.com/users/dotps1/starred{/owner}{/repo}; 
-                   subscriptions_url=https://api.github.com/users/dotps1/subscriptions; organizations_url=https://api.github.com/users/dotps1/orgs; repos_url=https://api.github.com/users/dotps1/repos; events_url=https://api.github.com/users/dotps1/events{/privacy}; 
+    owner        : @{login=dotps1; id=1016996; avatar_url=https://avatars.githubusercontent.com/u/1016996?v=3; gravatar_id=; url=https://api.github.com/users/dotps1; html_url=https://github.com/dotps1; followers_url=https://api.github.com/users/dotps1/followers;
+                   following_url=https://api.github.com/users/dotps1/following{/other_user}; gists_url=https://api.github.com/users/dotps1/gists{/gist_id}; starred_url=https://api.github.com/users/dotps1/starred{/owner}{/repo};
+                   subscriptions_url=https://api.github.com/users/dotps1/subscriptions; organizations_url=https://api.github.com/users/dotps1/orgs; repos_url=https://api.github.com/users/dotps1/repos; events_url=https://api.github.com/users/dotps1/events{/privacy};
                    received_events_url=https://api.github.com/users/dotps1/received_events; type=User; site_admin=False}
     forks        : {}
-    history      : {@{user=; version=369bffb9dd78b135b41047c2040b4b118d361545; committed_at=2016-03-16T14:40:08Z; change_status=; url=https://api.github.com/gists/62f8f608bdfec5d08552/369bffb9dd78b135b41047c2040b4b118d361545}, @{user=; version=6ea07bdaa15e1dae7e12013d5b29e6b6a9281ca7; 
+    history      : {@{user=; version=369bffb9dd78b135b41047c2040b4b118d361545; committed_at=2016-03-16T14:40:08Z; change_status=; url=https://api.github.com/gists/62f8f608bdfec5d08552/369bffb9dd78b135b41047c2040b4b118d361545}, @{user=; version=6ea07bdaa15e1dae7e12013d5b29e6b6a9281ca7;
                    committed_at=2016-03-16T14:39:29Z; change_status=; url=https://api.github.com/gists/62f8f608bdfec5d08552/6ea07bdaa15e1dae7e12013d5b29e6b6a9281ca7}}
     truncated    : False
 
@@ -48,7 +48,7 @@ function Get-GitHubGist {
     Maybe to much to ask for.
 
     This cmdlet can be easily used with Save-GitHubGist and Set-GitHubGist.
-      
+
     .Link
     https://trevorsullivan.net
     http://dotps1.github.io
@@ -67,7 +67,7 @@ function Get-GitHubGist {
         [ValidateSet('Public', 'Starred')]
         [String]$Target
     )
-    
+
     switch ($PSCmdlet.ParameterSetName) {
         'Owner' { $restMethod = 'users/{0}/gists' -f $Owner; break; }
         'Id' { $restMethod = 'gists/{0}' -f $Id; break; }
@@ -80,9 +80,9 @@ function Get-GitHubGist {
         RestMethod = $restMethod
         Method = 'Get'
     }
-    
+
     $ResultList = Invoke-GitHubApi @apiCall
-    
+
     foreach ($Result in $ResultList) {
         [GitHubGist]::new($Result.name, $Result.description);
     }

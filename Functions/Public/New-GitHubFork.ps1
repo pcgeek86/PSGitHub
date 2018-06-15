@@ -1,4 +1,4 @@
-function New-GitHubFork {
+﻿function New-GitHubFork {
     <#
     .SYNOPSIS
         the cmdlet to create a fork
@@ -20,7 +20,7 @@ function New-GitHubFork {
         fork the repo 'pcgeek86/PSGitHub' to my 'test-orgnization'
         PS C:\> New-GitHubFork -Owner pcgeek86 -Repository PSGitHub -Organization test-orgnization -verbose
 
-        fork the repo 'pcgeek86/PSGitHub' to my account 
+        fork the repo 'pcgeek86/PSGitHub' to my account
         PS C:\> New-GitHubFork -Owner pcgeek86 -Repository PSGitHub
 
     #>
@@ -33,10 +33,10 @@ function New-GitHubFork {
         [Parameter(Mandatory = $False)]
         [string] $Organization
     )
-    
+
     begin {
     }
-    
+
     process {
         # construct the post body
         if ($organization) {
@@ -55,7 +55,7 @@ function New-GitHubFork {
             RestMethod = "repos/$Owner/$Repository/forks"
         }
     }
-    
+
     end {
         # invoke the api call
         Invoke-GithubApi @apiCall

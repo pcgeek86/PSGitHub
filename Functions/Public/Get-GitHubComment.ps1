@@ -1,4 +1,4 @@
-function Get-GitHubComment {
+﻿function Get-GitHubComment {
     <#
     .SYNOPSIS
     Gets GitHub issue comments.
@@ -46,7 +46,7 @@ function Get-GitHubComment {
     .EXAMPLE
     # Retrieve all comments in the repository Mary/WebApps:
     Get-GitHubComment -Owner Mary -Repository WebApps -All
- 
+
     .EXAMPLE
     # Retrieve all comments on Issue #42 in the repository Mary/WebApps:
     Get-GitHubComment -Owner Mary -Repository WebApps -Number 42

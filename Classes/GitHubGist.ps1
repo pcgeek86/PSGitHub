@@ -1,4 +1,4 @@
-class GitHubGistFile {    
+﻿class GitHubGistFile {
 }
 
 class GitHubGist {
@@ -6,10 +6,10 @@ class GitHubGist {
     [string] $Description
     [string] $Owner
     [GitHubGistFile[]] $Files;
-    
+
     GitHubGist() {
     }
-    
+
     GitHubGist([string] $Name, [string] $Description, [string] $Owner) {
         $this.Name = $Name;
         $this.Owner = $Owner;
