@@ -43,24 +43,38 @@ Describe 'PSScriptAnalyzer' {
             $PSScriptAnalyzerResult = Invoke-ScriptAnalyzer -Path $ModuleRoot -Recurse -ErrorAction SilentlyContinue
             $PSScriptAnalyzerErrors = $PSScriptAnalyzerResult | Where-Object { $_.Severity -eq 'Error' }
             $PSScriptAnalyzerWarnings = $PSScriptAnalyzerResult | Where-Object { $_.Severity -eq 'Warning' }
-            if ($PSScriptAnalyzerErrors -ne $null)
-            {
+            if ($PSScriptAnalyzerErrors -ne $null) {
                 Write-Warning `
                     -Message 'There are PSScriptAnalyzer errors that need to be fixed:'
                 @($PSScriptAnalyzerErrors).Foreach( {
-                    Write-Warning -Message "$($_.Scriptname) (Line $($_.Line)): $($_.Message)"
-                } )
+                        Write-Warning -Message "$($_.Scriptname) (Line $($_.Line)): $($_.Message)"
+                    } )
                 Write-Warning `
                     -Message  'For instructions on how to run PSScriptAnalyzer on your own machine, please go to https://github.com/powershell/psscriptAnalyzer/'
-                $PSScriptAnalyzerErrors.Count | Should Be $null
+                $PSScriptAnalyzerErrors | Should -BeNullOrEmpty
             }
-            if ($PSScriptAnalyzerWarnings -ne $null)
-            {
+            if ($PSScriptAnalyzerWarnings -ne $null) {
                 Write-Warning `
                     -Message 'There are PSScriptAnalyzer warnings that should be fixed if possible:'
                 @($PSScriptAnalyzerWarnings).Foreach( {
-                    Write-Warning -Message "$($_.Scriptname) (Line $($_.Line)): $($_.Message)"
-                } )
+                        Write-Warning -Message "$($_.Scriptname) (Line $($_.Line)): $($_.Message)"
+                    } )
+            }
+        }
+        It 'Is formatted' {
+            $notFormatted = Get-ChildItem -Recurse '*.ps*' | ForEach-Object {
+                $content = $(Get-Content -Raw -Encoding utf8 $_)
+                if (!$content) {
+                    return
+                }
+                $formatted = Invoke-Formatter -ScriptDefinition $content
+                if ($formatted -ne $content) {
+                    Write-Warning "Not formatted: $_"
+                    $_
+                }
+            }
+            if ($notFormatted) {
+                throw "Found unformatted files. Run format.ps1 to format all"
             }
         }
     }
@@ -124,16 +138,16 @@ InModuleScope PSGitHub {
             $mockLabelDescription = 'Label description'
 
             $newGitHubLabelParameters = @{
-                Owner = $mockOwnerName
+                Owner      = $mockOwnerName
                 Repository = $mockRepositoryName
-                Name = $mockLabelName
-                Color = $mockLabelColor
+                Name       = $mockLabelName
+                Color      = $mockLabelColor
             }
 
             $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
 
             $mockExpectedDefaultRequestBody = @{
-                name = $mockLabelName
+                name  = $mockLabelName
                 color = $mockLabelColor
             }
         }
@@ -200,9 +214,9 @@ InModuleScope PSGitHub {
             $mockLabelDescription = 'Label description'
 
             $newGitHubLabelParameters = @{
-                Owner = $mockOwnerName
+                Owner      = $mockOwnerName
                 Repository = $mockRepositoryName
-                Name = $mockLabelName
+                Name       = $mockLabelName
             }
 
             $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
@@ -275,8 +289,8 @@ InModuleScope PSGitHub {
                 { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
 
                 $mockExpectedRequestBody = @{
-                    name = $mockNewLabelName
-                    color = $mockLabelColor
+                    name        = $mockNewLabelName
+                    color       = $mockLabelColor
                     description = $mockLabelDescription
                 }
 
@@ -317,9 +331,9 @@ InModuleScope PSGitHub {
             $mockLabelName = 'Label1'
 
             $newGitHubLabelParameters = @{
-                Owner = $mockOwnerName
+                Owner      = $mockOwnerName
                 Repository = $mockRepositoryName
-                Name = $mockLabelName
+                Name       = $mockLabelName
             }
 
             $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
@@ -360,3 +374,4 @@ InModuleScope PSGitHub {
 }
 
 Pop-Location
+
