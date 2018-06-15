@@ -1,4 +1,4 @@
-﻿function Invoke-GitHubApi {
+function Invoke-GitHubApi {
     <#
     .Synopsis
     An internal function that is responsible for invoking various GitHub REST methods.
@@ -33,14 +33,14 @@
     param (
         [Parameter(Mandatory = $false)]
         [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json'}
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Method = 'Get'
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $RestMethod
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Body
-      , [switch] $Preview
-      , [switch] $Anonymous
+        , [switch] $Preview
+        , [switch] $Anonymous
     )
 
     ### TODO: Truncate leading forward slashes for the -RestMethod parameter value.
@@ -79,8 +79,8 @@
     }
     $ApiRequest = @{
         Headers = $Headers;
-        Uri = $LocalRestMethod;
-        Method = $Method;
+        Uri     = $LocalRestMethod;
+        Method  = $Method;
     };
     Write-Verbose -Message ('Invoking the REST method: {0}' -f $ApiRequest.Uri)
 
@@ -96,4 +96,5 @@
     ### Invoke the REST API
     Invoke-RestMethod @ApiRequest;
 }
+
 

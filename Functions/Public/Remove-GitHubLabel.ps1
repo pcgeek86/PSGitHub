@@ -32,11 +32,11 @@ function Remove-GitHubLabel {
         [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Name
-      , [Parameter()]
+        , [Parameter()]
         [switch] $Force
     )
 
@@ -48,10 +48,10 @@ function Remove-GitHubLabel {
         $restMethod = 'repos/{0}/{1}/labels/{2}' -f $Owner, $Repository, $Name
 
         $apiCall = @{
-            Headers =  @{
+            Headers    = @{
                 Accept = 'application/vnd.github.symmetra-preview+json'
             }
-            Method = 'Delete'
+            Method     = 'Delete'
             RestMethod = $restMethod
         }
 
@@ -61,3 +61,4 @@ function Remove-GitHubLabel {
         Invoke-GitHubApi @apiCall
     }
 }
+

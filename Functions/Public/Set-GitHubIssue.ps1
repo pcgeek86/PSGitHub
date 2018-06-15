@@ -1,4 +1,4 @@
-﻿function Set-GitHubIssue {
+function Set-GitHubIssue {
     <#
     .Synopsis
     Creates a new GitHub issue.
@@ -40,21 +40,21 @@
         [Parameter(Mandatory = $true)]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Repository
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Title
-      , [Parameter(Mandatory = $true)]
+        , [Parameter(Mandatory = $true)]
         [string] $Number
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Body
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Assignee
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string[]] $Labels
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Milestone
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [ValidateSet('open', 'closed')]
         [string] $State
     )
@@ -84,11 +84,12 @@
 
     ### Set up the API call
     $ApiCall = @{
-        Body = $ApiBody | ConvertTo-Json
+        Body       = $ApiBody | ConvertTo-Json
         RestMethod = 'repos/{0}/{1}/issues/{2}' -f $Owner, $Repository, $Number;
-        Method = 'Patch';
+        Method     = 'Patch';
     }
 
     ### Invoke the GitHub REST method
     Invoke-GitHubApi @ApiCall;
 }
+

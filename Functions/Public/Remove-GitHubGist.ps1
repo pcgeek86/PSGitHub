@@ -1,4 +1,4 @@
-﻿function Remove-GitHubGist {
+function Remove-GitHubGist {
     <#
     .Synopsis
     This command deletes a GitHub Gist code snippet.
@@ -50,15 +50,16 @@
                         $body.files.Add($file, $null)
                     }
                     $restMethod = 'PATCH'
-                } else {
+                }
+                else {
                     $body = $null
                     $restMethod = 'DELETE'
                 }
 
                 $ApiCall = @{
-                    Body = ConvertTo-Json -InputObject $body
+                    Body       = ConvertTo-Json -InputObject $body
                     RestMethod = 'gists/{0}' -f $item
-                    Method = $restMethod
+                    Method     = $restMethod
                 }
 
                 Invoke-GitHubApi @ApiCall

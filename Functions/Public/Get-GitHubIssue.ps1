@@ -1,4 +1,4 @@
-﻿function Get-GitHubIssue {
+function Get-GitHubIssue {
     <#
     .SYNOPSIS
     Gets GitHub issues.
@@ -96,36 +96,36 @@
     param (
         [Parameter(Mandatory = $true, ParameterSetName = 'All')]
         [switch] $All
-      , [Parameter(Mandatory = $true, ParameterSetName = 'ForUser')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'ForUser')]
         [switch] $ForUser
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Organization')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Organization')]
         [string] $Organization
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
-      , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number
-      , [Parameter()]
+        , [Parameter()]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Page
-      , [Parameter()]
+        , [Parameter()]
         [ValidateSet('assigned', 'created', 'mentioned', 'subscribed', 'all')]
         [string] $Filter
-      , [Parameter()]
+        , [Parameter()]
         [ValidateSet('open', 'closed', 'all')]
         [string] $State
-      , [Parameter()]
+        , [Parameter()]
         [string[]] $Labels
-      , [Parameter()]
+        , [Parameter()]
         [ValidateSet('created', 'updated', 'comments')]
         [string] $Sort
-      , [Parameter()]
+        , [Parameter()]
         [ValidateSet('asc', 'desc')]
         [string] $Direction
-      , [Parameter()]
+        , [Parameter()]
         [string] $Since
     )
 
@@ -134,11 +134,14 @@
         if ($Number -gt 0) {
             $restMethod += ("/{0}" -f $Number)
         }
-    } elseif ($Organization) {
+    }
+    elseif ($Organization) {
         $restMethod = 'orgs/{0}/issues' -f $Organization
-    } elseif ($ForUser) {
+    }
+    elseif ($ForUser) {
         $restMethod = 'user/issues'
-    } else {
+    }
+    else {
         $restMethod = 'issues'
     }
 
@@ -176,7 +179,7 @@
     }
 
     $apiCall = @{
-        Method = 'Get';
+        Method     = 'Get';
         RestMethod = $restMethod
     }
 

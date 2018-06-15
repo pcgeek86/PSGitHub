@@ -1,4 +1,4 @@
-﻿function Get-GitHubReleaseAsset {
+function Get-GitHubReleaseAsset {
     <#
     .SYNOPSIS
     This command gets the github
@@ -59,7 +59,7 @@
         # set the API call parameter
         $apiCall = @{
             RestMethod = $restMethod
-            Method = 'Get'
+            Method     = 'Get'
         }
     }
 
@@ -68,3 +68,4 @@
         Invoke-GitHubApi @apiCall
     }
 }
+

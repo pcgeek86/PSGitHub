@@ -49,15 +49,15 @@ function New-GitHubLabel {
         [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
         [string] $Owner
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Repository
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Name
-      , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [string] $Color
-      , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
         [string] $Description
-      , [Parameter()]
+        , [Parameter()]
         [switch] $Force
     )
 
@@ -69,7 +69,7 @@ function New-GitHubLabel {
         $restMethod = 'repos/{0}/{1}/labels' -f $Owner, $Repository
 
         $bodyProperties = @{
-            name = $Name
+            name  = $Name
             color = $Color
         }
 
@@ -78,12 +78,12 @@ function New-GitHubLabel {
         }
 
         $apiCall = @{
-            Headers =  @{
+            Headers    = @{
                 Accept = 'application/vnd.github.symmetra-preview+json'
             }
-            Method = 'Post'
+            Method     = 'Post'
             RestMethod = $restMethod
-            Body = $bodyProperties | ConvertTo-Json
+            Body       = $bodyProperties | ConvertTo-Json
         }
 
         # Variable scope ensures that parent session remains unchanged
@@ -92,3 +92,4 @@ function New-GitHubLabel {
         Invoke-GitHubApi @apiCall
     }
 }
+

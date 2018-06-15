@@ -1,4 +1,4 @@
-﻿function Set-GitHubAuthenticatedUser {
+function Set-GitHubAuthenticatedUser {
     <#
     .Synopsis
     Updates information for the authenticated user.
@@ -19,25 +19,25 @@
     param (
         [Parameter(Mandatory = $false)]
         [string] $Name
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Email
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Blog
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Company
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [string] $Location
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [Alias('CanHire')]
         [bool] $Hireable
-      , [Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [Alias('Bio')]
         [string] $Biography
 
     )
 
     $Body = @{
-        };
+    };
     if ($Name) { $Body.Add('name', $Name) }
     if ($Email) { $Body.Add('email', $Email) }
     if ($Blog) { $Body.Add('blog', $Blog) }
@@ -52,3 +52,4 @@
     Invoke-GitHubApi -RestMethod user -Body $Body -Method Patch;
 
 }
+

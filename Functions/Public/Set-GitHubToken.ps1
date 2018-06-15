@@ -1,4 +1,4 @@
-﻿function Set-GitHubToken {
+function Set-GitHubToken {
     <#
     .Synopsis
     Internal function that obtains the username and Personal Access Token from the user.
@@ -19,7 +19,8 @@
     $TokenPath = '{0}\token.json' -f (Split-Path -Path $MyInvocation.MyCommand.Module.Path -Parent);
 
     @(@{
-        Username = $GitHubCredential.UserName;
-        PersonalAccessToken = $GitHubCredential.Password | ConvertFrom-SecureString;
-    }) | ConvertTo-Json | Out-File -FilePath $TokenPath;
+            Username            = $GitHubCredential.UserName;
+            PersonalAccessToken = $GitHubCredential.Password | ConvertFrom-SecureString;
+        }) | ConvertTo-Json | Out-File -FilePath $TokenPath;
 }
+

@@ -1,4 +1,4 @@
-﻿function New-GitHubRelease {
+function New-GitHubRelease {
     <#
     .SYNOPSIS
         Create a new GitHub release
@@ -66,13 +66,11 @@
         [switch] $PreRelease
     )
 
-    begin
-    {
+    begin {
 
     }
 
-    process
-    {
+    process {
         ### create the request Body
         $RequestBody = @{}
 
@@ -81,24 +79,20 @@
 
         # add target commitish
         # see this url for detail: https://developer.github.com/v3/repos/releases/#create-a-release
-        if ($Branch)
-        {
+        if ($Branch) {
             $RequestBody.Add('target_commitish', $Branch)
         }
-        elseif ($CommitSHA)
-        {
+        elseif ($CommitSHA) {
             $RequestBody.Add('target_commitish', $CommitSHA)
         }
 
         # add name
-        if ($Name)
-        {
+        if ($Name) {
             $RequestBody.Add('name', $Name)
         }
 
         # add Body
-        if ($ReleaseNote)
-        {
+        if ($ReleaseNote) {
             $RequestBody.Add('body', $ReleaseNote)
         }
 
@@ -108,23 +102,22 @@
         }
 
         # add pre-release
-        if ($PreRelease)
-        {
+        if ($PreRelease) {
             $RequestBody.Add('prerelease', $true)
         }
 
         ### create a API call
         $apiCall =
         @{
-            Body = $RequestBody | ConvertTo-Json
-            Method = 'post'
+            Body       = $RequestBody | ConvertTo-Json
+            Method     = 'post'
             RestMethod = "repos/$Owner/$Repository/releases"
         }
     }
 
-    end
-    {
+    end {
         # invoke the api call
         Invoke-GitHubApi @apiCall
     }
 }
+
