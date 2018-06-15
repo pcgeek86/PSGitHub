@@ -1,4 +1,4 @@
-﻿class GitHubGistFile {
+class GitHubGistFile {
 }
 
 class GitHubGist {

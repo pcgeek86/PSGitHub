@@ -92,4 +92,3 @@ function New-GitHubLabel {
         Invoke-GitHubApi @apiCall
     }
 }
-

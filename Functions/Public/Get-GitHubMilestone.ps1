@@ -115,4 +115,3 @@ function Get-GitHubMilestone {
     ### Invoke the GitHub REST method
     Invoke-GitHubApi @ApiCall;
 }
-

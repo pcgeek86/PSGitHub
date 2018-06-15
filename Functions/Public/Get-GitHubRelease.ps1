@@ -82,4 +82,3 @@ function Get-GitHubRelease {
         Invoke-GitHubApi @apiCall
     }
 }
-

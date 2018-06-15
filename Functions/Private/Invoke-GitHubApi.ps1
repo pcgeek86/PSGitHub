@@ -96,5 +96,3 @@ function Invoke-GitHubApi {
     ### Invoke the REST API
     Invoke-RestMethod @ApiRequest;
 }
-
-

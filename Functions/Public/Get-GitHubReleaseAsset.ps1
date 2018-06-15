@@ -68,4 +68,3 @@ function Get-GitHubReleaseAsset {
         Invoke-GitHubApi @apiCall
     }
 }
-

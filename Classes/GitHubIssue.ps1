@@ -1,4 +1,4 @@
-﻿class GitHubRepository {
+class GitHubRepository {
     [string] $Name
     [string] $Description
     [bool] $IsPrivate

@@ -109,4 +109,3 @@ function New-GitHubPullRequest {
         Invoke-GithubApi @ApiCall
     }
 }
-

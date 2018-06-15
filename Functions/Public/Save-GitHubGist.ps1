@@ -1,4 +1,4 @@
-﻿Function Save-GitHubGist {
+Function Save-GitHubGist {
     <#
     .Synopsis
     This command saves all files from a gist.
