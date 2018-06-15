@@ -1,8 +1,8 @@
-function New-GitHubGist {
+﻿function New-GitHubGist {
     <#
     .Synopsis
     This command creates a new GitHub Gist code snippet.
-    
+
     .Description
     This command is responsible for creating new GitHub Gist code snippets.
 
@@ -36,20 +36,20 @@ function New-GitHubGist {
     public       : True
     created_at   : 2016-03-23T16:00:59Z
     updated_at   : 2016-03-23T16:00:59Z
-    description  : 
+    description  :
     comments     : 0
-    user         : 
+    user         :
     comments_url : https://api.github.com/gists/a26026bea6f85f377276/comments
-    owner        : @{login=dotps1; id=1016996; avatar_url=https://avatars.githubusercontent.com/u/1016996?v=3; gravatar_id=; url=https://api.github.com/users/dotps1; html_url=https://github.com/dotps1; followers_url=https://api.github.com/users/dotps1/followers; 
-                   following_url=https://api.github.com/users/dotps1/following{/other_user}; gists_url=https://api.github.com/users/dotps1/gists{/gist_id}; starred_url=https://api.github.com/users/dotps1/starred{/owner}{/repo}; 
-                   subscriptions_url=https://api.github.com/users/dotps1/subscriptions; organizations_url=https://api.github.com/users/dotps1/orgs; repos_url=https://api.github.com/users/dotps1/repos; events_url=https://api.github.com/users/dotps1/events{/privacy}; 
+    owner        : @{login=dotps1; id=1016996; avatar_url=https://avatars.githubusercontent.com/u/1016996?v=3; gravatar_id=; url=https://api.github.com/users/dotps1; html_url=https://github.com/dotps1; followers_url=https://api.github.com/users/dotps1/followers;
+                   following_url=https://api.github.com/users/dotps1/following{/other_user}; gists_url=https://api.github.com/users/dotps1/gists{/gist_id}; starred_url=https://api.github.com/users/dotps1/starred{/owner}{/repo};
+                   subscriptions_url=https://api.github.com/users/dotps1/subscriptions; organizations_url=https://api.github.com/users/dotps1/orgs; repos_url=https://api.github.com/users/dotps1/repos; events_url=https://api.github.com/users/dotps1/events{/privacy};
                    received_events_url=https://api.github.com/users/dotps1/received_events; type=User; site_admin=False}
     forks        : {}
     history      : {@{user=; version=f4ad1eac3a3eb7ffc656e4b3a40875cf5fb9e539; committed_at=2016-03-23T16:00:59Z; change_status=; url=https://api.github.com/gists/a26026bea6f85f377276/f4ad1eac3a3eb7ffc656e4b3a40875cf5fb9e539}}
     truncated    : False
 
     .Notes
-    The IseScriptPane ParameterSet can only be used from with the PowerShell ISE.  
+    The IseScriptPane ParameterSet can only be used from with the PowerShell ISE.
 
     .Link
     https://trevorsullivan.net
@@ -92,12 +92,12 @@ function New-GitHubGist {
                 HelpMessage = 'The name of the Gist file.'
                 ParameterSetName = 'IseScriptPane'
             }
-            # Build Collection Object to hold Parameter Attributes. 
+            # Build Collection Object to hold Parameter Attributes.
             $gistFileNameCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
             $gistFileNameCollection.Add($gistFileNameAttributes)
             # Build Runtime Parameter with Collection Parameter Attributes.
             $gistFileNameParameter = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter -ArgumentList ('GistFileName', [String], $gistFileNameCollection)
-            
+
             # Build Runtime Dictionary and add Runtime Parameters to it.
             $dictionary = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameterDictionary
             $dictionary.Add('IseScriptPane', $iseScriptPaneParameter)
@@ -106,7 +106,7 @@ function New-GitHubGist {
             return $dictionary
         }
     }
-    
+
     Process {
         # Build request body template.
         [HashTable]$body = @{
@@ -134,7 +134,7 @@ function New-GitHubGist {
             RestMethod = 'gists'
             Method = 'Post'
         }
-        
+
         # Create the Gist.
         Invoke-GitHubApi @apiCall
     }

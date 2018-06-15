@@ -1,8 +1,8 @@
-function Get-GitHubMilestone {
+﻿function Get-GitHubMilestone {
     <#
     .Synopsis
     Creates a new GitHub issue.
-    
+
     .Parameter Owner
     The GitHub username of the account or organization that owns the GitHub repository specified in the -Repository parameter.
 
@@ -11,19 +11,19 @@ function Get-GitHubMilestone {
     created.
 
     .Parameter Milestone
-    The number of the milestone that you want to retrieve. 
-    
+    The number of the milestone that you want to retrieve.
+
     .Example
     ### Get a specific milestone, based on the milestone's number.
     Get-GitHubMilestone -Milestone 1;
-    
+
     .Example
     ### Get a list of milestone for the specified repository
     Get-GitHubMilestone -Owner pcgeek86 -Repository PSGitHub;
-    
+
     .Link
     https://trevorsullivan.net
-    https://developer.github.com/v3/issues    
+    https://developer.github.com/v3/issues
     #>
     [CmdletBinding()]
     param (
@@ -44,14 +44,14 @@ function Get-GitHubMilestone {
         [ValidateSet('Ascending', 'Descending')]
         [string] $Direction
     )
-    
+
     ### Build the core message body -- we'll add more properties soon
     $ApiBody = @{
     };
-    
+
     ### Add the milestone property
     if ($Milestone) { $ApiBody.Add('milestone', $Milestone); }
-    
+
     ### Normalize the "sort" JSON property
     if ($Sort) {
         switch ($Sort) {
@@ -61,7 +61,7 @@ function Get-GitHubMilestone {
         }
         $ApiBody.Add('sort', $Sort);
     }
-    
+
     ### Normalize the "state" JSON property
     if ($State) {
         switch ($State) {
@@ -76,7 +76,7 @@ function Get-GitHubMilestone {
         }
         $ApiBody.Add('state', $State);
     }
-    
+
     ### Normalize the "direction" JSON property
     if ($Direction) {
         switch ($Direction) {
@@ -89,20 +89,20 @@ function Get-GitHubMilestone {
         }
         $ApiBody.Add('direction', $Direction);
     }
-        
+
     ### Determine the appropriate REST method to use
     if ($Milestone) {
         $RestMethod = '/repos/{0}/{1}/milestones/{2}' -f $Owner, $Repository, $Milestone; }
     else {
         $RestMethod = '/repos/{0}/{1}/milestones' -f $Owner, $Repository; }
-        
+
     ### Set up the API call
     $ApiCall = @{
         Body = $ApiBody | ConvertTo-Json
         RestMethod = $RestMethod;
         Method = 'Get';
     }
-    
+
     ### Invoke the GitHub REST method
-    Invoke-GitHubApi @ApiCall;  
+    Invoke-GitHubApi @ApiCall;
 }

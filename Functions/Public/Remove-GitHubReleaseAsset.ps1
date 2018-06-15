@@ -1,11 +1,11 @@
-function Remove-GitHubReleaseAsset {
+﻿function Remove-GitHubReleaseAsset {
     <#
     .Synopsis
     This command deletes a GitHub release asset.
-    
+
     .Description
-    This command is responsible for deleting a GitHub release asset 
-    
+    This command is responsible for deleting a GitHub release asset
+
     .PARAMETER Owner
         Optional, the Owner of the repo that you want to create the release on, default to the authenticated user
 
@@ -31,7 +31,7 @@ function Remove-GitHubReleaseAsset {
         [Parameter(Mandatory = $true)]
         [String] $Id
     )
-    
+
     Process
     {
         $ApiCall = @{

@@ -1,7 +1,7 @@
-function Get-GitHubRelease {
+﻿function Get-GitHubRelease {
     <#
     .SYNOPSIS
-    This command gets the github 
+    This command gets the github
 
     .DESCRIPTION
     This command gets the id of a release via the following 3 Parameter:
@@ -16,11 +16,11 @@ function Get-GitHubRelease {
     The repo that you want to retrieve the release
 
     .PARAMETER Id
-    the Id of the release to retrieve, optional 
+    the Id of the release to retrieve, optional
     (cannot be used together with 'Latest' or 'TagName')
 
     .PARAMETER TagName
-    the TagName of the release to retrieve, optional 
+    the TagName of the release to retrieve, optional
     (cannot be used together with 'Id' or 'Latest')
 
     .PARAMETER Latest
@@ -28,18 +28,18 @@ function Get-GitHubRelease {
     (cannot be used together with 'Id' or 'TagName')
 
     .EXAMPLE
-    # get the latest release from soimort/you-get 
+    # get the latest release from soimort/you-get
     C:\PS> Get-GithubRelease -Owner soimort -Repository you-get -Latest
-    
-    # get all the release from PowerShell/vscode-powershell 
+
+    # get all the release from PowerShell/vscode-powershell
     C:\PS> Get-GithubRelease -Owner Powershell -Repository vscode-powershell
 
-    # get the version 'v0.1.0' release from PowerShell/vscode-powershell 
+    # get the version 'v0.1.0' release from PowerShell/vscode-powershell
     C:\PS> Get-GithubRelease -Owner Powershell -Repository vscode-powershell -TagName v0.1.0
 
-    # get the release with id 2161075 from PowerShell/vscode-powershell 
+    # get the release with id 2161075 from PowerShell/vscode-powershell
     C:\PS> Get-GithubRelease -Owner Powershell -Repository vscode-powershell -Id 2161075
-    
+
     .NOTES
     you cannot use parameter 'Id', 'Latest', 'TagName' together
 
@@ -57,10 +57,10 @@ function Get-GitHubRelease {
         [Parameter(Mandatory=$false, ParameterSetName = 'Latest')]
         [Switch] $Latest
     )
-    
+
     begin {
     }
-    
+
     process {
         # set the rest method
         switch ($PSCmdlet.ParameterSetName) {
@@ -76,7 +76,7 @@ function Get-GitHubRelease {
             Method = 'Get'
         }
     }
-    
+
     end {
         # invoke the rest api call
         Invoke-GitHubApi @apiCall

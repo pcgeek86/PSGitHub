@@ -1,19 +1,19 @@
-function New-GitHubRelease {
+﻿function New-GitHubRelease {
     <#
     .SYNOPSIS
         Create a new GitHub release
-    
+
     .DESCRIPTION
         Create a GitHub release for a given tag and this function will not creates the tag or upload assets
-    
+
     .PARAMETER Owner
         Optional, the Owner of the repo that you want to create the release on, default to the authenticated user
 
     .PARAMETER Repository
         Mandatory, the name of the Repository that you want to create the release on.
-    
+
     .PARAMETER TagName
-        Mandatory, the name of the tag of this release 
+        Mandatory, the name of the tag of this release
 
     .PARAMETER Branch
         Optional, specify the branch of the tag, default to the default branch (usually `master`)
@@ -23,7 +23,7 @@ function New-GitHubRelease {
 
     .PARAMETER Name
         Optional, the name (title) of the release
-    
+
     .PARAMETER ReleaseNote
         Optional, the Release note of the release
 
@@ -65,12 +65,12 @@ function New-GitHubRelease {
         [Parameter()]
         [switch] $PreRelease
     )
-    
-    begin 
+
+    begin
     {
-        
+
     }
-    
+
     process
     {
         ### create the request Body
@@ -79,27 +79,27 @@ function New-GitHubRelease {
         # add TagName
         $RequestBody.Add('tag_name', $TagName)
 
-        # add target commitish 
+        # add target commitish
         # see this url for detail: https://developer.github.com/v3/repos/releases/#create-a-release
-        if ($Branch) 
+        if ($Branch)
         {
             $RequestBody.Add('target_commitish', $Branch)
         }
-        elseif ($CommitSHA) 
+        elseif ($CommitSHA)
         {
             $RequestBody.Add('target_commitish', $CommitSHA)
         }
 
         # add name
-        if ($Name) 
+        if ($Name)
         {
             $RequestBody.Add('name', $Name)
         }
 
         # add Body
-        if ($ReleaseNote) 
+        if ($ReleaseNote)
         {
-            $RequestBody.Add('body', $ReleaseNote)    
+            $RequestBody.Add('body', $ReleaseNote)
         }
 
         # add draft
@@ -108,20 +108,20 @@ function New-GitHubRelease {
         }
 
         # add pre-release
-        if ($PreRelease) 
+        if ($PreRelease)
         {
             $RequestBody.Add('prerelease', $true)
         }
 
         ### create a API call
-        $apiCall = 
+        $apiCall =
         @{
             Body = $RequestBody | ConvertTo-Json
             Method = 'post'
             RestMethod = "repos/$Owner/$Repository/releases"
         }
     }
-    
+
     end
     {
         # invoke the api call

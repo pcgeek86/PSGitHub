@@ -8,6 +8,7 @@
     #>
     [OutputType([System.Management.Automation.PSCredential])]
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '')]
     param (
     )
 
@@ -15,7 +16,7 @@
     if (!(Get-Command -Name Get-AutomationPSCredential -ErrorAction Ignore) -or (Get-Process -Name System)) {
         ### Read the token from disk
         $Token = Get-Content -Path ('{0}\token.json' -f (Split-Path -Path $MyInvocation.MyCommand.Module.Path -Parent)) -Raw | ConvertFrom-Json;
-    
+
         ### Combine the username and password, per GitHub developer documentation for Basic Authentication Scheme
         ### https://developer.github.com/v3/auth/
         $PersonalAccessToken = New-Object -TypeName PSCredential -ArgumentList @($Token.Username, ($Token.PersonalAccessToken | ConvertTo-SecureString));

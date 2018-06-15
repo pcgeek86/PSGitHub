@@ -1,9 +1,9 @@
-function Get-GitHubRepository 
+﻿function Get-GitHubRepository
 {
     <#
     .SYNOPSIS
         This cmdlet will get the information about a GitHub repo.
-    
+
     .DESCRIPTION
         This cmdlet can get the information for one or more github repos you specify with owner and GitHub repo name
         See https://developer.github.com/v3/repos/#get for detail
@@ -16,17 +16,17 @@ function Get-GitHubRepository
     .PARAMETER License
         When this switch is turned on, you will only get the info about the license of the repository. Can be used only when specifying the Respository Parameter.
 
-    .PARAMETER ReadMe 
+    .PARAMETER ReadMe
         When this switch is turned on, you will only get the info about the README of the repository. Can be used only when specifying hte Repository Parameter.
 
     .OUTPUTS
-        Return a PSCustomObject. 
+        Return a PSCustomObject.
         See the return in https://developer.github.com/v3/repos/#get for detail
-    
+
     .EXAMPLE
         PS C:\> Get-GitHubRepository -Owner octocat -Repository Hello-World
         the return of this statement is shown in https://developer.github.com/v3/repos/#get
-    
+
     .EXAMPLE
         PS C:\> Get-GitHubRepository
         Returns all respositories for the authenticated user
@@ -34,7 +34,7 @@ function Get-GitHubRepository
     .EXAMPLE
         PS C:\> Get-GitHubRepository -Owner exactmike
         Returns all respositories for the specified user
-    
+
     .EXAMPLE
         PS C:\> Get-GitHubRepository -Owner exactmike -Repository OutSpeech -License
         Returns the license information for the specified owner's repository
@@ -53,16 +53,16 @@ function Get-GitHubRepository
         [string] $Owner = (Get-GitHubAuthenticatedUser).login,
         [Parameter(Mandatory = $true,ParameterSetName = 'SpecificOwnerAndRepository')]
         [Parameter(Mandatory = $true,ParameterSetName = 'SpecificOwnerAndRepositoryReadMe')]
-        [Parameter(Mandatory = $true,ParameterSetName = 'SpecificOwnerAndRepositoryLicense')]        
+        [Parameter(Mandatory = $true,ParameterSetName = 'SpecificOwnerAndRepositoryLicense')]
         [string] $Repository,
         [Parameter(Mandatory,ParameterSetName = 'SpecificOwnerAndRepositoryLicense')]
         [switch] $License,
         [Parameter(Mandatory,ParameterSetName = 'SpecificOwnerAndRepositoryReadMe')]
         [switch] $ReadMe
     )
-    
-    begin 
-    { 
+
+    begin
+    {
       switch -Wildcard ($PSCmdlet.ParameterSetName) {
         'AllForOwner'
         {
@@ -97,7 +97,7 @@ function Get-GitHubRepository
             Method = 'Get'
         }
     }
-    
+
     end
     {
         Invoke-GitHubApi @ApiCall

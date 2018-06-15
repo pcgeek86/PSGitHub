@@ -50,5 +50,5 @@
     Write-Verbose -Message $Body;
 
     Invoke-GitHubApi -RestMethod user -Body $Body -Method Patch;
-        
+
 }

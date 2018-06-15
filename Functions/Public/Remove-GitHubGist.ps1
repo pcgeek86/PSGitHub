@@ -1,11 +1,11 @@
-function Remove-GitHubGist {
+﻿function Remove-GitHubGist {
     <#
     .Synopsis
     This command deletes a GitHub Gist code snippet.
-    
+
     .Description
     This command is responsible for deleting GitHub Gist code snippets or files.
-    
+
     .Parameter Id
     The Id of the Gist to remove or remove files from.
 
@@ -22,7 +22,7 @@ function Remove-GitHubGist {
 
     .Notes
     This cmdlet will compliment Get-GitHubGist nicely.
-      
+
     .Link
     https://trevorsullivan.net
     http://dotps1.github.io
@@ -38,7 +38,7 @@ function Remove-GitHubGist {
         [Parameter()]
         [String[]]$FileName
     )
-    
+
     Process {
         foreach ($item in $Id) {
             if ($PSCmdlet.ShouldProcess($item)) {
@@ -54,13 +54,13 @@ function Remove-GitHubGist {
                     $body = $null
                     $restMethod = 'DELETE'
                 }
-                
+
                 $ApiCall = @{
                     Body = ConvertTo-Json -InputObject $body
                     RestMethod = 'gists/{0}' -f $item
                     Method = $restMethod
                 }
-    
+
                 Invoke-GitHubApi @ApiCall
             }
         }

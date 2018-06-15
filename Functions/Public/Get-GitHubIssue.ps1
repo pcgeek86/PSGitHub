@@ -1,10 +1,10 @@
-function Get-GitHubIssue {
+﻿function Get-GitHubIssue {
     <#
     .SYNOPSIS
     Gets GitHub issues.
 
     .DESCRIPTION
-    This command retrieves GitHub issues either for the authenticated user or from 
+    This command retrieves GitHub issues either for the authenticated user or from
     a specified repository.
 
     .PARAMETER All

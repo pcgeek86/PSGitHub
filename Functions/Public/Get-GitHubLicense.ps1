@@ -1,4 +1,4 @@
-function Get-GitHubLicense 
+﻿function Get-GitHubLicense
 {
     <#
     .SYNOPSIS
@@ -21,30 +21,30 @@ function Get-GitHubLicense
 
     #>
     [CmdletBinding()]
-    param 
+    param
     (
         [Parameter(Mandatory = $false, Position = 0)]
         [string] $LicenseId
     )
-    
-    begin 
+
+    begin
     {
 
     }
-    
-    process 
+
+    process
     {
-        if (-Not ($LicenseId)) 
+        if (-Not ($LicenseId))
         {
             $restMethod = 'licenses'
         }
-        else 
+        else
         {
             $restMethod = 'licenses/{0}' -f $LicenseId
         }
     }
-    
-    end 
+
+    end
     {
         Invoke-GitHubApi -Method get -RestMethod $restMethod -Preview
     }

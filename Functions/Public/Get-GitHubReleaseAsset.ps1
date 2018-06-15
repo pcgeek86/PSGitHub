@@ -1,7 +1,7 @@
-function Get-GitHubReleaseAsset {
+﻿function Get-GitHubReleaseAsset {
     <#
     .SYNOPSIS
-    This command gets the github 
+    This command gets the github
 
     .DESCRIPTION
     This command gets the assets of a release via the following 2 Parameter:
@@ -15,15 +15,15 @@ function Get-GitHubReleaseAsset {
     The repo that you want to retrieve the release
 
     .PARAMETER ReleaseId
-    the Id of the release to retrieve, optional 
+    the Id of the release to retrieve, optional
     (cannot be used together with 'Id')
 
     .PARAMETER Id
-    the Id of the asset to retrieve, optional 
+    the Id of the asset to retrieve, optional
     (cannot be used together with 'ReleaseId')
 
     .EXAMPLE
-    # get the all assets for a release from PowerShell/vscode-powershell 
+    # get the all assets for a release from PowerShell/vscode-powershell
     C:\PS> Get-GithubReleaseAsset -Owner Powershell -Repository vscode-powershell -ReleaseId 6808217
 
     # get a specific asset
@@ -44,10 +44,10 @@ function Get-GitHubReleaseAsset {
         [Parameter(Mandatory = $false, ParameterSetName = 'Id')]
         [String] $Id
     )
-    
+
     begin {
     }
-    
+
     process {
         # set the rest method
         switch ($PSCmdlet.ParameterSetName) {
@@ -62,7 +62,7 @@ function Get-GitHubReleaseAsset {
             Method = 'Get'
         }
     }
-    
+
     end {
         # invoke the rest api call
         Invoke-GitHubApi @apiCall

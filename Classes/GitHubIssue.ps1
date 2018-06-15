@@ -1,9 +1,9 @@
-class GitHubRepository {
+﻿class GitHubRepository {
     [string] $Name
     [string] $Description
     [bool] $IsPrivate
-    
-       
+
+
 }
 
 class GitHubIssue {
@@ -17,5 +17,5 @@ class GitHubIssue {
 
 ### In the GitHub object mode, a Pull Request "is an" issue, but not vice versa
 class GitHubPullRequest : GitHubIssue {
-    
+
 }

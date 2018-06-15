@@ -1,4 +1,4 @@
-Function Save-GitHubGist {
+﻿Function Save-GitHubGist {
     <#
     .Synopsis
     This command saves all files from a gist.
@@ -14,15 +14,15 @@ Function Save-GitHubGist {
 
     .Example
     Get-GitHubGist -Id 62f8f608bdfec5d08552 | Save-GitHubGist
-    
+
 
         Directory: C:\Users\me\Documents\GitHub\Gists\62f8f608bdfec5d08552
 
 
-    Mode                LastWriteTime         Length Name                                                                                                                                                                                                                                     
-    ----                -------------         ------ ----                                                                                                                                                                                                                                     
-    -a----        3/21/2016   3:11 PM           2080 Register-SophosWebIntelligenceService.ps1  
-    
+    Mode                LastWriteTime         Length Name
+    ----                -------------         ------ ----
+    -a----        3/21/2016   3:11 PM           2080 Register-SophosWebIntelligenceService.ps1
+
     .Notes
     This cmdlet will compliment Get-GitHubGist nicely.
 
