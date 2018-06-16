@@ -55,7 +55,8 @@ function Get-GitHubRelease {
         [Parameter(Mandatory = $false, ParameterSetName = 'TagName')]
         [String] $TagName,
         [Parameter(Mandatory = $false, ParameterSetName = 'Latest')]
-        [Switch] $Latest
+        [Switch] $Latest,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     begin {
@@ -64,16 +65,17 @@ function Get-GitHubRelease {
     process {
         # set the rest method
         switch ($PSCmdlet.ParameterSetName) {
-            'Id' { $restMethod = "repos/$Owner/$Repository/releases/$Id"; break; }
-            'TagName' { $restMethod = "repos/$Owner/$Repository/releases/tags/$TagName"; break; }
-            'Latest' { $restMethod = "repos/$Owner/$Repository/releases/latest"; break; }
-            Default { $restMethod = "repos/$Owner/$Repository/releases"; break; }
+            'Id' { $uri = "repos/$Owner/$Repository/releases/$Id"; break; }
+            'TagName' { $uri = "repos/$Owner/$Repository/releases/tags/$TagName"; break; }
+            'Latest' { $uri = "repos/$Owner/$Repository/releases/latest"; break; }
+            Default { $uri = "repos/$Owner/$Repository/releases"; break; }
         }
 
         # set the API call parameter
         $apiCall = @{
-            RestMethod = $restMethod
-            Method     = 'Get'
+            Uri    = $uri
+            Method = 'Get'
+            Token  = $Token
         }
     }
 

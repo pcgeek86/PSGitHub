@@ -50,9 +50,10 @@ function New-GitHubFork {
 
         # construct the api call
         $apiCall = @{
-            Body       = $Body
-            Method     = 'post'
-            RestMethod = "repos/$Owner/$Repository/forks"
+            Body   = $Body
+            Method = 'post'
+            Uri    = "repos/$Owner/$Repository/forks"
+            Token  = $Token
         }
     }
 

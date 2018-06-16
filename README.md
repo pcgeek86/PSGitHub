@@ -11,17 +11,37 @@ The PSGitHub PowerShell module contains commands to manage GitHub through its RE
 You can install the PSGitHub PowerShell module using one of the following methods.
 
 1. Install from the PowerShell Gallery (requires PowerShell 5.0+)
+   ```powershell
+   Install-Module PSGitHub
+   ```
 2. Copy-install the module to your `$env:PSModulePath`
 3. Extract the module anywhere on the filesystem, and import it explicitly, using `Import-Module`
 
-# Getting Started
+# Setup
 
-If this is your first time using the PSGitHub PowerShell module, follow these steps to get started.
+To access private repositories, make changes and have a higher rate limit, [create a GitHub token](https://github.com/settings/tokens/new).
+This token can be provided to all PSGitHub functions as a `SecureString` through the `-Token` parameter.
+You can set a default token to be used by changing `$PSDefaultParameterValues` in your `profile.ps1`:
 
-1. Import the module, if you disabled module auto-loading (*optional*)
-2. Run the `Set-GitHubToken` command
-3. Specify your GitHub username and Personal Access Token
-4. Run GitHub management commands (eg. `New-GitHubRepository`)
+### On Windows
+```powershell
+$PSDefaultParameterValues['*GitHub*:Token'] = 'YOUR_ENCRYPTED_TOKEN' | ConvertTo-SecureString
+```
+
+To get the value for `YOUR_ENCRYPTED_TOKEN`, run `Read-Host -AsSecureString | ConvertFrom-SecureString` once and paste in your token.
+
+### On macOS/Linux
+
+macOS and Linux do not have access to the Windows Data Protection API, so they cannot use `ConvertFrom-SecureString`
+to generate an encrypted plaintext version of the token without a custom encryption key.
+
+If you are not concerned about storing the token in plain text in the `profile.ps1`, you can set it like this:
+
+```powershell
+$PSDefaultParameterValues['*GitHub*:Token'] = 'YOUR_PLAINTEXT_TOKEN' | ConvertTo-SecureString -AsPlainText -Force
+```
+
+Alternatively, you could store the token in a password manager or the Keychain, then retrieve it in your profile and set it the same way.
 
 # Issues
 

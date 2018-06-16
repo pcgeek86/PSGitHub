@@ -63,7 +63,8 @@ function New-GitHubRelease {
         [Parameter()]
         [switch] $Draft,
         [Parameter()]
-        [switch] $PreRelease
+        [switch] $PreRelease,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     begin {
@@ -109,9 +110,10 @@ function New-GitHubRelease {
         ### create a API call
         $apiCall =
         @{
-            Body       = $RequestBody | ConvertTo-Json
-            Method     = 'post'
-            RestMethod = "repos/$Owner/$Repository/releases"
+            Body   = $RequestBody | ConvertTo-Json
+            Method = 'post'
+            Uri    = "repos/$Owner/$Repository/releases"
+            Token  = $Token
         }
     }
 

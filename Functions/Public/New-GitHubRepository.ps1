@@ -27,17 +27,18 @@ function New-GitHubRepository {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-        [string] $Name
-        , [Parameter(Mandatory = $false)]
-        [string] $Description
-        , [Parameter(Mandatory = $false)]
-        [string] $Homepage
-        , [Parameter(Mandatory = $false)]
-        [switch] $IncludeReadme
-        , [Parameter(Mandatory = $false)]
-        [string] $DisableIssues
-        , [Parameter(Mandatory = $false)]
-        [string] $Private
+        [string] $Name,
+        [Parameter(Mandatory = $false)]
+        [string] $Description,
+        [Parameter(Mandatory = $false)]
+        [string] $Homepage,
+        [Parameter(Mandatory = $false)]
+        [switch] $IncludeReadme,
+        [Parameter(Mandatory = $false)]
+        [string] $DisableIssues,
+        [Parameter(Mandatory = $false)]
+        [string] $Private,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $Body = @{
@@ -50,6 +51,6 @@ function New-GitHubRepository {
     } | ConvertTo-Json;
     Write-Verbose -Message $Body;
 
-    Invoke-GitHubApi -RestMethod user/repos -Body $Body -Method Post;
+    Invoke-GitHubApi -Uri user/repos -Body $Body -Method Post -Token $Token;
 
 }

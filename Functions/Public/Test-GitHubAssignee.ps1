@@ -8,12 +8,15 @@ function Test-GitHubAssignee {
     https://developer.github.com/v3/issues/assignees/#check-assignee
     #>
     [CmdletBinding()]
-    param ()
+    param (
+        [Security.SecureString] $Token = (Get-GitHubToken)
+    )
 
     $ApiCall = @{
-        Body       = '';
-        RestMethod = '';
-        Method     = '';
+        Body   = '';
+        Uri    = '';
+        Method = '';
+        Token  = $Token
     }
 
     Invoke-GitHubApi @ApiCall;

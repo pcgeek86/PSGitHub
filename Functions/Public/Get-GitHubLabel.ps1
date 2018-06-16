@@ -40,20 +40,21 @@ function Get-GitHubLabel {
     param (
         [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Repository
-        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
-        [string] $Name
-        , [Parameter()]
+        [string] $Owner,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [string] $Repository,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        [string] $Name,
+        [Parameter()]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $Page
+        [int] $Page,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $restMethod = 'repos/{0}/{1}/labels' -f $Owner, $Repository
+    $uri = 'repos/{0}/{1}/labels' -f $Owner, $Repository
 
     if ($Name) {
-        $restMethod += ("/{0}" -f $Name)
+        $uri += ("/{0}" -f $Name)
     }
 
     $queryParameters = @()
@@ -62,15 +63,16 @@ function Get-GitHubLabel {
     }
 
     if ($queryParameters) {
-        $restMethod += "?" + ($queryParameters -join '&')
+        $uri += "?" + ($queryParameters -join '&')
     }
 
     $apiCall = @{
-        Headers    = @{
+        Headers = @{
             Accept = 'application/vnd.github.symmetra-preview+json'
         }
-        Method     = 'Get'
-        RestMethod = $restMethod
+        Method  = 'Get'
+        Uri     = $uri
+        Token   = $Token
     }
 
     Invoke-GitHubApi @apiCall

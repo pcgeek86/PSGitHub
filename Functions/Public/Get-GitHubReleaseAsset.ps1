@@ -42,7 +42,8 @@ function Get-GitHubReleaseAsset {
         [Parameter(Mandatory = $true, ParameterSetName = 'ReleaseId')]
         [String] $ReleaseId,
         [Parameter(Mandatory = $false, ParameterSetName = 'Id')]
-        [String] $Id
+        [String] $Id,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     begin {
@@ -51,15 +52,16 @@ function Get-GitHubReleaseAsset {
     process {
         # set the rest method
         switch ($PSCmdlet.ParameterSetName) {
-            'ReleaseId' { $restMethod = "repos/$Owner/$Repository/releases/$ReleaseId/assets"; break; }
-            'Id' { $restMethod = "repos/$Owner/$Repository/releases/assets/$Id"; break; }
-            Default { $restMethod = "repos/$Owner/$Repository/releases/$ReleaseId/assets"; break; }
+            'ReleaseId' { $uri = "repos/$Owner/$Repository/releases/$ReleaseId/assets"; break; }
+            'Id' { $uri = "repos/$Owner/$Repository/releases/assets/$Id"; break; }
+            Default { $uri = "repos/$Owner/$Repository/releases/$ReleaseId/assets"; break; }
         }
 
         # set the API call parameter
         $apiCall = @{
-            RestMethod = $restMethod
-            Method     = 'Get'
+            Uri    = $uri
+            Method = 'Get'
+            Token  = $Token
         }
     }
 

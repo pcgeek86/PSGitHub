@@ -1,10 +1,10 @@
 function Invoke-GitHubApi {
     <#
     .Synopsis
-    An internal function that is responsible for invoking various GitHub REST methods.
+    An internal function that is responsible for invoking various GitHub REST endpoint.
 
     .Parameter Headers
-    A HashTable of the HTTP request headers as key-value pairs. Some REST methods in the GitHub
+    A HashTable of the HTTP request headers as key-value pairs. Some REST endpoint in the GitHub
     API do not require any request headers, in which case this parameter should not be specified.
 
     NOTE: Do not include the HTTP Authorization header in this HashTable, as the Authorization header
@@ -13,76 +13,60 @@ function Invoke-GitHubApi {
     .Parameter Method
     The HTTP method that will be used for the request.
 
-    .Parameter RestMethod
-    This parameter is a mandatory parameter that specifies the URL part, after the API's DNS name, that
-    will be invoked. By default, all
-
-    .Parameter Preview
-    This will retrieve the preview api,
-    by changing `Accept` header to `application/vnd.github.drax-preview+json`.
+    .Parameter Uri
+    This parameter is a mandatory parameter that specifies the URL to request.
+    If not absolute, it will be resolved relative to https://api.github.com.
 
     .Parameter Anonymous
     If, for some reason, you need to ensure that the REST method is invoked anonymously, you can specify the
     -Anonymous switch parameter. This will prevent the HTTP Authorization header from being added to the
-    HTTP headers prior to invoking the REST method.
+    HTTP headers prior to invoking the REST method, even if -Token is provided.
+
+    .Parameter Token
+    The GitHub OAuth token to use for authenticating the request.
+    Create one at https://github.com/settings/tokens/new.
+    Not all requests require a token.
 
     .Notes
     Created by Trevor Sullivan <trevor@trevorsullivan.net>
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $false)]
-        [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json'}
-        , [Parameter(Mandatory = $false)]
-        [string] $Method = 'Get'
-        , [Parameter(Mandatory = $true)]
-        [string] $RestMethod
-        , [Parameter(Mandatory = $false)]
-        [string] $Body
-        , [switch] $Preview
-        , [switch] $Anonymous
+        [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json'},
+        [Microsoft.PowerShell.Commands.WebRequestMethod] $Method = [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
+        [Parameter(Mandatory)]
+        [string] $Uri,
+        [string] $Body,
+        [switch] $Anonymous,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    ### TODO: Truncate leading forward slashes for the -RestMethod parameter value.
-
-    ### If the caller hasn't specified the -Anonymous switch parameter, then add the HTTP Authorization header
-    ### to authenticate the HTTP request.
-    if (!$Anonymous) {
+    # If the caller hasn't specified the -Anonymous switch parameter, then add the HTTP Authorization header
+    # to authenticate the HTTP request.
+    if (!$Anonymous -and $Token) {
+        $tokenStr = [Management.Automation.PSCredential]::new('dummy', $Token).GetNetworkCredential().Password
         if (!$Headers.Authorization) {
-            $Headers.Add('Authorization', 'Basic ' + (Get-GitHubToken).GetNetworkCredential().Password)
-        }
-        else {
-            $Headers.Authorization = 'Basic ' + (Get-GitHubToken).GetNetworkCredential().Password
+            $Headers.Authorization = 'token ' + $tokenStr
         }
 
         Write-Verbose -Message ('Authorization header is: {0}' -f $Headers['Authorization']);
     }
-
-    ### if the user applied Preview switch, added the header to retrieve the preview api
-    if ($Preview) {
-
-        if (!$Headers.Accept) {
-            $Headers.Add('Accept', 'application/vnd.github.drax-preview+json')
-        }
-        else {
-            $Headers.Accept = 'application/vnd.github.drax-preview+json'
-        }
-
-        Write-Warning -Message 'The API you are trying to retrieve maybe preview'
-        Write-Warning -Message 'Therefore there may be a chance that the request is unsuccessful'
+    else {
+        Write-Verbose -Message 'Making request without API token'
     }
 
-    ### Build the REST API parameters as a HashTable for PowerShell Splatting (look it up, it's easy)
-    $LocalRestMethod = $RestMethod
-    if ($RestMethod -notlike 'https://*.github.com/*') {
-        $LocalRestMethod = "https://api.github.com/$RestMethod"
-    }
+    $Headers.Add('User-Agent', 'PowerShell')
+
+    # Resolve the Uri parameter with https://api.github.com as a base URI
+    # This allows to call this function with just a path,
+    # but also supply a full URI (e.g. for a GitHub enterprise instance)
+    $Uri = [Uri]::new([Uri]::new('https://api.github.com'), $Uri)
+
     $ApiRequest = @{
         Headers = $Headers;
-        Uri     = $LocalRestMethod;
+        Uri     = $Uri;
         Method  = $Method;
     };
-    Write-Verbose -Message ('Invoking the REST method: {0}' -f $ApiRequest.Uri)
 
     ### Append the HTTP message body (payload), if the caller specified one.
     if ($Body) {
@@ -93,6 +77,6 @@ function Invoke-GitHubApi {
     # We need to communicate using TLS 1.2 against GitHub.
     [Net.ServicePointManager]::SecurityProtocol = 'tls12'
 
-    ### Invoke the REST API
+    # Invoke the REST API
     Invoke-RestMethod @ApiRequest;
 }

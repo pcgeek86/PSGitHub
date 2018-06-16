@@ -39,24 +39,25 @@ function Set-GitHubIssue {
     param (
         [Parameter(Mandatory = $true)]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true)]
-        [string] $Repository
-        , [Parameter(Mandatory = $true)]
-        [string] $Title
-        , [Parameter(Mandatory = $true)]
-        [string] $Number
-        , [Parameter(Mandatory = $false)]
-        [string] $Body
-        , [Parameter(Mandatory = $false)]
-        [string] $Assignee
-        , [Parameter(Mandatory = $false)]
-        [string[]] $Labels
-        , [Parameter(Mandatory = $false)]
-        [string] $Milestone
-        , [Parameter(Mandatory = $false)]
+        [string] $Owner,
+        [Parameter(Mandatory = $true)]
+        [string] $Repository,
+        [Parameter(Mandatory = $true)]
+        [string] $Title,
+        [Parameter(Mandatory = $true)]
+        [string] $Number,
+        [Parameter(Mandatory = $false)]
+        [string] $Body,
+        [Parameter(Mandatory = $false)]
+        [string] $Assignee,
+        [Parameter(Mandatory = $false)]
+        [string[]] $Labels,
+        [Parameter(Mandatory = $false)]
+        [string] $Milestone,
+        [Parameter(Mandatory = $false)]
         [ValidateSet('open', 'closed')]
-        [string] $State
+        [string] $State,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     ### Build the core message body -- we'll add more properties soon
@@ -84,9 +85,10 @@ function Set-GitHubIssue {
 
     ### Set up the API call
     $ApiCall = @{
-        Body       = $ApiBody | ConvertTo-Json
-        RestMethod = 'repos/{0}/{1}/issues/{2}' -f $Owner, $Repository, $Number;
-        Method     = 'Patch';
+        Body   = $ApiBody | ConvertTo-Json
+        Uri    = 'repos/{0}/{1}/issues/{2}' -f $Owner, $Repository, $Number;
+        Method = 'Patch';
+        Token  = $Token
     }
 
     ### Invoke the GitHub REST method

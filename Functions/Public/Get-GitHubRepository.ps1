@@ -57,35 +57,37 @@ function Get-GitHubRepository {
         [Parameter(Mandatory, ParameterSetName = 'SpecificOwnerAndRepositoryLicense')]
         [switch] $License,
         [Parameter(Mandatory, ParameterSetName = 'SpecificOwnerAndRepositoryReadMe')]
-        [switch] $ReadMe
+        [switch] $ReadMe,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     begin {
         switch -Wildcard ($PSCmdlet.ParameterSetName) {
             'AllForOwner' {
                 if ($Owner -eq $(Get-GitHubAuthenticatedUser).login) {
-                    $RestMethod = 'user/repos'
+                    $Uri = 'user/repos'
                 }
                 else {
-                    $RestMethod = 'users/{0}/repos' -f $Owner
+                    $Uri = 'users/{0}/repos' -f $Owner
                 }
             }
             'SpecificOwnerAndRepository*' {
-                $RestMethod = 'repos/{0}/{1}' -f $Owner, $Repository
+                $Uri = 'repos/{0}/{1}' -f $Owner, $Repository
             }
             'SpecificOwnerAndRepositoryReadMe' {
-                $RestMethod += '/readme'
+                $Uri += '/readme'
             }
             'SpecificOwnerAndRepositoryLicense' {
-                $RestMethod += '/license'
+                $Uri += '/license'
             }
         }
     }
 
     process {
         $ApiCall = @{
-            RestMethod = $RestMethod
-            Method     = 'Get'
+            Uri    = $Uri
+            Method = 'Get'
+            Token  = $Token
         }
     }
 

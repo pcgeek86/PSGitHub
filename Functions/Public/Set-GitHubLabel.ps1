@@ -55,19 +55,20 @@ function Set-GitHubLabel {
     param (
         [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Repository
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Name
-        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
-        [string] $NewName
-        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
-        [string] $Color
-        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
-        [string] $Description
-        , [Parameter()]
-        [switch] $Force
+        [string] $Owner,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [string] $Repository,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [string] $Name,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        [string] $NewName,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        [string] $Color,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        [string] $Description,
+        [Parameter()]
+        [switch] $Force,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $shouldProcessCaption = 'Updating an existing GitHub label'
@@ -75,7 +76,7 @@ function Set-GitHubLabel {
     $shouldProcessWarning = 'Do you want to update the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $Repository
 
     if ($Force -or $PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-        $restMethod = 'repos/{0}/{1}/labels/{2}' -f $Owner, $Repository, $Name
+        $uri = 'repos/{0}/{1}/labels/{2}' -f $Owner, $Repository, $Name
 
         $bodyProperties = @{}
 
@@ -92,12 +93,13 @@ function Set-GitHubLabel {
         }
 
         $apiCall = @{
-            Headers    = @{
+            Headers = @{
                 Accept = 'application/vnd.github.symmetra-preview+json'
             }
-            Method     = 'Patch'
-            RestMethod = $restMethod
-            Body       = $bodyProperties | ConvertTo-Json
+            Method  = 'Patch'
+            Uri     = $uri
+            Body    = $bodyProperties | ConvertTo-Json
+            Token   = $Token
         }
 
         # Variable scope ensures that parent session remains unchanged

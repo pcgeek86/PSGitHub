@@ -31,12 +31,12 @@ function Remove-GitHubGist {
 
     [CmdletBinding(ConfirmImpact = 'High', SupportsShouldProcess = $true)]
     [OutputType([Void])]
-
     Param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [String[]] $Id,
         [Parameter()]
-        [String[]]$FileName
+        [String[]]$FileName,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     Process {
@@ -49,17 +49,18 @@ function Remove-GitHubGist {
                     foreach ($file in $FileName) {
                         $body.files.Add($file, $null)
                     }
-                    $restMethod = 'PATCH'
+                    $uri = 'PATCH'
                 }
                 else {
                     $body = $null
-                    $restMethod = 'DELETE'
+                    $uri = 'DELETE'
                 }
 
                 $ApiCall = @{
-                    Body       = ConvertTo-Json -InputObject $body
-                    RestMethod = 'gists/{0}' -f $item
-                    Method     = $restMethod
+                    Body   = ConvertTo-Json -InputObject $body
+                    Uri    = 'gists/{0}' -f $item
+                    Method = $uri
+                    Token  = $Token
                 }
 
                 Invoke-GitHubApi @ApiCall

@@ -24,13 +24,14 @@ function Find-GitHubRepository {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-        [string] $Keywords
-        , [Parameter(Mandatory = $false)]
+        [string] $Keywords,
+        [Parameter(Mandatory = $false)]
         [ValidateSet('Stars', 'Forks', 'Updated')]
-        [string] $SortBy
-        , [Parameter(Mandatory = $false)]
+        [string] $SortBy,
+        [Parameter(Mandatory = $false)]
         [ValidateSet('Ascending', 'Descending')]
-        [string] $SortOrder
+        [string] $SortOrder,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     ### Create a stub HTTP message body
@@ -64,9 +65,10 @@ function Find-GitHubRepository {
 
     ### Build the parameters for the REST API call
     $ApiCall = @{
-        Body       = $ApiBody | ConvertTo-Json;
-        RestMethod = 'search/repositories';
-        Method     = 'Get';
+        Body   = $ApiBody | ConvertTo-Json;
+        Uri    = 'search/repositories';
+        Method = 'Get';
+        Token  = $Token
     }
 
     ### Invoke the GitHub REST API

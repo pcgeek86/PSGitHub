@@ -14,12 +14,14 @@ function Set-GitHubGist {
     #>
     [CmdletBinding()]
     param (
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $ApiCall = @{
-        Body       = '';
-        RestMethod = '';
-        Method     = '';
+        Body   = '';
+        Uri    = '';
+        Method = '';
+        Token  = $Token
     }
 
     Invoke-GitHubApi @ApiCall;

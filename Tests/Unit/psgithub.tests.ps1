@@ -77,7 +77,7 @@ InModuleScope PSGitHub {
             $mockRepositoryName = 'WebApps'
             $mockLabelName = 'Label1'
 
-            $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
         }
 
         Context 'When getting first page of all labels in a repository' {
@@ -86,7 +86,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Get' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod
+                    $Uri -eq $mockExpectedDefaultUri
                 }
             }
         }
@@ -97,7 +97,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Get' -and
-                    $RestMethod -eq ('{0}?page=2' -f $mockExpectedDefaultRestMethod)
+                    $Uri -eq ('{0}?page=2' -f $mockExpectedDefaultUri)
                 }
             }
         }
@@ -108,7 +108,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Get' -and
-                    $RestMethod -eq ('{0}/{1}' -f $mockExpectedDefaultRestMethod, $mockLabelName)
+                    $Uri -eq ('{0}/{1}' -f $mockExpectedDefaultUri, $mockLabelName)
                 }
             }
         }
@@ -131,7 +131,7 @@ InModuleScope PSGitHub {
                 Color      = $mockLabelColor
             }
 
-            $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
 
             $mockExpectedDefaultRequestBody = @{
                 name  = $mockLabelName
@@ -145,7 +145,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Post' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Uri -eq $mockExpectedDefaultUri -and
                     $Body -eq ($mockExpectedDefaultRequestBody | ConvertTo-Json)
                 }
             }
@@ -163,7 +163,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Post' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Uri -eq $mockExpectedDefaultUri -and
                     $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
@@ -206,7 +206,7 @@ InModuleScope PSGitHub {
                 Name       = $mockLabelName
             }
 
-            $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
         }
 
         Context 'When updating a label with a new name' {
@@ -222,7 +222,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Patch' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Uri -eq $mockExpectedDefaultUri -and
                     $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
@@ -241,7 +241,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Patch' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Uri -eq $mockExpectedDefaultUri -and
                     $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
@@ -260,7 +260,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Patch' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Uri -eq $mockExpectedDefaultUri -and
                     $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
@@ -283,7 +283,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Patch' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Uri -eq $mockExpectedDefaultUri -and
                     $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
                 }
             }
@@ -323,7 +323,7 @@ InModuleScope PSGitHub {
                 Name       = $mockLabelName
             }
 
-            $mockExpectedDefaultRestMethod = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
         }
 
         Context 'When removing a label' {
@@ -332,7 +332,7 @@ InModuleScope PSGitHub {
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Delete' -and
-                    $RestMethod -eq $mockExpectedDefaultRestMethod -and
+                    $Uri -eq $mockExpectedDefaultUri -and
                     $null -eq $Body
                 }
             }

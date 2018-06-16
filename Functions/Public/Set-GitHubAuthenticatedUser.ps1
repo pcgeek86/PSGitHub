@@ -18,22 +18,22 @@ function Set-GitHubAuthenticatedUser {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]
-        [string] $Name
-        , [Parameter(Mandatory = $false)]
-        [string] $Email
-        , [Parameter(Mandatory = $false)]
-        [string] $Blog
-        , [Parameter(Mandatory = $false)]
-        [string] $Company
-        , [Parameter(Mandatory = $false)]
-        [string] $Location
-        , [Parameter(Mandatory = $false)]
+        [string] $Name,
+        [Parameter(Mandatory = $false)]
+        [string] $Email,
+        [Parameter(Mandatory = $false)]
+        [string] $Blog,
+        [Parameter(Mandatory = $false)]
+        [string] $Company,
+        [Parameter(Mandatory = $false)]
+        [string] $Location,
+        [Parameter(Mandatory = $false)]
         [Alias('CanHire')]
-        [bool] $Hireable
-        , [Parameter(Mandatory = $false)]
+        [bool] $Hireable,
+        [Parameter(Mandatory = $false)]
         [Alias('Bio')]
-        [string] $Biography
-
+        [string] $Biography,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $Body = @{
@@ -49,6 +49,6 @@ function Set-GitHubAuthenticatedUser {
     $Body = $Body | ConvertTo-Json;
     Write-Verbose -Message $Body;
 
-    Invoke-GitHubApi -RestMethod user -Body $Body -Method Patch;
+    Invoke-GitHubApi -Uri user -Body $Body -Method Patch -Token $Token;
 
 }

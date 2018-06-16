@@ -34,19 +34,20 @@ function New-GitHubIssue {
     param (
         [Parameter(Mandatory = $true)]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true)]
-        [string] $Repository
-        , [Parameter(Mandatory = $true)]
-        [string] $Title
-        , [Parameter(Mandatory = $false)]
-        [string] $Body
-        , [Parameter(Mandatory = $false)]
-        [string] $Assignee
-        , [Parameter(Mandatory = $false)]
-        [string[]] $Labels
-        , [Parameter(Mandatory = $false)]
-        [string] $Milestone
+        [string] $Owner,
+        [Parameter(Mandatory = $true)]
+        [string] $Repository,
+        [Parameter(Mandatory = $true)]
+        [string] $Title,
+        [Parameter(Mandatory = $false)]
+        [string] $Body,
+        [Parameter(Mandatory = $false)]
+        [string] $Assignee,
+        [Parameter(Mandatory = $false)]
+        [string[]] $Labels,
+        [Parameter(Mandatory = $false)]
+        [string] $Milestone,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     ### Build the core message body -- we'll add more properties soon
@@ -69,9 +70,10 @@ function New-GitHubIssue {
 
     ### Set up the API call
     $ApiCall = @{
-        Body       = $ApiBody | ConvertTo-Json
-        RestMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository;
-        Method     = 'Post';
+        Body   = $ApiBody | ConvertTo-Json
+        Uri    = 'repos/{0}/{1}/issues' -f $Owner, $Repository;
+        Method = 'Post';
+        Token  = $Token
     }
 
     ### Invoke the GitHub REST method

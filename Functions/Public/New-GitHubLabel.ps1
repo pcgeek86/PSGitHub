@@ -48,17 +48,18 @@ function New-GitHubLabel {
     param (
         [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Repository
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Name
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Color
-        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
-        [string] $Description
-        , [Parameter()]
-        [switch] $Force
+        [string] $Owner,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [string] $Repository,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [string] $Name,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [string] $Color,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        [string] $Description,
+        [Parameter()]
+        [switch] $Force,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $shouldProcessCaption = 'Creating new GitHub label'
@@ -66,7 +67,7 @@ function New-GitHubLabel {
     $shouldProcessWarning = 'Do you want to create the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $Repository
 
     if ($Force -or $PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-        $restMethod = 'repos/{0}/{1}/labels' -f $Owner, $Repository
+        $uri = 'repos/{0}/{1}/labels' -f $Owner, $Repository
 
         $bodyProperties = @{
             name  = $Name
@@ -78,12 +79,13 @@ function New-GitHubLabel {
         }
 
         $apiCall = @{
-            Headers    = @{
+            Headers = @{
                 Accept = 'application/vnd.github.symmetra-preview+json'
             }
-            Method     = 'Post'
-            RestMethod = $restMethod
-            Body       = $bodyProperties | ConvertTo-Json
+            Method  = 'Post'
+            Uri     = $uri
+            Body    = $bodyProperties | ConvertTo-Json
+            Token   = $Token
         }
 
         # Variable scope ensures that parent session remains unchanged

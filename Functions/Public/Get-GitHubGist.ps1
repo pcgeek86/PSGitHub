@@ -65,20 +65,22 @@ function Get-GitHubGist {
         [String]$Id,
         [Parameter(ParameterSetName = 'Target')]
         [ValidateSet('Public', 'Starred')]
-        [String]$Target
+        [String]$Target,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     switch ($PSCmdlet.ParameterSetName) {
-        'Owner' { $restMethod = 'users/{0}/gists' -f $Owner; break; }
-        'Id' { $restMethod = 'gists/{0}' -f $Id; break; }
-        'Target' { if ($Target -eq 'Public') { $restMethod = 'gists/public'} else { $restMethod = 'gists/starred' }; break; }
-        default { $restMethod = 'gists'; break; }
+        'Owner' { $uri = 'users/{0}/gists' -f $Owner; break; }
+        'Id' { $uri = 'gists/{0}' -f $Id; break; }
+        'Target' { if ($Target -eq 'Public') { $uri = 'gists/public'} else { $uri = 'gists/starred' }; break; }
+        default { $uri = 'gists'; break; }
     }
 
     $apiCall = @{
         #Body = ''
-        RestMethod = $restMethod
-        Method     = 'Get'
+        Uri    = $uri
+        Method = 'Get'
+        Token  = $Token
     }
 
     $ResultList = Invoke-GitHubApi @apiCall
