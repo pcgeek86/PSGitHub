@@ -1,10 +1,10 @@
-[![Join the chat at https://gitter.im/pcgeek86/PSGitHub](https://badges.gitter.im/pcgeek86/PSGitHub.svg)](https://gitter.im/pcgeek86/PSGitHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSGitHub.svg)]()
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PSGitHub.svg)]()
+# PSGitHub
+[![powershellgallery](https://img.shields.io/powershellgallery/v/PSGitHub.svg)](https://www.powershellgallery.com/packages/PSGitHub)
+[![downloads](https://img.shields.io/powershellgallery/dt/PSGitHub.svg?label=downloads)](https://www.powershellgallery.com/packages/PSGitHub)
+[![build](https://ci.appveyor.com/api/projects/status/github/pcgeek86/PSGitHub?branch=master&svg=true)](https://ci.appveyor.com/project/pcgeek86/psgithub)
+[![chat](https://badges.gitter.im/pcgeek86/PSGitHub.svg)](https://gitter.im/pcgeek86/PSGitHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# What is PSGitHub?
-
-The PSGitHub PowerShell module contains commands to manage GitHub through its REST API.
+PowerShell module with commands to query and manage GitHub through its REST API.
 
 # Installation
 
