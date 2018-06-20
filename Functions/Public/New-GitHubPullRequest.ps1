@@ -66,7 +66,8 @@ function New-GitHubPullRequest {
         [Parameter(Mandatory = $false, ParameterSetName = 'title')]
         [string] $Body,
         [Parameter(Mandatory = $true, ParameterSetName = 'issue')]
-        [int] $issue
+        [int] $issue,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     begin {
@@ -98,9 +99,10 @@ function New-GitHubPullRequest {
 
         # construct the parameters of the ApiCall
         $ApiCall = @{
-            Body       = $ApiBody
-            Method     = 'post'
-            RestMethod = "repos/$Owner/$Repository/pulls"
+            Body   = $ApiBody
+            Method = 'post'
+            Uri    = "repos/$Owner/$Repository/pulls"
+            Token  = $Token
         }
 
     }

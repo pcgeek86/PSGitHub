@@ -7,8 +7,11 @@ function Set-GitHubToken {
     Created by Trevor Sullivan <trevor@trevorsullivan.net>
     #>
     [CmdletBinding()]
+    [Obsolete('Use $PSDefaultParameterValues to set the -Token parameter for all PSGitHub functions')]
     param (
     )
+
+    Write-Warning 'Set-GitHubToken is deprecated. Use $PSDefaultParameterValues to set the -Token parameter for all PSGitHub functions'
 
     ### Invoke the GitHub Personal Access Token screen
     Invoke-Expression -Command 'explorer https://github.com/settings/tokens';

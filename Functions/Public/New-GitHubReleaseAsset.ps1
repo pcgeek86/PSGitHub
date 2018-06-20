@@ -43,7 +43,8 @@ function New-GitHubReleaseAsset {
         [Parameter(Mandatory = $true)]
         [string] $Path,
         [Parameter(Mandatory = $false)]
-        [string] $ContentType = 'application/zip'
+        [string] $ContentType = 'application/zip',
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     begin {
@@ -62,10 +63,11 @@ function New-GitHubReleaseAsset {
         ### create a API call
         $apiCall =
         @{
-            Body       = Get-Content -Path $Path -Raw
-            Headers    = @{'Content-Type' = $ContentType}
-            Method     = 'post'
-            RestMethod = "https://uploads.github.com/repos/$Owner/$Repository/releases/$ReleaseId/assets?name=$Name&label=$Name"
+            Body    = Get-Content -Path $Path -Raw
+            Headers = @{'Content-Type' = $ContentType}
+            Method  = 'post'
+            Uri     = "https://uploads.github.com/repos/$Owner/$Repository/releases/$ReleaseId/assets?name=$Name&label=$Name"
+            Token   = $Token
         }
     }
 

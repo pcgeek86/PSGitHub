@@ -32,26 +32,28 @@ function New-GitHubComment {
     param (
         [Parameter(Mandatory = $true)]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true)]
-        [string] $Repository
-        , [Parameter(Mandatory = $true)]
+        [string] $Owner,
+        [Parameter(Mandatory = $true)]
+        [string] $Repository,
+        [Parameter(Mandatory = $true)]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $Number
-        , [Parameter(Mandatory = $true)]
-        [string] $Body
+        [int] $Number,
+        [Parameter(Mandatory = $true)]
+        [string] $Body,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $restMethod = 'repos/{0}/{1}/issues/{2}/comments' -f $Owner, $Repository, $Number
+    $uri = 'repos/{0}/{1}/issues/{2}/comments' -f $Owner, $Repository, $Number
 
     $apiBody = @{
         body = $Body
     } | ConvertTo-Json
 
     $apiCall = @{
-        Method     = 'Post';
-        RestMethod = $restMethod;
-        Body       = $apiBody;
+        Method = 'Post';
+        Uri    = $uri;
+        Body   = $apiBody;
+        Token  = $Token
     }
 
     Invoke-GitHubApi @apiCall

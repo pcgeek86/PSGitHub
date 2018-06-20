@@ -20,26 +20,22 @@ function Get-GitHubLicense {
 
     #>
     [CmdletBinding()]
-    param
-    (
+    param(
         [Parameter(Mandatory = $false, Position = 0)]
-        [string] $LicenseId
+        [string] $LicenseId,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    begin {
-
+    if (-Not ($LicenseId)) {
+        $uri = 'licenses'
+    }
+    else {
+        $uri = 'licenses/{0}' -f $LicenseId
     }
 
-    process {
-        if (-Not ($LicenseId)) {
-            $restMethod = 'licenses'
-        }
-        else {
-            $restMethod = 'licenses/{0}' -f $LicenseId
-        }
+    $headers = @{
+        Accept = 'application/vnd.github.drax-preview+json'
+        Token  = $Token
     }
-
-    end {
-        Invoke-GitHubApi -Method get -RestMethod $restMethod -Preview
-    }
+    Invoke-GitHubApi -Method get -Uri $uri -Headers $headers
 }

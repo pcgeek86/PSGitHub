@@ -2,9 +2,10 @@ function Get-GitHubAuthenticatedUser {
     [OutputType([System.Object])]
     [CmdletBinding()]
     param (
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $RestMethod = 'user'
-    $Result = Invoke-GitHubApi -RestMethod $RestMethod -Method Default
+    $Uri = 'user'
+    $Result = Invoke-GitHubApi -Uri $Uri -Method Default
     $Result
 }

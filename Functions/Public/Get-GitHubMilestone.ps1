@@ -29,20 +29,21 @@ function Get-GitHubMilestone {
     param (
         [Parameter(Mandatory = $true)]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true)]
-        [string] $Repository
-        , [Parameter(ParameterSetName = 'SpecificMilestone', Mandatory = $true)]
-        [string] $Milestone
-        , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+        [string] $Owner,
+        [Parameter(Mandatory = $true)]
+        [string] $Repository,
+        [Parameter(ParameterSetName = 'SpecificMilestone', Mandatory = $true)]
+        [string] $Milestone,
+        [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
         [ValidateSet('Open', 'Closed', 'All')]
-        [string] $State
-        , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+        [string] $State,
+        [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
         [ValidateSet('DueDate', 'Completeness')]
-        [string] $Sort
-        , [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+        [string] $Sort,
+        [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
         [ValidateSet('Ascending', 'Descending')]
-        [string] $Direction
+        [string] $Direction,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     ### Build the core message body -- we'll add more properties soon
@@ -66,16 +67,16 @@ function Get-GitHubMilestone {
     if ($State) {
         switch ($State) {
             'Open' {
-                $State = 'open'; break; 
+                $State = 'open'; break;
             }
             'Closed' {
-                $State = 'closed'; break; 
+                $State = 'closed'; break;
             }
             'All' {
-                $State = 'all'; break; 
+                $State = 'all'; break;
             }
             default {
-                break; 
+                break;
             }
         }
         $ApiBody.Add('state', $State);
@@ -85,13 +86,13 @@ function Get-GitHubMilestone {
     if ($Direction) {
         switch ($Direction) {
             'Ascending' {
-                $Direction = 'asc'; break; 
+                $Direction = 'asc'; break;
             }
             'Descending' {
-                $Direction = 'desc'; break; 
+                $Direction = 'desc'; break;
             }
             default {
-                break; 
+                break;
             }
         }
         $ApiBody.Add('direction', $Direction);
@@ -99,17 +100,18 @@ function Get-GitHubMilestone {
 
     ### Determine the appropriate REST method to use
     if ($Milestone) {
-        $RestMethod = '/repos/{0}/{1}/milestones/{2}' -f $Owner, $Repository, $Milestone; 
+        $Uri = '/repos/{0}/{1}/milestones/{2}' -f $Owner, $Repository, $Milestone;
     }
     else {
-        $RestMethod = '/repos/{0}/{1}/milestones' -f $Owner, $Repository; 
+        $Uri = '/repos/{0}/{1}/milestones' -f $Owner, $Repository;
     }
 
     ### Set up the API call
     $ApiCall = @{
-        Body       = $ApiBody | ConvertTo-Json
-        RestMethod = $RestMethod;
-        Method     = 'Get';
+        Body   = $ApiBody | ConvertTo-Json
+        Uri    = $Uri;
+        Method = 'Get';
+        Token  = $Token
     }
 
     ### Invoke the GitHub REST method

@@ -64,41 +64,42 @@ function Get-GitHubComment {
     param (
         [Parameter(Mandatory = $true)]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true)]
-        [string] $Repository
-        , [Parameter(Mandatory = $true, ParameterSetName = 'InRepo')]
-        [switch] $All
-        , [Parameter(Mandatory = $true, ParameterSetName = 'InIssue')]
+        [string] $Owner,
+        [Parameter(Mandatory = $true)]
+        [string] $Repository,
+        [Parameter(Mandatory = $true, ParameterSetName = 'InRepo')]
+        [switch] $All,
+        [Parameter(Mandatory = $true, ParameterSetName = 'InIssue')]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $Number
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Single')]
+        [int] $Number,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Single')]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $CommentId
-        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        [int] $CommentId,
+        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [Parameter(Mandatory = $false, ParameterSetName = 'InIssue')]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $Page
-        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        [int] $Page,
+        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [ValidateSet('created', 'updated')]
-        [string] $Sort
-        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        [string] $Sort,
+        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [ValidateSet('asc', 'desc')]
-        [string] $Direction
-        , [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+        [string] $Direction,
+        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
         [Parameter(Mandatory = $false, ParameterSetName = 'InIssue')]
-        [string] $Since
+        [string] $Since,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $restMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository
+    $uri = 'repos/{0}/{1}/issues' -f $Owner, $Repository
     if ($All) {
-        $restMethod += '/comments'
+        $uri += '/comments'
     }
     elseif ($Number) {
-        $restMethod += '/{0}/comments' -f $Number
+        $uri += '/{0}/comments' -f $Number
     }
     elseif ($CommentId) {
-        $restMethod += '/comments/{0}' -f $CommentId
+        $uri += '/comments/{0}' -f $CommentId
     }
 
     $queryParameters = @()
@@ -119,12 +120,13 @@ function Get-GitHubComment {
     }
 
     if ($queryParameters) {
-        $restMethod += "?" + ($queryParameters -join '&')
+        $uri += "?" + ($queryParameters -join '&')
     }
 
     $apiCall = @{
-        Method     = 'Get';
-        RestMethod = $restMethod
+        Method = 'Get';
+        Uri    = $uri
+        Token  = $Token
     }
 
     Invoke-GitHubApi @apiCall

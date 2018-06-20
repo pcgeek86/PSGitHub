@@ -95,54 +95,55 @@ function Get-GitHubIssue {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ParameterSetName = 'All')]
-        [switch] $All
-        , [Parameter(Mandatory = $true, ParameterSetName = 'ForUser')]
-        [switch] $ForUser
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Organization')]
-        [string] $Organization
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [switch] $All,
+        [Parameter(Mandatory = $true, ParameterSetName = 'ForUser')]
+        [switch] $ForUser,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Organization')]
+        [string] $Organization,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
         [Alias('User')]
-        [string] $Owner
-        , [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Repository
-        , [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+        [string] $Owner,
+        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [string] $Repository,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $Number
-        , [Parameter()]
+        [int] $Number,
+        [Parameter()]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $Page
-        , [Parameter()]
+        [int] $Page,
+        [Parameter()]
         [ValidateSet('assigned', 'created', 'mentioned', 'subscribed', 'all')]
-        [string] $Filter
-        , [Parameter()]
+        [string] $Filter,
+        [Parameter()]
         [ValidateSet('open', 'closed', 'all')]
-        [string] $State
-        , [Parameter()]
-        [string[]] $Labels
-        , [Parameter()]
+        [string] $State,
+        [Parameter()]
+        [string[]] $Labels,
+        [Parameter()]
         [ValidateSet('created', 'updated', 'comments')]
-        [string] $Sort
-        , [Parameter()]
+        [string] $Sort,
+        [Parameter()]
         [ValidateSet('asc', 'desc')]
-        [string] $Direction
-        , [Parameter()]
-        [string] $Since
+        [string] $Direction,
+        [Parameter()]
+        [string] $Since,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     if ($Repository) {
-        $restMethod = 'repos/{0}/{1}/issues' -f $Owner, $Repository
+        $uri = 'repos/{0}/{1}/issues' -f $Owner, $Repository
         if ($Number -gt 0) {
-            $restMethod += ("/{0}" -f $Number)
+            $uri += ("/{0}" -f $Number)
         }
     }
     elseif ($Organization) {
-        $restMethod = 'orgs/{0}/issues' -f $Organization
+        $uri = 'orgs/{0}/issues' -f $Organization
     }
     elseif ($ForUser) {
-        $restMethod = 'user/issues'
+        $uri = 'user/issues'
     }
     else {
-        $restMethod = 'issues'
+        $uri = 'issues'
     }
 
     $queryParameters = @()
@@ -175,12 +176,13 @@ function Get-GitHubIssue {
     }
 
     if ($queryParameters) {
-        $restMethod += "?" + ($queryParameters -join '&')
+        $uri += "?" + ($queryParameters -join '&')
     }
 
     $apiCall = @{
-        Method     = 'Get';
-        RestMethod = $restMethod
+        Method = 'Get';
+        Uri    = $uri
+        Token  = $Token
     }
 
     Invoke-GitHubApi @apiCall

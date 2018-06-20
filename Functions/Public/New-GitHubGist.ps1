@@ -69,7 +69,8 @@ function New-GitHubGist {
         [Parameter(HelpMessage = 'Description of the Gist.')]
         [String]$Description,
         [Parameter(HelpMessage = 'Allows the Gist to be viewed by others.')]
-        [Switch] $Public
+        [Switch] $Public,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     DynamicParam {
@@ -131,9 +132,10 @@ function New-GitHubGist {
 
         # Splat API call Parameters.
         $apiCall = @{
-            Body       = ConvertTo-Json -InputObject $body
-            RestMethod = 'gists'
-            Method     = 'Post'
+            Body   = ConvertTo-Json -InputObject $body
+            Uri    = 'gists'
+            Method = 'Post'
+            Token  = $Token
         }
 
         # Create the Gist.

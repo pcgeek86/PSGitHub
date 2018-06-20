@@ -29,13 +29,15 @@ function Remove-GitHubReleaseAsset {
         [Parameter(Mandatory = $true)]
         [string] $RepositoryName,
         [Parameter(Mandatory = $true)]
-        [String] $Id
+        [String] $Id,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     Process {
         $ApiCall = @{
-            RestMethod = "repos/$Owner/$RepositoryName/releases/assets/$Id"
-            Method     = 'delete'
+            Uri    = "repos/$Owner/$RepositoryName/releases/assets/$Id"
+            Method = 'delete'
+            Token  = $Token
         }
     }
 

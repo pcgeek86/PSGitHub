@@ -41,19 +41,20 @@ function Set-GitHubRepository {
     #>
     param (
         [Parameter(Mandatory = $true)]
-        [string] $Owner
-        , [Parameter(Mandatory = $true)]
-        [string] $Name
-        , [Parameter(Mandatory = $false)]
-        [string] $NewName
-        , [Parameter(Mandatory = $false)]
-        [string] $Description
-        , [Parameter(Mandatory = $false)]
-        [string] $Homepage
-        , [Parameter(Mandatory = $false)]
-        [Boolean] $DisableIssues
-        , [Parameter(Mandatory = $false)]
-        [Boolean] $Private
+        [string] $Owner,
+        [Parameter(Mandatory = $true)]
+        [string] $Name,
+        [Parameter(Mandatory = $false)]
+        [string] $NewName,
+        [Parameter(Mandatory = $false)]
+        [string] $Description,
+        [Parameter(Mandatory = $false)]
+        [string] $Homepage,
+        [Parameter(Mandatory = $false)]
+        [Boolean] $DisableIssues,
+        [Parameter(Mandatory = $false)]
+        [Boolean] $Private,
+        [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $Body = @{
@@ -67,9 +68,10 @@ function Set-GitHubRepository {
     Write-Verbose -Message $Body;
 
     $ApiCall = @{
-        RestMethod = 'repos/{0}/{1}' -f $Owner, $Name;
-        Body       = $Body;
-        Method     = 'Patch';
+        Uri    = 'repos/{0}/{1}' -f $Owner, $Name;
+        Body   = $Body;
+        Method = 'Patch';
+        Token  = $Token
     }
     Invoke-GitHubApi @ApiCall;
 }
