@@ -3,6 +3,9 @@ function New-GitHubRepository {
     .Synopsis
     Creates a new GitHub Repository, with the specified name.
 
+    .Parameter Organization
+    The name of the organization in that the GitHub repository will be created. If not given, will create a repository for the current user.
+
     .Parameter Name
     The name of the new GitHub repository that will be created. This is the only required parameter in order to instantiate a new GitHub Repository. The other parameters are optional, but recommended.
 
@@ -26,17 +29,19 @@ function New-GitHubRepository {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [string] $Organization,
+        [Parameter(Mandatory, Position = 0)]
         [string] $Name,
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [string] $Description,
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [string] $Homepage,
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [switch] $IncludeReadme,
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [string] $DisableIssues,
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [string] $Private,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
@@ -51,6 +56,11 @@ function New-GitHubRepository {
     } | ConvertTo-Json;
     Write-Verbose -Message $Body;
 
-    Invoke-GitHubApi -Uri user/repos -Body $Body -Method Post -Token $Token;
-
+    $uri = if ($Organization) {
+        "orgs/$Organization/repos"
+    }
+    else {
+        "user/repos"
+    }
+    Invoke-GitHubApi -Uri $uri -Body $Body -Method Post -Token $Token;
 }
