@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="terminal" baseProfile="full" viewBox="0 0 800 274" width="800" version="1.1">
+    <defs>
+        <termtosvg:template_settings xmlns:termtosvg="https://github.com/nbedos/termtosvg">
+            <termtosvg:screen_geometry columns="100" rows="16"/>
+        </termtosvg:template_settings>
+        <style type="text/css" id="generated-style"><![CDATA[#screen {
+                font-family: 'DejaVu Sans Mono', monospace;
+                font-style: normal;
+                font-size: 14px;
+            }
+
+        text {
+            dominant-baseline: text-before-edge;
+            white-space: pre;
+        }]]></style>
+        <style type="text/css" id="user-style">
+            /* base16-default-dark color theme (source: http://chriskempson.com/projects/base16/) */
+            .foreground {fill: #d8d8d8;}
+            .background {fill: #181818;}
+            .color0 {fill: #181818;}
+            .color1 {fill: #ab4642;}
+            .color2 {fill: #a1b56c;}
+            .color3 {fill: #f7ca88;}
+            .color4 {fill: #7cafc2;}
+            .color5 {fill: #ba8baf;}
+            .color6 {fill: #86c1b9;}
+            .color7 {fill: #d8d8d8;}
+            .color8 {fill: #585858;}
+            .color9 {fill: #ab4642;}
+            .color10 {fill: #a1b56C;}
+            .color11 {fill: #f7ca88;}
+            .color12 {fill: #7cafc2;}
+            .color13 {fill: #ba8baf;}
+            .color14 {fill: #86c1b9;}
+            .color15 {fill: #f8f8f8;}
+        </style>
+    </defs>
+    <svg id="screen" width="800" viewBox="0 0 800 272" preserveAspectRatio="xMidYMin meet">
+        <rect class="background" height="100%" width="100%" x="0" y="0"/><defs><g id="g1"><text class="foreground" textLength="136" x="0">&#10004; ~/git/PSGitHub </text><text class="color3" textLength="8" x="136">[</text><text class="color6" textLength="72" x="144">interop &#8801;</text><text class="foreground" textLength="8" x="216"> </text><text class="color1" textLength="80" x="224">+10 ~14 -0</text><text class="foreground" textLength="8" x="304"> </text><text class="color3" textLength="8" x="312">|</text><text class="foreground" textLength="8" x="320"> </text><text class="color2" textLength="64" x="328">+0 ~1 -0</text><text class="color3" textLength="8" x="392">]</text></g><g id="g2"><text class="color2" textLength="8" x="0">&#9432;</text><text class="foreground" textLength="56" x="8">  9797 </text><text class="foreground" font-style="italic" textLength="232" x="64">Add .CPL back to $env:PathExt</text><text class="foreground" textLength="504" x="296">                                                               </text></g><g id="g3"><text class="color1" textLength="8" x="0">&#9432;</text><text class="foreground" textLength="56" x="8">  9796 </text><text class="foreground" font-style="italic" textLength="528" x="64">DefaultParameterSetName and DefaultParameterSetName Case Sensitive</text><text class="foreground" textLength="208" x="592">                          </text></g><g id="g4"><text class="color2" textLength="8" x="0">&#9432;</text><text class="foreground" textLength="56" x="8">  9795 </text><text class="foreground" font-style="italic" textLength="256" x="64">Internal CLR error. (0x80131506)</text><text class="foreground" textLength="480" x="320">                                                            </text></g><g id="g5"><text class="color2" textLength="8" x="0">&#9095;</text><text class="foreground" textLength="56" x="8">  9794 </text><text class="foreground" font-style="italic" textLength="480" x="64">Consider DBNull.Value and NullString.Value the same as $null</text><text class="foreground" textLength="256" x="544">                                </text></g><g id="g6"><text class="color2" textLength="8" x="0">&#9095;</text><text class="foreground" textLength="56" x="8">  9793 </text><text class="foreground" font-style="italic" textLength="336" x="64">Fix use of `Start-Process http://bing.com`</text><text class="foreground" textLength="400" x="400">                                                  </text></g><g id="g7"><text class="color2" textLength="8" x="0">&#9095;</text><text class="foreground" textLength="56" x="8">  9792 </text><text class="foreground" font-style="italic" textLength="240" x="64">:recycle: Cleanup Parser tests</text><text class="foreground" textLength="496" x="304">                                                              </text></g><g id="g8"><text class="color2" textLength="8" x="0">&#9432;</text><text class="foreground" textLength="56" x="8">  9791 </text><text class="foreground" font-style="italic" textLength="424" x="64">v7.0.0-preview.1: can't open a URL with Start-Process</text><text class="foreground" textLength="312" x="488">                                       </text></g><g id="g9"><text class="color1" textLength="8" x="0">&#9095;</text><text class="foreground" textLength="56" x="8">  9790 </text><text class="foreground" font-style="italic" textLength="544" x="64">Build(deps): Bump System.Net.Http.WinHttpHandler from 4.5.3 to 4.5.4</text><text class="foreground" textLength="192" x="608">                        </text></g><g id="g10"><text class="foreground" textLength="16" x="0">&gt; </text><text class="color11" font-weight="bold" textLength="120" x="16">Get-GitHubIssue</text><text class="color15" font-weight="bold" textLength="8" x="136"> </text><text class="color8" font-weight="bold" textLength="48" x="144">-Owner</text><text class="color15" font-weight="bold" textLength="96" x="192"> PowerShell </text><text class="color8" font-weight="bold" textLength="120" x="288">-RepositoryName</text><text class="color15" font-weight="bold" textLength="96" x="408"> PowerShell </text><text class="color8" font-weight="bold" textLength="56" x="504">-Number</text><text class="color15" font-weight="bold" textLength="24" x="560"> 97</text><text class="background" textLength="8" x="584">9</text><text class="color15" font-weight="bold" textLength="208" x="592">8                         </text></g><g id="g11"><text class="color1" textLength="8" x="0">&#9095;</text><text class="foreground" textLength="56" x="8">  9789 </text><text class="foreground" font-style="italic" textLength="544" x="64">Build(deps): Bump System.Net.Http.WinHttpHandler from 4.5.3 to 4.5.4</text><text class="foreground" textLength="192" x="608">                        </text></g><g id="g12"><text class="color2" textLength="8" x="0">&#9432;</text><text class="foreground" textLength="56" x="8">  9798 </text><text class="foreground" font-style="italic" textLength="504" x="64">No PackageProviders available after installing 7.0.0-preview.1;</text><text class="foreground" textLength="232" x="568">                             </text></g><g id="g13"><text class="color14" font-weight="bold" textLength="552" x="0">#9798 No PackageProviders available after installing 7.0.0-preview.1;</text></g></defs><g><use y="0" xlink:href="#g1"/><use y="51" xlink:href="#g2"/><use y="68" xlink:href="#g3"/><use y="85" xlink:href="#g4"/><use y="102" xlink:href="#g5"/><use y="119" xlink:href="#g6"/><use y="136" xlink:href="#g7"/><use y="153" xlink:href="#g8"/><use y="170" xlink:href="#g9"/><rect class="foreground" height="17" width="8" x="584" y="17"/><rect class="color0" height="17" width="8" x="592" y="17"/><use y="17" xlink:href="#g10"/><use y="187" xlink:href="#g11"/><rect class="color0" height="17" width="776" x="0" y="34"/><use y="34" xlink:href="#g12"/><use y="221" xlink:href="#g13"/></g></svg>
+</svg>

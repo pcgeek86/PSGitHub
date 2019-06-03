@@ -1,7 +1,7 @@
-function Get-GitHubComment {
+﻿function Get-GitHubComment {
     <#
     .SYNOPSIS
-    Gets GitHub issue comments.
+    Gets GitHub issue or pull request comments.
 
     .DESCRIPTION
     Gets a single comment, or all comments on an issue, or all comments in a
@@ -9,14 +9,14 @@ function Get-GitHubComment {
 
     .PARAMETER Owner
     The GitHub username of the account or organization that owns the GitHub repository
-    specified in the -Repository parameter.
+    specified in the -RepositoryName parameter.
 
     .PARAMETER Repository
     The name of the GitHub repository containing the issue.
 
     .PARAMETER All
     Retrieve all comments in the GitHub repository specified by the -Owner and
-    -Repository parameters.
+    -RepositoryName parameters.
 
     .PARAMETER Number
     The number of the issue to retrieve.
@@ -45,61 +45,73 @@ function Get-GitHubComment {
 
     .EXAMPLE
     # Retrieve all comments in the repository Mary/WebApps:
-    Get-GitHubComment -Owner Mary -Repository WebApps -All
+    Get-GitHubComment -Owner Mary -RepositoryName WebApps -All
 
     .EXAMPLE
     # Retrieve all comments on Issue #42 in the repository Mary/WebApps:
-    Get-GitHubComment -Owner Mary -Repository WebApps -Number 42
+    Get-GitHubComment -Owner Mary -RepositoryName WebApps -Number 42
 
     .EXAMPLE
     # Retrieve all comments in the repository Mary/WebApps in 2017 or later.
-    Get-GitHubComment -Owner Mary -Repository WebApps -Since 2017-01-01T00:00:00Z
+    Get-GitHubComment -Owner Mary -RepositoryName WebApps -Since 2017-01-01T00:00:00Z
 
     .EXAMPLE
     # Retrieve the comment with id 332551910 in the repository Mary/WebApps:
-    Get-GitHubComment -Owner Mary -Repository WebApps -CommentId 332551910
+    Get-GitHubComment -Owner Mary -RepositoryName WebApps -CommentId 332551910
 
     #>
     [CmdletBinding()]
+    [OutputType('PSGitHub.Comment')]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(Mandatory = $true, ParameterSetName = 'InRepo')]
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(Mandatory, ParameterSetName = 'InRepo')]
         [switch] $All,
-        [Parameter(Mandatory = $true, ParameterSetName = 'InIssue')]
+
+        # The issue or pull request number. Supports piping an issue or pull request.
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'InIssue')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Single')]
+
+        [Parameter(Mandatory, ParameterSetName = 'Single')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $CommentId,
-        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'InIssue')]
+
+        [Parameter(ParameterSetName = 'InRepo')]
+        [Parameter(ParameterSetName = 'InIssue')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Page,
-        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+
+        [Parameter(ParameterSetName = 'InRepo')]
         [ValidateSet('created', 'updated')]
         [string] $Sort,
-        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
+
+        [Parameter(ParameterSetName = 'InRepo')]
         [ValidateSet('asc', 'desc')]
         [string] $Direction,
-        [Parameter(Mandatory = $false, ParameterSetName = 'InRepo')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'InIssue')]
+
+        [Parameter(ParameterSetName = 'InRepo')]
+        [Parameter(ParameterSetName = 'InIssue')]
         [string] $Since,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $uri = 'repos/{0}/{1}/issues' -f $Owner, $Repository
+    $uri = "repos/$Owner/$RepositoryName/issues"
     if ($All) {
-        $uri += '/comments'
-    }
-    elseif ($Number) {
-        $uri += '/{0}/comments' -f $Number
-    }
-    elseif ($CommentId) {
-        $uri += '/comments/{0}' -f $CommentId
+        $uri += "/comments"
+    } elseif ($Number) {
+        $uri += "/$Number/comments"
+    } elseif ($CommentId) {
+        $uri += "/comments/$CommentId"
     }
 
     $queryParameters = @()
@@ -125,9 +137,13 @@ function Get-GitHubComment {
 
     $apiCall = @{
         Method = 'Get';
-        Uri    = $uri
-        Token  = $Token
+        Uri = $uri
+        Token = $Token
     }
 
-    Invoke-GitHubApi @apiCall
+    Invoke-GitHubApi @apiCall | ForEach-Object { $_ } | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Comment')
+        $_.User.PSTypeNames.Insert(0, 'PSGitHub.User')
+        $_
+    }
 }

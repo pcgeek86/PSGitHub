@@ -1,4 +1,4 @@
-function New-GitHubRelease {
+﻿function New-GitHubRelease {
     <#
     .SYNOPSIS
         Create a new GitHub release
@@ -35,7 +35,7 @@ function New-GitHubRelease {
 
     .EXAMPLE
         Create a new draft release in my 'test-organization/test-repo'
-        PS C:\> New-GitHubRelease -Owner 'test-organization' -Repository 'test-repo' -TagName 'v1.0' -name 'awesome release' -ReleaseNote 'great release note'
+        PS C:\> New-GitHubRelease -Owner 'test-organization' -RepositoryName 'test-repo' -TagName 'v1.0' -name 'awesome release' -ReleaseNote 'great release note'
 
     .NOTES
         1. This cmdlet will not help you create a tag, you need to use git to do that.
@@ -46,34 +46,38 @@ function New-GitHubRelease {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false)]
-        [string] $Owner = (Get-GitHubAuthenticatedUser).login,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(Mandatory = $true)]
+        [string] $Owner = (Get-GitHubUser).login,
+
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(Mandatory)]
         [string] $TagName,
-        [Parameter(Mandatory = $false)]
+
         [string] $Branch,
-        [Parameter(Mandatory = $false)]
+
         [string] $CommitSHA,
-        [Parameter(Mandatory = $false)]
+
         [string] $Name,
-        [Parameter(Mandatory = $false)]
+
         [string] $ReleaseNote,
-        [Parameter()]
+
         [switch] $Draft,
-        [Parameter()]
+
         [switch] $PreRelease,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     begin {
-
     }
 
     process {
         ### create the request Body
-        $RequestBody = @{}
+        $RequestBody = @{ }
 
         # add TagName
         $RequestBody.Add('tag_name', $TagName)
@@ -82,8 +86,7 @@ function New-GitHubRelease {
         # see this url for detail: https://developer.github.com/v3/repos/releases/#create-a-release
         if ($Branch) {
             $RequestBody.Add('target_commitish', $Branch)
-        }
-        elseif ($CommitSHA) {
+        } elseif ($CommitSHA) {
             $RequestBody.Add('target_commitish', $CommitSHA)
         }
 
@@ -108,12 +111,11 @@ function New-GitHubRelease {
         }
 
         ### create a API call
-        $apiCall =
-        @{
-            Body   = $RequestBody | ConvertTo-Json
+        $apiCall = @{
+            Body = $RequestBody | ConvertTo-Json
             Method = 'post'
-            Uri    = "repos/$Owner/$Repository/releases"
-            Token  = $Token
+            Uri = "repos/$Owner/$RepositoryName/releases"
+            Token = $Token
         }
     }
 

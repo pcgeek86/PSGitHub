@@ -1,0 +1,29 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.CombinedCommitStatus</Name>
+        <Members>
+            <AliasProperty>
+                <Name>TotalCount</Name>
+                <ReferencedMemberName>total_count</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>Status</Name>
+                <ReferencedMemberName>State</ReferencedMemberName>
+            </AliasProperty>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Sha</Name>
+                            <Name>State</Name>
+                            <Name>TotalCount</Name>
+                            <Name>Statuses</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

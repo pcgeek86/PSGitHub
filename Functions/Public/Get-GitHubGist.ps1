@@ -1,4 +1,4 @@
-function Get-GitHubGist {
+﻿function Get-GitHubGist {
     <#
     .Synopsis
     This command retrieves GitHub Gist.
@@ -56,11 +56,11 @@ function Get-GitHubGist {
     #>
 
     [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
-    [OutputType([System.Object])]
+    [OutputType('PSGitHub.Gist')]
 
     Param (
         [Parameter(ParameterSetName = 'Owner')]
-        [String]$Owner = (Get-GitHubAuthenticatedUser).login,
+        [String]$Owner = (Get-GitHubUser -Token $Token).login,
         [Parameter(ParameterSetName = 'Id')]
         [String]$Id,
         [Parameter(ParameterSetName = 'Target')]
@@ -72,20 +72,27 @@ function Get-GitHubGist {
     switch ($PSCmdlet.ParameterSetName) {
         'Owner' { $uri = 'users/{0}/gists' -f $Owner; break; }
         'Id' { $uri = 'gists/{0}' -f $Id; break; }
-        'Target' { if ($Target -eq 'Public') { $uri = 'gists/public'} else { $uri = 'gists/starred' }; break; }
+        'Target' { if ($Target -eq 'Public') { $uri = 'gists/public' } else { $uri = 'gists/starred' }; break; }
         default { $uri = 'gists'; break; }
     }
 
     $apiCall = @{
-        #Body = ''
-        Uri    = $uri
+        Uri = $uri
         Method = 'Get'
-        Token  = $Token
+        Token = $Token
     }
 
-    $ResultList = Invoke-GitHubApi @apiCall
-
-    foreach ($Result in $ResultList) {
-        [GitHubGist]::new($Result.name, $Result.description);
+    Invoke-GitHubApi @apiCall | ForEach-Object { $_ } | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Gist')
+        $_.Owner.PSTypeNames.Insert(0, 'PSGitHub.User')
+        $filesObj = $_.Files
+        $filesMap = @{ }
+        foreach ($fileName in $filesObj.PSObject.Properties.Name) {
+            $file = $filesObj.$fileName
+            $file.PSTypeNames.Insert(0, 'PSGitHub.GistFile')
+            $filesMap[$fileName] = $file
+        }
+        $_.Files = $filesMap
+        $_
     }
 }

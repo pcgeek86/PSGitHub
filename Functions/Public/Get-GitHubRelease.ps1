@@ -1,4 +1,4 @@
-function Get-GitHubRelease {
+﻿function Get-GitHubRelease {
     <#
     .SYNOPSIS
     This command gets the github
@@ -10,7 +10,7 @@ function Get-GitHubRelease {
         3. latest -- the latest release
 
     .PARAMETER Owner
-    the Owner of the repo to retrieve the releases, defaults to the current authenticated user.
+    the Owner of the repo to retrieve the releases.
 
     .PARAMETER Repository
     The repo that you want to retrieve the release
@@ -29,58 +29,60 @@ function Get-GitHubRelease {
 
     .EXAMPLE
     # get the latest release from soimort/you-get
-    C:\PS> Get-GithubRelease -Owner soimort -Repository you-get -Latest
+    C:\PS> Get-GithubRelease -Owner soimort -RepositoryName you-get -Latest
 
     # get all the release from PowerShell/vscode-powershell
-    C:\PS> Get-GithubRelease -Owner Powershell -Repository vscode-powershell
+    C:\PS> Get-GithubRelease -Owner Powershell -RepositoryName vscode-powershell
 
     # get the version 'v0.1.0' release from PowerShell/vscode-powershell
-    C:\PS> Get-GithubRelease -Owner Powershell -Repository vscode-powershell -TagName v0.1.0
+    C:\PS> Get-GithubRelease -Owner Powershell -RepositoryName vscode-powershell -TagName v0.1.0
 
     # get the release with id 2161075 from PowerShell/vscode-powershell
-    C:\PS> Get-GithubRelease -Owner Powershell -Repository vscode-powershell -Id 2161075
+    C:\PS> Get-GithubRelease -Owner Powershell -RepositoryName vscode-powershell -Id 2161075
 
     .NOTES
     you cannot use parameter 'Id', 'Latest', 'TagName' together
 
     #>
     [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
+    [OutputType('PSGitHub.Release')]
     param(
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [String] $Owner,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Id')]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+        [Parameter(ParameterSetName = 'Id')]
         [String] $Id,
-        [Parameter(Mandatory = $false, ParameterSetName = 'TagName')]
+        [Parameter(ParameterSetName = 'TagName')]
         [String] $TagName,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Latest')]
+        [Parameter(ParameterSetName = 'Latest')]
         [Switch] $Latest,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    begin {
-    }
-
     process {
-        # set the rest method
-        switch ($PSCmdlet.ParameterSetName) {
-            'Id' { $uri = "repos/$Owner/$Repository/releases/$Id"; break; }
-            'TagName' { $uri = "repos/$Owner/$Repository/releases/tags/$TagName"; break; }
-            'Latest' { $uri = "repos/$Owner/$Repository/releases/latest"; break; }
-            Default { $uri = "repos/$Owner/$Repository/releases"; break; }
+        # set the URL
+        $uri = switch ($PSCmdlet.ParameterSetName) {
+            'Id' { "repos/$Owner/$RepositoryName/releases/$Id" }
+            'TagName' { "repos/$Owner/$RepositoryName/releases/tags/$TagName" }
+            'Latest' { "repos/$Owner/$RepositoryName/releases/latest" }
+            Default { "repos/$Owner/$RepositoryName/releases" }
         }
 
         # set the API call parameter
         $apiCall = @{
-            Uri    = $uri
+            Uri = $uri
             Method = 'Get'
-            Token  = $Token
+            Token = $Token
         }
-    }
-
-    end {
         # invoke the rest api call
-        Invoke-GitHubApi @apiCall
+        Invoke-GitHubApi @apiCall | ForEach-Object { $_ } | ForEach-Object {
+            $_.PSTypeNames.Insert(0, 'PSGitHub.Release')
+            $_.Author.PSTypeNames.Insert(0, 'PSGitHub.User')
+            $_
+        }
     }
 }

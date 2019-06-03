@@ -1,4 +1,4 @@
-function Invoke-GitHubApi {
+﻿function Invoke-GitHubApi {
     <#
     .Synopsis
     An internal function that is responsible for invoking various GitHub REST endpoint.
@@ -32,51 +32,91 @@ function Invoke-GitHubApi {
     #>
     [CmdletBinding()]
     param (
-        [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json'},
-        [Microsoft.PowerShell.Commands.WebRequestMethod] $Method = [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, Position = 0)]
         [string] $Uri,
-        [string] $Body,
+
+        [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json' },
+        [Microsoft.PowerShell.Commands.WebRequestMethod] $Method = [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
+        $Body,
+
+        # Accept header to be added (for accessing preview APIs or different resource representations)
+        [string[]] $Accept,
+
         [switch] $Anonymous,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    # If the caller hasn't specified the -Anonymous switch parameter, then add the HTTP Authorization header
-    # to authenticate the HTTP request.
-    if (!$Anonymous -and $Token) {
-        $tokenStr = [Management.Automation.PSCredential]::new('dummy', $Token).GetNetworkCredential().Password
-        if (!$Headers.Authorization) {
-            $Headers.Authorization = 'token ' + $tokenStr
-        }
+    $Headers['User-Agent'] = 'PowerShell PSGitHub'
 
-        Write-Verbose -Message ('Authorization header is: {0}' -f $Headers['Authorization']);
+    if ($Accept) {
+        $Headers.Accept = ($Accept -join ',')
     }
-    else {
-        Write-Verbose -Message 'Making request without API token'
-    }
-
-    $Headers.Add('User-Agent', 'PowerShell')
 
     # Resolve the Uri parameter with https://api.github.com as a base URI
     # This allows to call this function with just a path,
     # but also supply a full URI (e.g. for a GitHub enterprise instance)
     $Uri = [Uri]::new([Uri]::new('https://api.github.com'), $Uri)
 
-    $ApiRequest = @{
+    $apiRequest = @{
         Headers = $Headers;
-        Uri     = $Uri;
-        Method  = $Method;
+        Uri = $Uri;
+        Method = $Method;
+        # enable automatic pagination
+        # use | Select-Object -First to limit the result
+        FollowRelLink = $true;
     };
+
+    # If the caller hasn't specified the -Anonymous switch parameter, then add the HTTP Authorization header
+    # to authenticate the HTTP request.
+    if (!$Anonymous -and $Token) {
+        $apiRequest.Authentication = 'Bearer'
+        $apiRequest.Token = $Token
+    } else {
+        Write-Verbose -Message 'Making request without API token'
+    }
 
     ### Append the HTTP message body (payload), if the caller specified one.
     if ($Body) {
-        $ApiRequest.Body = $Body
-        Write-Verbose -Message ('the request body is {0}' -f $Body)
+        $apiRequest.Body = $Body
+        Write-Verbose -Message ("Request body: " + ($Body | Out-String))
     }
 
     # We need to communicate using TLS 1.2 against GitHub.
     [Net.ServicePointManager]::SecurityProtocol = 'tls12'
 
     # Invoke the REST API
-    Invoke-RestMethod @ApiRequest;
+    try {
+        Invoke-RestMethod @apiRequest -ResponseHeadersVariable responseHeaders
+        Write-Verbose "Rate limit total: $($responseHeaders['X-RateLimit-Limit'])"
+        Write-Verbose "Rate limit remaining: $($responseHeaders['X-RateLimit-Remaining'])"
+        $resetUnixSeconds = [int]($responseHeaders['X-RateLimit-Reset'][0])
+        $resetDateTime = ([System.DateTimeOffset]::FromUnixTimeSeconds($resetUnixSeconds)).DateTime
+        Write-Verbose "Rate limit resets: $resetDateTime"
+    } catch [Microsoft.PowerShell.Commands.HttpResponseException] {
+        $errors = , ($_.ErrorDetails.Message | ConvertFrom-Json)
+        if ('errors' -in $err.PSObject.Properties.Name) {
+            $errors += $err.errors
+        }
+        foreach ($err in $errors) {
+            $message = ""
+            $errorId = $null
+            $docUrl = $null
+            if ('code' -in $err.PSObject.Properties.Name) {
+                $errorId = $err.code
+                $message += "$($err.code): "
+            }
+            if ('field' -in $err.PSObject.Properties.Name) {
+                $message += "$($err.field): "
+            }
+            if ('message' -in $err.PSObject.Properties.Name) {
+                $message += $err.message
+            }
+            if ('documentation_url' -in $err.PSObject.Properties.Name) {
+                $message += "`nSee $($err.documentation_url)"
+                $docUrl = $err.documentation_url
+            }
+            $message += "`n$($Method.ToString().ToUpper()) $Uri $($_.Exception.Response.StatusCode)"
+            Write-Error -Message $message -ErrorId $errorId -RecommendedAction $docUrl
+        }
+    }
 }

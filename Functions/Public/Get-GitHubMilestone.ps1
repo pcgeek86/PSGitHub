@@ -1,10 +1,10 @@
-function Get-GitHubMilestone {
+﻿function Get-GitHubMilestone {
     <#
     .Synopsis
     Creates a new GitHub issue.
 
     .Parameter Owner
-    The GitHub username of the account or organization that owns the GitHub repository specified in the -Repository parameter.
+    The GitHub username of the account or organization that owns the GitHub repository specified in the -RepositoryName parameter.
 
     .Parameter Repository
     Required. The name of the GitHub repository that is owned by the -Owner parameter, where the new GitHub issue will be
@@ -19,101 +19,62 @@ function Get-GitHubMilestone {
 
     .Example
     ### Get a list of milestone for the specified repository
-    Get-GitHubMilestone -Owner pcgeek86 -Repository PSGitHub;
+    Get-GitHubMilestone -Owner pcgeek86 -RepositoryName PSGitHub;
 
     .Link
     https://trevorsullivan.net
     https://developer.github.com/v3/issues
     #>
     [CmdletBinding()]
+    [OutputType('PSGitHub.Milestone')]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(ParameterSetName = 'SpecificMilestone', Mandatory = $true)]
-        [string] $Milestone,
-        [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(ParameterSetName = 'SpecificMilestone', Mandatory)]
+        [int] $Number,
+
+        [Parameter(ParameterSetName = 'FindMilestones')]
         [ValidateSet('Open', 'Closed', 'All')]
         [string] $State,
-        [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+
+        [Parameter(ParameterSetName = 'FindMilestones')]
         [ValidateSet('DueDate', 'Completeness')]
         [string] $Sort,
-        [Parameter(ParameterSetName = 'FindMilestones', Mandatory = $false)]
+
+        [Parameter(ParameterSetName = 'FindMilestones')]
         [ValidateSet('Ascending', 'Descending')]
         [string] $Direction,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    ### Build the core message body -- we'll add more properties soon
-    $ApiBody = @{
-    };
-
-    ### Add the milestone property
-    if ($Milestone) { $ApiBody.Add('milestone', $Milestone); }
-
-    ### Normalize the "sort" JSON property
+    $queryParams = @{ };
     if ($Sort) {
-        switch ($Sort) {
-            'DueDate' { $Sort = 'due_on'; break; }
-            'Completeness' { $Sort = 'completeness'; break; }
-            default { break; }
-        }
-        $ApiBody.Add('sort', $Sort);
+        $queryParams.sort = ($Sort -creplace '([a-z])([A-Z])', '$1_$2').ToLower(); # PascalCase to snake_case
     }
-
-    ### Normalize the "state" JSON property
     if ($State) {
-        switch ($State) {
-            'Open' {
-                $State = 'open'; break;
-            }
-            'Closed' {
-                $State = 'closed'; break;
-            }
-            'All' {
-                $State = 'all'; break;
-            }
-            default {
-                break;
-            }
-        }
-        $ApiBody.Add('state', $State);
+        $queryParams.state = $State.ToLower();
     }
-
-    ### Normalize the "direction" JSON property
     if ($Direction) {
-        switch ($Direction) {
-            'Ascending' {
-                $Direction = 'asc'; break;
-            }
-            'Descending' {
-                $Direction = 'desc'; break;
-            }
-            default {
-                break;
-            }
-        }
-        $ApiBody.Add('direction', $Direction);
+        $queryParams.direction = ($Direction -replace 'ending$', '').ToLower();
+    }
+    $Uri = if ($Number) {
+        '/repos/{0}/{1}/milestones/{2}' -f $Owner, $RepositoryName, $Number;
+    } else {
+        '/repos/{0}/{1}/milestones' -f $Owner, $RepositoryName;
     }
 
-    ### Determine the appropriate REST method to use
-    if ($Milestone) {
-        $Uri = '/repos/{0}/{1}/milestones/{2}' -f $Owner, $Repository, $Milestone;
+    Invoke-GitHubApi -Method GET $Uri -Body $queryParams -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Milestone')
+        $_.Creator.PSTypeNames.Insert(0, 'PSGitHub.User')
+        $_
     }
-    else {
-        $Uri = '/repos/{0}/{1}/milestones' -f $Owner, $Repository;
-    }
-
-    ### Set up the API call
-    $ApiCall = @{
-        Body   = $ApiBody | ConvertTo-Json
-        Uri    = $Uri;
-        Method = 'Get';
-        Token  = $Token
-    }
-
-    ### Invoke the GitHub REST method
-    Invoke-GitHubApi @ApiCall;
 }

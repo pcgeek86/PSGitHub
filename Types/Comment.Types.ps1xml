@@ -1,0 +1,32 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.Comment</Name>
+        <Members>
+            <AliasProperty>
+                <Name>CreatedAt</Name>
+                <ReferencedMemberName>created_at</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>UpdatedAt</Name>
+                <ReferencedMemberName>updated_at</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>HtmlUrl</Name>
+                <ReferencedMemberName>html_url</ReferencedMemberName>
+            </AliasProperty>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>User</Name>
+                            <Name>CreatedAt</Name>
+                            <Name>Body</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

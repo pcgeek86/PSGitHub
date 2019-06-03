@@ -35,9 +35,8 @@ Function Save-GitHubGist {
     [CmdletBinding()]
     [OutputType()]
     Param (
-        [Parameter()]
         [String]$Path = "$env:APPDATA\PSGitHub\Gists",
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory, ValueFromPipeline = $true)]
         [System.Object[]]$Gist
     )
 

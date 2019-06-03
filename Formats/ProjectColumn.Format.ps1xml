@@ -1,0 +1,20 @@
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>Column</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.ProjectColumn</TypeName>
+            </ViewSelectedBy>
+            <WideControl>
+                <ColumnNumber>6</ColumnNumber>
+                <WideEntries>
+                    <WideEntry>
+                        <WideItem>
+                            <ScriptBlock>"`e[47m`e[30m $($_.Name) `e[0m"</ScriptBlock>
+                        </WideItem>
+                    </WideEntry>
+                </WideEntries>
+            </WideControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

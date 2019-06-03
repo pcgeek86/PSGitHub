@@ -1,0 +1,16 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.Commit</Name>
+        <Members>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <NoteProperty>
+                        <Name>DefaultDisplayProperty</Name>
+                        <Value>Sha</Value>
+                    </NoteProperty>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

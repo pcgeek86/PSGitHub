@@ -1,4 +1,4 @@
-function Get-GitHubReleaseAsset {
+﻿function Get-GitHubReleaseAsset {
     <#
     .SYNOPSIS
     This command gets the github
@@ -24,10 +24,10 @@ function Get-GitHubReleaseAsset {
 
     .EXAMPLE
     # get the all assets for a release from PowerShell/vscode-powershell
-    C:\PS> Get-GithubReleaseAsset -Owner Powershell -Repository vscode-powershell -ReleaseId 6808217
+    C:\PS> Get-GithubReleaseAsset -Owner Powershell -RepositoryName vscode-powershell -ReleaseId 6808217
 
     # get a specific asset
-    C:\PS> Get-GithubReleaseAsset -Owner Powershell -Repository vscode-powershell -Id 4163551
+    C:\PS> Get-GithubReleaseAsset -Owner Powershell -RepositoryName vscode-powershell -Id 4163551
 
     .NOTES
     you cannot use parameter 'ReleaseId', 'Id' together
@@ -35,38 +35,45 @@ function Get-GitHubReleaseAsset {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory, ParameterSetName = 'Release', ValueFromPipeline)]
+        [ValidateScript( { 'assets_url' -in $_.PSObject.Properties.Name })]
+        [object] $Release,
+
+        [Parameter(Mandatory, ParameterSetName = 'Id')]
+        [Parameter(Mandatory, ParameterSetName = 'ReleaseId')]
         [String] $Owner,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(Mandatory = $true, ParameterSetName = 'ReleaseId')]
-        [String] $ReleaseId,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Id')]
+
+        [Parameter(Mandatory, ParameterSetName = 'Id')]
+        [Parameter(Mandatory, ParameterSetName = 'ReleaseId')]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(Mandatory, ParameterSetName = 'Id')]
         [String] $Id,
+
+        [Parameter(Mandatory, ParameterSetName = 'ReleaseId')]
+        [String] $ReleaseId,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    begin {
-    }
-
     process {
         # set the rest method
-        switch ($PSCmdlet.ParameterSetName) {
-            'ReleaseId' { $uri = "repos/$Owner/$Repository/releases/$ReleaseId/assets"; break; }
-            'Id' { $uri = "repos/$Owner/$Repository/releases/assets/$Id"; break; }
-            Default { $uri = "repos/$Owner/$Repository/releases/$ReleaseId/assets"; break; }
+        $uri = switch ($PSCmdlet.ParameterSetName) {
+            'Release' { $Release.assets_url }
+            'ReleaseId' { "repos/$Owner/$RepositoryName/releases/$ReleaseId/assets" }
+            'Id' { "repos/$Owner/$RepositoryName/releases/assets/$Id" }
+            Default { "repos/$Owner/$RepositoryName/releases/$ReleaseId/assets" }
         }
 
         # set the API call parameter
         $apiCall = @{
-            Uri    = $uri
+            Uri = $uri
             Method = 'Get'
-            Token  = $Token
+            Token = $Token
         }
-    }
-
-    end {
-        # invoke the rest api call
         Invoke-GitHubApi @apiCall
     }
 }

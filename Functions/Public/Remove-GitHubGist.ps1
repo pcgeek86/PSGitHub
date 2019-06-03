@@ -1,4 +1,4 @@
-function Remove-GitHubGist {
+﻿function Remove-GitHubGist {
     <#
     .Synopsis
     This command deletes a GitHub Gist code snippet.
@@ -32,9 +32,8 @@ function Remove-GitHubGist {
     [CmdletBinding(ConfirmImpact = 'High', SupportsShouldProcess = $true)]
     [OutputType([Void])]
     Param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         [String[]] $Id,
-        [Parameter()]
         [String[]]$FileName,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
@@ -42,25 +41,24 @@ function Remove-GitHubGist {
     Process {
         foreach ($item in $Id) {
             if ($PSCmdlet.ShouldProcess($item)) {
-                if ($FileName -ne $null) {
+                if ($null -ne $FileName) {
                     [HashTable]$body = @{
-                        files = @{}
+                        files = @{ }
                     }
                     foreach ($file in $FileName) {
                         $body.files.Add($file, $null)
                     }
                     $uri = 'PATCH'
-                }
-                else {
+                } else {
                     $body = $null
                     $uri = 'DELETE'
                 }
 
                 $ApiCall = @{
-                    Body   = ConvertTo-Json -InputObject $body
-                    Uri    = 'gists/{0}' -f $item
+                    Body = ConvertTo-Json -InputObject $body
+                    Uri = 'gists/{0}' -f $item
                     Method = $uri
-                    Token  = $Token
+                    Token = $Token
                 }
 
                 Invoke-GitHubApi @ApiCall

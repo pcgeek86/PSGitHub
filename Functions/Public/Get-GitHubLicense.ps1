@@ -1,4 +1,4 @@
-function Get-GitHubLicense {
+﻿function Get-GitHubLicense {
     <#
     .SYNOPSIS
         this cmdlet the the licenses that github provide
@@ -20,22 +20,27 @@ function Get-GitHubLicense {
 
     #>
     [CmdletBinding()]
+    [OutputType('PSGitHub.License')]
     param(
-        [Parameter(Mandatory = $false, Position = 0)]
+        [Parameter(Position = 0)]
         [string] $LicenseId,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    if (-Not ($LicenseId)) {
-        $uri = 'licenses'
-    }
-    else {
-        $uri = 'licenses/{0}' -f $LicenseId
-    }
+    process {
+        if (-Not ($LicenseId)) {
+            $uri = 'licenses'
+        } else {
+            $uri = 'licenses/{0}' -f $LicenseId
+        }
 
-    $headers = @{
-        Accept = 'application/vnd.github.drax-preview+json'
-        Token  = $Token
+        $headers = @{
+            Accept = 'application/vnd.github.drax-preview+json'
+            Token = $Token
+        }
+        Invoke-GitHubApi -Method get -Uri $uri -Headers $headers -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+            $_.PSTypeNames.Insert(0, 'PSGitHub.License')
+            $_
+        }
     }
-    Invoke-GitHubApi -Method get -Uri $uri -Headers $headers
 }

@@ -1,4 +1,4 @@
-function Get-GitHubLabel {
+﻿function Get-GitHubLabel {
     <#
     .SYNOPSIS
     Gets GitHub labels.
@@ -9,7 +9,7 @@ function Get-GitHubLabel {
 
     .PARAMETER Owner
     The GitHub username of the account or organization that owns the GitHub
-    repository specified in the parameter -Repository parameter.
+    repository specified in the parameter -RepositoryName parameter.
 
     .PARAMETER Repository
     The name of the GitHub repository, that is owned by the GitHub username
@@ -17,63 +17,64 @@ function Get-GitHubLabel {
 
     .PARAMETER Name
     Retrieve a single label with the specified name from the GitHub repository
-    specified by the parameters -Owner and -Repository.
+    specified by the parameters -Owner and -RepositoryName.
 
     .PARAMETER Page
     The page number of the results to return. Default: 1
-    Note: The GitHub documentation of pagination warns to always rely on the
-    links provided in the response headers, rather than attempting to construct
-    the page URLs by hand. Unfortunately, as of PowerShell 5.1, Invoke-RestApi
-    does not provide access to the response headers.
-    https://developer.github.com/v3/guides/traversing-with-pagination/
 
     .EXAMPLE
     # Retrieve all labels from the repository Mary/WebApps:
-    Get-GitHubLabel -Owner Mary -Repository WebApps
+    Get-GitHubLabel -Owner Mary -RepositoryName WebApps
 
     .EXAMPLE
     # Retrieve only the label 'Label1' from the repository Mary/WebApps:
-    Get-GitHubLabel -Owner Mary -Repository WebApps -Name Label1
+    Get-GitHubLabel -Owner Mary -RepositoryName WebApps -Name Label1
 
     #>
     [CmdletBinding()]
+    [OutputType('PSGitHub.Label')]
     param (
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Repository,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
-        [string] $Name,
-        [Parameter()]
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Page,
+
+        [string] $Name,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $uri = 'repos/{0}/{1}/labels' -f $Owner, $Repository
+    $uri = 'repos/{0}/{1}/labels' -f $Owner, $RepositoryName
 
     if ($Name) {
         $uri += ("/{0}" -f $Name)
     }
 
-    $queryParameters = @()
+    $queryParams = @{ }
     if ($Page) {
-        $queryParameters += "page=$Page"
-    }
-
-    if ($queryParameters) {
-        $uri += "?" + ($queryParameters -join '&')
+        $queryParams.page = $Page
     }
 
     $apiCall = @{
         Headers = @{
             Accept = 'application/vnd.github.symmetra-preview+json'
         }
-        Method  = 'Get'
-        Uri     = $uri
-        Token   = $Token
+        Body = $queryParams
+        Method = 'Get'
+        Uri = $uri
+        Token = $Token
     }
 
-    Invoke-GitHubApi @apiCall
+    Invoke-GitHubApi @apiCall | ForEach-Object { $_ } | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Label')
+        $_
+    }
 }
