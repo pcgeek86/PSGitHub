@@ -1,4 +1,4 @@
-function New-GitHubReleaseAsset {
+﻿function New-GitHubReleaseAsset {
     <#
     .SYNOPSIS
         Create a new GitHub release asset
@@ -23,7 +23,7 @@ function New-GitHubReleaseAsset {
 
     .EXAMPLE
         Create a new release asset in release with id 1234567 of project 'test-organization/test-repo'
-        PS C:\> New-GitHubRelease -Owner 'test-organization' -Repository 'test-repo' -ReleaseId 1234567 -Path .\myasset.zip
+        PS C:\> New-GitHubRelease -Owner 'test-organization' -RepositoryName 'test-repo' -ReleaseId 1234567 -Path .\myasset.zip
 
     .NOTES
         1. This cmdlet will not help you create a tag, you need to use git to do that.
@@ -34,22 +34,25 @@ function New-GitHubReleaseAsset {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false)]
-        [string] $Owner = (Get-GitHubAuthenticatedUser).login,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(Mandatory = $true)]
+        [string] $Owner = (Get-GitHubUser).login,
+
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(Mandatory)]
         [string] $ReleaseId,
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [Alias('FullName')]
         [string] $Path,
-        [Parameter(Mandatory = $false)]
+
         [string] $ContentType = 'application/zip',
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
-
-    begin {
-
-    }
 
     process {
         ### check path of asset
@@ -61,17 +64,14 @@ function New-GitHubReleaseAsset {
         $Name = Get-Item -Path $Path | Select-Object -ExpandProperty Name
 
         ### create a API call
-        $apiCall =
-        @{
-            Body    = Get-Content -Path $Path -Raw
-            Headers = @{'Content-Type' = $ContentType}
-            Method  = 'post'
-            Uri     = "https://uploads.github.com/repos/$Owner/$Repository/releases/$ReleaseId/assets?name=$Name&label=$Name"
-            Token   = $Token
+        $apiCall = @{
+            Body = Get-Content -Path $Path -Raw
+            Headers = @{'Content-Type' = $ContentType }
+            Method = 'post'
+            Uri = "https://uploads.github.com/repos/$Owner/$RepositoryName/releases/$ReleaseId/assets?name=$Name&label=$Name"
+            Token = $Token
         }
-    }
 
-    end {
         # invoke the api call
         Invoke-GitHubApi @apiCall
     }

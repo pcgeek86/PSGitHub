@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="terminal" baseProfile="full" viewBox="0 0 800 376" width="800" version="1.1">
+    <defs>
+        <termtosvg:template_settings xmlns:termtosvg="https://github.com/nbedos/termtosvg">
+            <termtosvg:screen_geometry columns="100" rows="22" />
+        </termtosvg:template_settings>
+        <style type="text/css" id="generated-style">
+            <![CDATA[#screen {
+                font-family: 'DejaVu Sans Mono', monospace;
+                font-style: normal;
+                font-size: 14px;
+            }
+
+        text {
+            dominant-baseline: text-before-edge;
+            white-space: pre;
+        }]]>
+        </style>
+        <style type="text/css" id="user-style">
+            /* base16-default-dark color theme (source: http://chriskempson.com/projects/base16/) */
+            .foreground {fill: #d8d8d8;}
+            .background {fill: #181818;}
+            .color0 {fill: #181818;}
+            .color1 {fill: #ab4642;}
+            .color2 {fill: #a1b56c;}
+            .color3 {fill: #f7ca88;}
+            .color4 {fill: #7cafc2;}
+            .color5 {fill: #ba8baf;}
+            .color6 {fill: #86c1b9;}
+            .color7 {fill: #d8d8d8;}
+            .color8 {fill: #585858;}
+            .color9 {fill: #ab4642;}
+            .color10 {fill: #a1b56C;}
+            .color11 {fill: #f7ca88;}
+            .color12 {fill: #7cafc2;}
+            .color13 {fill: #ba8baf;}
+            .color14 {fill: #86c1b9;}
+            .color15 {fill: #f8f8f8;}
+        </style>
+    </defs>
+    <svg id="screen" width="800" viewBox="0 0 800 374" preserveAspectRatio="xMidYMin meet">
+        <rect class="background" height="100%" width="100%" x="0" y="0" />
+        <defs>
+            <g id="g1">
+                <text class="foreground" textLength="136" x="0">&#10004; ~/git/PSGitHub </text>
+                <text class="color3" textLength="8" x="136">[</text>
+                <text class="color6" textLength="72" x="144">interop &#8801;</text>
+                <text class="foreground" textLength="8" x="216"></text>
+                <text class="color1" textLength="64" x="224">+4 ~4 -0</text>
+                <text class="color3" textLength="8" x="288">]</text>
+            </g>
+            <g id="g2">
+                <text class="foreground" textLength="16" x="0">&gt; </text>
+            </g>
+            <g id="g3">
+                <text class="foreground" textLength="16" x="0">&gt; </text>
+                <text class="color11" font-weight="bold" textLength="120" x="16">Get-GitHubIssue</text>
+                <text class="color15" font-weight="bold" textLength="8" x="136"></text>
+                <text class="color8" font-weight="bold" textLength="48" x="144">-Owner</text>
+                <text class="color15" font-weight="bold" textLength="96" x="192"> PowerShell </text>
+                <text class="color8" font-weight="bold" textLength="120" x="288">-RepositoryName</text>
+                <text class="color15" font-weight="bold" textLength="112" x="408"> PowerShell | </text>
+                <text class="color11" font-weight="bold" textLength="104" x="520">Select-Object</text>
+                <text class="color15" font-weight="bold" textLength="8" x="624"></text>
+                <text class="color8" font-weight="bold" textLength="48" x="632">-First</text>
+                <text class="color15" font-weight="bold" textLength="48" x="680"> 10 | </text>
+                <text class="color11" font-weight="bold" textLength="16" x="728">fc</text>
+                <text class="color15" font-weight="bold" textLength="56" x="744"></text>
+            </g>
+            <g id="g4">
+                <text class="color15" font-weight="bold" textLength="424" x="0"></text>
+            </g>
+            <g id="g5">
+                <text class="color10" font-weight="bold" textLength="8" x="0">&#9432;</text>
+                <text class="foreground" textLength="8" x="8"></text>
+                <text class="foreground" font-weight="bold" textLength="256" x="16">Internal CLR error. (0x80131506)</text>
+                <text class="foreground" textLength="8" x="272"></text>
+                <text fill="#ffffff" textLength="128" x="280"> Issue-Question </text>
+            </g>
+            <g id="g6">
+                <text class="foreground" textLength="632" x="0">  #9795 opened on 06/01/2019 09:42:28 by yao00jun &#128343; Updated 06/01/2019 09:44:23</text>
+            </g>
+            <g id="g7">
+                <text class="color10" font-weight="bold" textLength="8" x="0">&#9095;</text>
+                <text class="foreground" textLength="8" x="8"></text>
+                <text class="foreground" font-weight="bold" textLength="480" x="16">Consider DBNull.Value and NullString.Value the same as $null</text>
+                <text class="foreground" textLength="8" x="496"></text>
+            </g>
+            <g id="g8">
+                <text class="foreground" textLength="616" x="0">  #9794 opened on 06/01/2019 08:13:57 by vexx32 &#128343; Updated 06/01/2019 08:33:57</text>
+            </g>
+            <g id="g9">
+                <text class="color10" font-weight="bold" textLength="8" x="0">&#9095;</text>
+                <text class="foreground" textLength="8" x="8"></text>
+                <text class="foreground" font-weight="bold" textLength="336" x="16">Fix use of `Start-Process http://bing.com`</text>
+                <text class="foreground" textLength="8" x="352"></text>
+            </g>
+            <g id="g10">
+                <text class="foreground" textLength="656" x="0">  #9793 opened on 06/01/2019 06:50:54 by SteveL-MSFT &#128343; Updated 06/01/2019 07:10:35</text>
+            </g>
+            <g id="g11">
+                <text class="color10" font-weight="bold" textLength="8" x="0">&#9095;</text>
+                <text class="foreground" textLength="8" x="8"></text>
+                <text class="foreground" font-weight="bold" textLength="240" x="16">:recycle: Cleanup Parser tests</text>
+                <text class="foreground" textLength="8" x="256"></text>
+            </g>
+            <g id="g12">
+                <text class="foreground" textLength="616" x="0">  #9792 opened on 06/01/2019 06:11:50 by vexx32 &#128343; Updated 06/01/2019 07:27:11</text>
+            </g>
+            <g id="g13">
+                <text class="color10" font-weight="bold" textLength="8" x="0">&#9432;</text>
+                <text class="foreground" textLength="8" x="8"></text>
+                <text class="foreground" font-weight="bold" textLength="424" x="16">v7.0.0-preview.1: can't open a URL with Start-Process</text>
+                <text class="foreground" textLength="8" x="440"></text>
+                <text fill="#ffffff" textLength="128" x="448"> Issue-Question </text>
+            </g>
+            <g id="g14">
+                <text class="foreground" textLength="760" x="0">  #9791 opened on 06/01/2019 05:50:23 by sba923 &#128343; Updated 06/01/2019 06:45:49 &#127937; 7.0.0-preview.2</text>
+            </g>
+            <g id="g15">
+                <text class="background" textLength="8" x="0"></text>
+            </g>
+        </defs>
+        <g>
+            <use y="0" xlink:href="#g1" />
+            <use y="17" xlink:href="#g2" />
+            <use y="34" xlink:href="#g1" />
+            <use y="51" xlink:href="#g3" />
+            <use y="68" xlink:href="#g4" />
+            <rect fill="#fc2929" height="17" width="128" x="280" y="85" />
+            <use y="85" xlink:href="#g5" />
+            <use y="102" xlink:href="#g6" />
+            <use y="136" xlink:href="#g7" />
+            <use y="153" xlink:href="#g8" />
+            <use y="187" xlink:href="#g9" />
+            <use y="204" xlink:href="#g10" />
+            <use y="238" xlink:href="#g11" />
+            <use y="255" xlink:href="#g12" />
+            <rect fill="#fc2929" height="17" width="128" x="448" y="289" />
+            <use y="289" xlink:href="#g13" />
+            <use y="306" xlink:href="#g14" />
+            <rect class="foreground" height="17" width="8" x="0" y="340" />
+            <use y="340" xlink:href="#g15" />
+        </g>
+    </svg>
+</svg>

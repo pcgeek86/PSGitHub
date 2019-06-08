@@ -1,4 +1,4 @@
-function Remove-GitHubReleaseAsset {
+﻿function Remove-GitHubReleaseAsset {
     <#
     .Synopsis
     This command deletes a GitHub release asset.
@@ -16,28 +16,33 @@ function Remove-GitHubReleaseAsset {
     The Id of the Gist to remove or remove files from.
 
     .Example
-    PS C:\> Remove-GitHubRelease -Owner 'test-organization' -Repository 'test-repo' -Id 1234567
+    PS C:\> Remove-GitHubRelease -Owner 'test-organization' -RepositoryName 'test-repo' -Id 1234567
 
     #>
 
     [CmdletBinding(ConfirmImpact = 'High', SupportsShouldProcess = $true)]
     [OutputType([Void])]
-
     Param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [string] $Owner,
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
         [string] $RepositoryName,
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [String] $Id,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     Process {
         $ApiCall = @{
-            Uri    = "repos/$Owner/$RepositoryName/releases/assets/$Id"
+            Uri = "repos/$Owner/$RepositoryName/releases/assets/$Id"
             Method = 'delete'
-            Token  = $Token
+            Token = $Token
         }
     }
 

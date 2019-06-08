@@ -1,0 +1,25 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.RateLimitResources</Name>
+        <Members>
+            <AliasProperty>
+                <Name>IntegrationManifest</Name>
+                <ReferencedMemberName>integration_manifest</ReferencedMemberName>
+            </AliasProperty>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Core</Name>
+                            <Name>Search</Name>
+                            <Name>GraphQL</Name>
+                            <Name>IntegrationManifest</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

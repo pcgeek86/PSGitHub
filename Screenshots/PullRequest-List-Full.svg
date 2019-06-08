@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="terminal" baseProfile="full" viewBox="0 0 800 427" width="800" version="1.1">
+    <defs>
+        <termtosvg:template_settings xmlns:termtosvg="https://github.com/nbedos/termtosvg">
+            <termtosvg:screen_geometry columns="100" rows="25"/>
+        </termtosvg:template_settings>
+        <style type="text/css" id="generated-style"><![CDATA[#screen {
+                font-family: 'DejaVu Sans Mono', monospace;
+                font-style: normal;
+                font-size: 14px;
+            }
+
+        text {
+            dominant-baseline: text-before-edge;
+            white-space: pre;
+        }]]></style>
+        <style type="text/css" id="user-style">
+            /* base16-default-dark color theme (source: http://chriskempson.com/projects/base16/) */
+            .foreground {fill: #d8d8d8;}
+            .background {fill: #181818;}
+            .color0 {fill: #181818;}
+            .color1 {fill: #ab4642;}
+            .color2 {fill: #a1b56c;}
+            .color3 {fill: #f7ca88;}
+            .color4 {fill: #7cafc2;}
+            .color5 {fill: #ba8baf;}
+            .color6 {fill: #86c1b9;}
+            .color7 {fill: #d8d8d8;}
+            .color8 {fill: #585858;}
+            .color9 {fill: #ab4642;}
+            .color10 {fill: #a1b56C;}
+            .color11 {fill: #f7ca88;}
+            .color12 {fill: #7cafc2;}
+            .color13 {fill: #ba8baf;}
+            .color14 {fill: #86c1b9;}
+            .color15 {fill: #f8f8f8;}
+        </style>
+    </defs>
+    <svg id="screen" width="800" viewBox="0 0 800 425" preserveAspectRatio="xMidYMin meet">
+        <rect class="background" height="100%" width="100%" x="0" y="0"/><defs><g id="g1"><text class="foreground" textLength="16" x="0">&gt; </text><text class="color11" font-weight="bold" textLength="168" x="16">Get-GitHubPullRequest</text><text class="color15" font-weight="bold" textLength="8" x="184"> </text><text class="color8" font-weight="bold" textLength="48" x="192">-Owner</text><text class="color15" font-weight="bold" textLength="96" x="240"> PowerShell </text><text class="color8" font-weight="bold" textLength="120" x="336">-RepositoryName</text><text class="color15" font-weight="bold" textLength="96" x="456"> PowerShell </text><text class="color8" font-weight="bold" textLength="56" x="552">-Number</text><text class="color15" font-weight="bold" textLength="64" x="608"> 9722 | </text><text class="color11" font-weight="bold" textLength="16" x="672">fl</text><text class="color15" font-weight="bold" textLength="8" x="688"> </text><text class="color8" font-weight="bold" textLength="40" x="696">-view</text><text class="color15" font-weight="bold" textLength="64" x="736"> full   </text></g><g id="g2"><text class="color15" font-weight="bold" textLength="8" x="0"> </text></g><g id="g3"><text class="foreground" textLength="168" x="0">Title              : </text><text class="foreground" font-weight="bold" textLength="320" x="168">Code cleanup: use IndexOf(char) overload</text></g><g id="g4"><text class="foreground" textLength="480" x="0">Head               : iSazonov:cleanup-optimize-using-indexof</text></g><g id="g5"><text class="foreground" textLength="168" x="0">State              : </text><text class="color2" textLength="32" x="168">open</text></g><g id="g6"><text class="foreground" textLength="200" x="0">Number             : 9722</text></g><g id="g7"><text class="foreground" textLength="232" x="0">User               : iSazonov</text></g><g id="g8"><text class="foreground" textLength="168" x="0">Labels             : </text><text fill="#000000" textLength="128" x="168"> CL-CodeCleanup </text></g><g id="g9"><text class="foreground" textLength="576" x="0">RequestedReviewers : {daxian-dbw, anmenaga, adityapatwardhan, PaulHigin}</text></g><g id="g10"><text class="foreground" textLength="312" x="0">CreatedAt          : 5/24/19 3:23:30 PM</text></g><g id="g11"><text class="foreground" textLength="312" x="0">UpdatedAt          : 5/31/19 5:44:51 AM</text></g><g id="g12"><text class="foreground" textLength="168" x="0">Body               : </text><text class="background" textLength="80" x="168">PR Summary</text></g><g id="g13"><text class="foreground" textLength="168" x="0">                     </text></g><g id="g14"><text class="foreground" textLength="744" x="0">                     - Use IndexOf(char) overload instead of IndexOf(string) to benefit from </text></g><g id="g15"><text class="foreground" textLength="280" x="0">                     Ordinal search</text></g><g id="g16"><text class="foreground" textLength="672" x="0">                     - Replace IndexOf with Contains to get more understandable code</text></g><g id="g17"><text class="foreground" textLength="536" x="0">                     - Use StringComparison.Ordinal for ASCII chars</text></g><g id="g18"><text class="foreground" textLength="168" x="0">                     </text><text class="color11" font-weight="bold" text-decoration="underline" textLength="80" x="168">PR Context</text></g><g id="g19"><text class="foreground" textLength="168" x="0">                     </text><text class="color11" font-weight="bold" text-decoration="underline" textLength="96" x="168">PR Checklist</text></g><g id="g20"><text class="foreground" textLength="216" x="0">                     - [x] </text><text fill="#87d7ff" text-decoration="underline" textLength="216" x="216">"PR has a meaningful title"</text><text class="foreground" textLength="328" x="432">  - Use the present tense and imperative </text></g><g id="g21"><text class="foreground" textLength="432" x="0">                     mood when describing your changes</text></g><g id="g22"><text class="foreground" textLength="168" x="0">                     </text><text class="background" textLength="8" x="168"> </text></g></defs><g><use y="0" xlink:href="#g1"/><use y="17" xlink:href="#g2"/><use y="34" xlink:href="#g3"/><use y="51" xlink:href="#g4"/><use y="68" xlink:href="#g5"/><use y="85" xlink:href="#g6"/><use y="102" xlink:href="#g7"/><rect fill="#fbca04" height="17" width="128" x="168" y="119"/><use y="119" xlink:href="#g8"/><use y="136" xlink:href="#g9"/><use y="153" xlink:href="#g10"/><use y="170" xlink:href="#g11"/><rect class="foreground" height="17" width="80" x="168" y="187"/><use y="187" xlink:href="#g12"/><use y="204" xlink:href="#g13"/><use y="221" xlink:href="#g14"/><use y="238" xlink:href="#g15"/><use y="255" xlink:href="#g16"/><use y="272" xlink:href="#g17"/><use y="289" xlink:href="#g13"/><use y="306" xlink:href="#g18"/><use y="323" xlink:href="#g13"/><use y="340" xlink:href="#g19"/><use y="357" xlink:href="#g13"/><use y="374" xlink:href="#g20"/><use y="391" xlink:href="#g21"/><rect class="foreground" height="17" width="8" x="168" y="408"/><use y="408" xlink:href="#g22"/></g></svg>
+</svg>

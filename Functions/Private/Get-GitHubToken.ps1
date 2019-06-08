@@ -1,4 +1,4 @@
-
+﻿
 function Get-GitHubToken {
     <#
     .Synopsis
@@ -34,8 +34,7 @@ function Get-GitHubToken {
         }
         Write-Warning 'Relying on a token set through Set-GitHubToken is deprecated. Provide the -Token parameter or set it through $PSDefaultParameterValues'
         $config.PersonalAccessToken | ConvertTo-SecureString
-    }
-    else {
+    } else {
         ### If we're running inside Azure Automation, then retrieve the credential from the Asset Store
         $gitHubCredential = Get-AutomationPSCredential -Name GitHub;
         $gitHubCredential.Password

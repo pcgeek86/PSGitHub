@@ -1,0 +1,34 @@
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>List</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.RateLimitResources</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>Core</Label>
+                                <PropertyName>Core</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Search</Label>
+                                <PropertyName>Search</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>GraphQL</Label>
+                                <PropertyName>GraphQL</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>IntegrationManifest</Label>
+                                <PropertyName>IntegrationManifest</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

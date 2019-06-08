@@ -1,9 +1,9 @@
-function Find-GitHubRepository {
+﻿function Find-GitHubRepository {
     <#
     .Synopsis
     This function searches for repositories on GitHub.
 
-    .Parameter SortBy
+    .Parameter Sort
     Optional. Choose the property to sort on, for GitHub repository search results:
 
       - Default: Best match
@@ -11,7 +11,7 @@ function Find-GitHubRepository {
       - Forks: Sort by the number of forks the repositories have
       - Updated: Sort by the last update date/time of the repositories
 
-    .Parameter SortOrder
+    .Parameter Order
     Optional. Specify the order to sort search results.
 
       - Ascending
@@ -22,55 +22,44 @@ function Find-GitHubRepository {
     https://developer.github.com/v3/search
     #>
     [CmdletBinding()]
+    [OutputType('PSGitHub.Repository')]
     param (
-        [Parameter(Mandatory = $true)]
-        [string] $Keywords,
-        [Parameter(Mandatory = $false)]
-        [ValidateSet('Stars', 'Forks', 'Updated')]
-        [string] $SortBy,
-        [Parameter(Mandatory = $false)]
-        [ValidateSet('Ascending', 'Descending')]
-        [string] $SortOrder,
+        [Parameter(Mandatory, Position = 0)]
+        [string] $Query,
+
+        [ValidateSet('stars', 'forks', 'updated', 'help-wanted-issues')]
+        [Alias('SortBy')] # BC
+        [string] $Sort,
+
+        [ValidateSet('asc', 'desc')]
+        [Alias('SortOrder')] # BC
+        [Alias('Direction')]
+        [string] $Order,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    ### Create a stub HTTP message body
-    $ApiBody = @{ }
-
-    ### Add keyword search to message body, if specified by user
-    if ($Keywords) { $ApiBody.Add('keywords', $Keywords); }
-
-    ### Normalize the "sortby" JSON property, and append to message body
-    ### NOTE: The reason we're translating these values (seemingly needlessly), is to provide a first-class PowerShell experience,
-    ###       while maintaining compatibility with the GitHub REST API.
-    if ($SortBy) {
-        switch ($SortBy) {
-            'Stars' { $SortOrder = 'stars'; break; }
-            'Forks' { $SortOrder = 'forks'; break; }
-            'Updated' { $SortOrder = 'updated'; break; }
-            default { break; }
-        }
-        $ApiBody.Add('sort', $SortBy);
+    $queryParams = @{
+        q = $Query
+    }
+    if ($Sort) {
+        $queryParams.Add('sort', $Sort);
+    }
+    if ($Order) {
+        $queryParams.Add('order', $Order);
     }
 
-    ### Normalize the "sort" JSON property, and append to message body
-    if ($SortOrder) {
-        switch ($SortOrder) {
-            'Ascending' { $SortOrder = 'asc'; break; }
-            'Descending' { $SortOrder = 'desc'; break; }
-            default { break; }
-        }
-        $ApiBody.Add('order', $SortOrder);
-    }
-
-    ### Build the parameters for the REST API call
     $ApiCall = @{
-        Body   = $ApiBody | ConvertTo-Json;
-        Uri    = 'search/repositories';
-        Method = 'Get';
-        Token  = $Token
+        Uri = 'search/repositories'
+        Body = $queryParams
+        Token = $Token
     }
-
-    ### Invoke the GitHub REST API
-    Invoke-GitHubApi @ApiCall;
+    Invoke-GitHubApi @ApiCall | ForEach-Object { $_.items } | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')
+        $_.Owner.PSTypeNames.Insert(0, 'PSGitHub.User')
+        if ($_.License) {
+            $_.License.PSTypeNames.Insert(0, 'PSGitHub.License')
+        }
+        $_
+    }
 }

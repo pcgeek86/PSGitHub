@@ -1,4 +1,4 @@
-function New-GitHubGist {
+﻿function New-GitHubGist {
     <#
     .Synopsis
     This command creates a new GitHub Gist code snippet.
@@ -60,11 +60,11 @@ function New-GitHubGist {
     [CmdletBinding(DefaultParameterSetName = '__AllParameterSets')]
     [OutputType([System.Object])]
     Param (
-        [Parameter(HelpMessage = 'Path to file(s) where the content will be used for the Gist.', Mandatory = $true, ParameterSetName = 'Files', ValueFromPipeline = $true)]
-        [ValidateScript( { if (Test-Path -Path $_) { $true } else { throw "Cannot find path: '$_' because it does not exist." }})]
+        [Parameter(HelpMessage = 'Path to file(s) where the content will be used for the Gist.', Mandatory, ParameterSetName = 'Files', ValueFromPipeline)]
+        [ValidateScript( { if (Test-Path -Path $_) { $true } else { throw "Cannot find path: '$_' because it does not exist." } })]
         # TODO: Perhaps allow a path to a folder, and then create one Gist with all the files in the top level of the directory?  Just a thought, but for now, no folders.
         # Get-ChildItem -Path $_ -File
-        [ValidateScript( { if (-not (Get-Item -Path $_).PSIsContainer) { $true } else { throw "Path must be to a file." }})]
+        [ValidateScript( { if (-not (Get-Item -Path $_).PSIsContainer) { $true } else { throw "Path must be to a file." } })]
         [String[]]$Path,
         [Parameter(HelpMessage = 'Description of the Gist.')]
         [String]$Description,
@@ -75,11 +75,11 @@ function New-GitHubGist {
 
     DynamicParam {
         # Only present this parameter set if running the PowerShell ISE.
-        if ($psISE -ne $null) {
+        if ($null -ne $psISE) {
             # Build Attributes for the IseScriptPane Parameter.
             $iseScriptPaneAttributes = New-Object -TypeName System.Management.Automation.ParameterAttribute -Property @{
-                HelpMessage      = 'Captures the current active ISE Script Pane as Gist content.'
-                Mandatory        = $true
+                HelpMessage = 'Captures the current active ISE Script Pane as Gist content.'
+                Mandatory = $true
                 ParameterSetName = 'IseScriptPane'
             }
             # Build Collection Object to hold Parameter Attributes.
@@ -90,7 +90,7 @@ function New-GitHubGist {
 
             # Build Attributes for GistFileName Parameter.
             $gistFileNameAttributes = New-Object -TypeName System.Management.Automation.ParameterAttribute -Property @{
-                HelpMessage      = 'The name of the Gist file.'
+                HelpMessage = 'The name of the Gist file.'
                 ParameterSetName = 'IseScriptPane'
             }
             # Build Collection Object to hold Parameter Attributes.
@@ -112,8 +112,8 @@ function New-GitHubGist {
         # Build request body template.
         [HashTable]$body = @{
             description = $Description
-            public      = $Public.IsPresent
-            files       = @{}
+            public = $Public.IsPresent
+            files = @{ }
         }
 
         # If running from the console, the later else is not available.
@@ -122,8 +122,7 @@ function New-GitHubGist {
             foreach ($item in $Path) {
                 $body.files.Add($(Split-Path -Path $item -Leaf), @{ content = ((Get-Content -Path $item -Raw).PSObject.BaseObject) })
             }
-        }
-        else {
+        } else {
             if ([String]::IsNullOrEmpty($PSBoundParameters.GistFileName)) {
                 $PSBoundParameters.GistFileName = $psISE.CurrentPowerShellTab.Files.SelectedFile.DisplayName.Replace('*', '')
             }
@@ -132,10 +131,10 @@ function New-GitHubGist {
 
         # Splat API call Parameters.
         $apiCall = @{
-            Body   = ConvertTo-Json -InputObject $body
-            Uri    = 'gists'
+            Body = ConvertTo-Json -InputObject $body
+            Uri = 'gists'
             Method = 'Post'
-            Token  = $Token
+            Token = $Token
         }
 
         # Create the Gist.

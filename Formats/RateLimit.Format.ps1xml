@@ -1,0 +1,21 @@
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>List</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.RateLimit</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <PropertyName>Resources</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

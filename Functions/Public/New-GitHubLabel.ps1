@@ -1,4 +1,4 @@
-function New-GitHubLabel {
+﻿function New-GitHubLabel {
     <#
     .SYNOPSIS
     Create a GitHub label.
@@ -9,7 +9,7 @@ function New-GitHubLabel {
 
     .PARAMETER Owner
     The GitHub username of the account or organization that owns the GitHub
-    repository specified in the parameter -Repository parameter.
+    repository specified in the parameter -RepositoryName parameter.
 
     .PARAMETER Repository
     The name of the GitHub repository, that is owned by the GitHub username
@@ -17,7 +17,7 @@ function New-GitHubLabel {
 
     .PARAMETER Name
     The name of the label to create in the GitHub repository specified by the
-    parameters -Owner and -Repository.
+    parameters -Owner and -RepositoryName.
     It is possible to add emoji to label names, i.e. 'Good :strawberry:'.
 
     .PARAMETER Color
@@ -33,44 +33,53 @@ function New-GitHubLabel {
 
     .EXAMPLE
     # Create a label without description.
-    New-GitHubLabel -Owner Mary -Repository WebApps -Name 'good first issue' -Color '5319e7'
+    New-GitHubLabel -Owner Mary -RepositoryName WebApps -Name 'good first issue' -Color '5319e7'
 
     .EXAMPLE
     # Create a label without description using emoji.
-    New-GitHubLabel -Owner Mary -Repository WebApps -Name 'Good :strawberry:' -Color 'ffffff'
+    New-GitHubLabel -Owner Mary -RepositoryName WebApps -Name 'Good :strawberry:' -Color 'ffffff'
 
     .EXAMPLE
     # Create a label with a description.
-    New-GitHubLabel -Owner Mary -Repository WebApps -Name 'good first issue' -Color '5319e7' -Description 'The issue should be easier to fix and can be taken up by a beginner to learn to contribute on GitHub.'
+    New-GitHubLabel -Owner Mary -RepositoryName WebApps -Name 'good first issue' -Color '5319e7' -Description 'The issue should be easier to fix and can be taken up by a beginner to learn to contribute on GitHub.'
 
     #>
-    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    [OutputType('PSGitHub.Label')]
     param (
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository')]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Repository,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+
+        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(Mandatory, ParameterSetName = 'Repository')]
         [string] $Name,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+
+        [Parameter(Mandatory, ParameterSetName = 'Repository')]
         [string] $Color,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+
+        [Parameter(ParameterSetName = 'Repository')]
         [string] $Description,
-        [Parameter()]
+
         [switch] $Force,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $shouldProcessCaption = 'Creating new GitHub label'
-    $shouldProcessDescription = 'Creating the GitHub label ''{0}'' in the repository ''{1}/{2}''.' -f $Name, $Owner, $Repository
-    $shouldProcessWarning = 'Do you want to create the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $Repository
+    $shouldProcessDescription = 'Creating the GitHub label ''{0}'' in the repository ''{1}/{2}''.' -f $Name, $Owner, $RepositoryName
+    $shouldProcessWarning = 'Do you want to create the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $RepositoryName
 
     if ($Force -or $PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-        $uri = 'repos/{0}/{1}/labels' -f $Owner, $Repository
+        $uri = 'repos/{0}/{1}/labels' -f $Owner, $RepositoryName
 
         $bodyProperties = @{
-            name  = $Name
+            name = $Name
             color = $Color
         }
 
@@ -82,15 +91,18 @@ function New-GitHubLabel {
             Headers = @{
                 Accept = 'application/vnd.github.symmetra-preview+json'
             }
-            Method  = 'Post'
-            Uri     = $uri
-            Body    = $bodyProperties | ConvertTo-Json
-            Token   = $Token
+            Method = 'Post'
+            Uri = $uri
+            Body = $bodyProperties | ConvertTo-Json
+            Token = $Token
         }
 
         # Variable scope ensures that parent session remains unchanged
         $ConfirmPreference = 'None'
 
-        Invoke-GitHubApi @apiCall
+        Invoke-GitHubApi @apiCall | ForEach-Object {
+            $_.PSTypeNames.Insert(0, 'PSGitHub.Label')
+            $_
+        }
     }
 }

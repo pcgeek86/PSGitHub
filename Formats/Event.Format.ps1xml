@@ -1,0 +1,273 @@
+﻿<Configuration>
+    <DefaultSettings>
+        <DisplayError>true</DisplayError>
+        <ShowError>true</ShowError>
+    </DefaultSettings>
+    <Controls>
+        <Control>
+            <Name>CommentBody</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>
+                                    ($_.Body | ConvertFrom-Markdown -AsVT100EncodedString).VT100EncodedString.Trim()
+                                </ScriptBlock>
+                            </ExpressionBinding>
+                            <NewLine />
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+        <Control>
+            <Name>Issue</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>
+                                    $issue = $_.Source.Issue
+                                    $title = $issue.Title
+                                    $number = $issue.Number
+                                    $bg = $issue.GetVT100BackgroundColor()
+                                    $stateBadge = "`e[0m$bg`e[37;1m$($issue.Icon)  $($issue.State)`e[0m"
+                                    "$stateBadge #$number `e[1m$title`e[0m"
+                                </ScriptBlock>
+                            </ExpressionBinding>
+                            <NewLine />
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+        <Control>
+            <Name>Commit</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>
+                                    $_.Url -match '/(\w+)$' | Out-Null
+                                    $sha = $Matches[1].Substring(0, 7)
+                                    $msg = ($_.Message -split "`n")[0]
+                                    "`e[4m$sha`e[0m $msg"
+                                </ScriptBlock>
+                            </ExpressionBinding>
+                            <NewLine />
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+    </Controls>
+    <ViewDefinitions>
+        <View>
+            <Name>Timeline</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.Event</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <Frame>
+                                <LeftIndent>1</LeftIndent>
+                                <CustomItem>
+                                    <NewLine />
+                                    <ExpressionBinding>
+                                        <ScriptBlock>
+                                                $event = $_
+                                                try {
+                                                    $text = ""
+                                                    $text += switch -wildcard ($event.Event) {
+                                                        '*assigned'                { "👤 `e[0m `e[1m$($event.Actor.Login)`e[0m $($event.Event) `e[1m$($event.Assignee.Login)`e[0m `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'labeled'                  { "🏷  `e[0m `e[1m$($event.Actor.Login)`e[0m added the $($event.Label.ToColoredString()) label `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'unlabeled'                { "🏷  `e[0m `e[1m$($event.Actor.Login)`e[0m removed the $($event.Label.ToColoredString()) label `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'milestoned'               { "🏁 `e[0m `e[1m$($event.Actor.Login)`e[0m added this to the `e[1m$($event.Milestone.Title)`e[0m milestone `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'unmilestoned'             { "🏁 `e[0m `e[1m$($event.Actor.Login)`e[0m removed this from the `e[1m$($event.Milestone.Title)`e[0m milestone `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'closed'                   { "🚫`e[0m `e[1m$($event.Actor.Login)`e[0m closed this `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'referenced'               { "🔗 `e[0m `e[1m$($event.Actor.Login)`e[0m referenced this from commit `e[4m$($event.CommitId.Substring(0, 7))`e[0m `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'cross-referenced'         { "🔗 `e[0m `e[1m$($event.Actor.Login)`e[0m referenced this `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'renamed'                  { "✏️ `e[0m `e[1m$($event.Actor.Login)`e[0m changed the title from `e[1m`e[9m$($event.Rename.From)`e[0m to `e[1m$($event.Rename.To)`e[0m `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'reopened'                 { "✳️ `e[0m `e[1m$($event.Actor.Login)`e[0m reopened this `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'merged'                   { "♐️ `e[0m `e[1m$($event.Actor.Login)`e[0m merged commit `e[1m$($event.CommitId)`e[0m `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'review_requested'         { "👁‍🗨  `e[0m‍ `e[1m$($event.Actor.Login)`e[0m requested a review from `e[1m$($event.RequestedReviewer.Login)`e[0m `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'commented'                { "💬 `e[0m `e[1m$($event.Actor.Login)`e[0m commented `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'head_ref_deleted'         { "✖️ `e[0m `e[1m$($event.Actor.Login)`e[0m deleted the head branch `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'head_ref_restored'        { "🔙 `e[0m `e[1m$($event.Actor.Login)`e[0m restored the head branch `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'added_to_project'         { "🗂  `e[0m `e[1m$($event.Actor.Login)`e[0m added this to a project `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'moved_columns_in_project' { "🗂  `e[0m `e[1m$($event.Actor.Login)`e[0m moved this to a different project column `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'locked'                   { "🔒 `e[0m  `e[1m$($event.Actor.Login)`e[0m locked the thread `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'unlocked'                 { "🔓 `e[0m `e[1m$($event.Actor.Login)`e[0m unlocked the thread `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'subscribed'               { "🔉 `e[0m `e[1m$($event.Actor.Login)`e[0m subscribed `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'unsubscribed'             { "🔇 `e[0m `e[1m$($event.Actor.Login)`e[0m unsubscribed `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'mentioned'                { "❕ `e[0m `e[1m$($event.Actor.Login)`e[0m was mentioned `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'committed'                { "🔘 `e[0m `e[1m$($event.Committer.Name)`e[0m added a commit `e[2m$($event.Committer.Date)`e[0m" }
+                                                        'head_ref_force_pushed'    { "⬆️  `e[0m `e[1m$($event.Actor.Login)`e[0m force-pushed the head branch `e[2m$($event.CreatedAt)`e[0m" }
+                                                        'reviewed' {
+                                                            switch ($event.State) {
+                                                                'approved'          { "✅ `e[0m‍ `e[1m$($event.User.Login)`e[0m approved `e[2m$($event.SubmittedAt)`e[0m" }
+                                                                'commented'         { "👁‍🗨  `e[0m‍ `e[1m$($event.User.Login)`e[0m reviewed `e[2m$($event.SubmittedAt)`e[0m" }
+                                                                'changes_requested' { "⛔ `e[0m‍ `e[1m$($event.User.Login)`e[0m requested changes `e[2m$($event.SubmittedAt)`e[0m" }
+                                                            }
+                                                        }
+                                                        default                 { "⚪️ `e[0m `e[1m$($event.Actor.Login)`e[0m $($event.Event) `e[2m$($event.CreatedAt)`e[0m" }
+                                                    }
+                                                    $text
+                                                } catch {
+                                                    $event | Format-List -p * | Out-String | Write-Warning
+                                                    $_ | Out-string | Write-warning
+                                                }
+                                            </ScriptBlock>
+                                    </ExpressionBinding>
+                                    <NewLine />
+                                </CustomItem>
+                            </Frame>
+                            <Frame>
+                                <LeftIndent>5</LeftIndent>
+                                <CustomItem>
+                                    <ExpressionBinding>
+                                        <ScriptBlock>$_</ScriptBlock>
+                                        <ItemSelectionCondition>
+                                            <ScriptBlock>$_.Event -in 'commented','reviewed' -and $_.Body</ScriptBlock>
+                                        </ItemSelectionCondition>
+                                        <CustomControlName>CommentBody</CustomControlName>
+                                    </ExpressionBinding>
+                                    <ExpressionBinding>
+                                        <ScriptBlock>$_</ScriptBlock>
+                                        <ItemSelectionCondition>
+                                            <ScriptBlock>$_.Event -eq 'committed'</ScriptBlock>
+                                        </ItemSelectionCondition>
+                                        <CustomControlName>Commit</CustomControlName>
+                                    </ExpressionBinding>
+                                    <ExpressionBinding>
+                                        <ScriptBlock>$_</ScriptBlock>
+                                        <ItemSelectionCondition>
+                                            <ScriptBlock>$_.Event -eq 'cross-referenced'</ScriptBlock>
+                                        </ItemSelectionCondition>
+                                        <CustomControlName>Issue</CustomControlName>
+                                    </ExpressionBinding>
+                                </CustomItem>
+                            </Frame>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+        <View>
+            <Name>List</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.Event</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>Event</Label>
+                                <ScriptBlock>"`e[1m$($_.Event)`e[0m"</ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>CreatedAt</Label>
+                                <ItemSelectionCondition>
+                                    <PropertyName>CreatedAt</PropertyName>
+                                </ItemSelectionCondition>
+                                <PropertyName>CreatedAt</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Actor</Label>
+                                <ItemSelectionCondition>
+                                    <PropertyName>Actor</PropertyName>
+                                </ItemSelectionCondition>
+                                <ScriptBlock>$_.Actor.Login</ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Committer</Label>
+                                <ItemSelectionCondition>
+                                    <PropertyName>Committer</PropertyName>
+                                </ItemSelectionCondition>
+                                <PropertyName>Committer</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Author</Label>
+                                <ItemSelectionCondition>
+                                    <PropertyName>Author</PropertyName>
+                                </ItemSelectionCondition>
+                                <PropertyName>Author</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Assignee</Label>
+                                <ItemSelectionCondition>
+                                    <ScriptBlock>$_.Event -in 'assigned','unassigned'</ScriptBlock>
+                                </ItemSelectionCondition>
+                                <ScriptBlock>$_.Assignee.Login</ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Label</Label>
+                                <ItemSelectionCondition>
+                                    <ScriptBlock>$_.Event -in 'labeled','unlabeled'</ScriptBlock>
+                                </ItemSelectionCondition>
+                                <ScriptBlock>$_.Label.ToColoredString()</ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Source</Label>
+                                <ItemSelectionCondition>
+                                    <ScriptBlock>$_.Event -eq 'cross-referenced'</ScriptBlock>
+                                </ItemSelectionCondition>
+                                <PropertyName>Source</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Rename</Label>
+                                <ItemSelectionCondition>
+                                    <ScriptBlock>$_.Event -eq 'renamed'</ScriptBlock>
+                                </ItemSelectionCondition>
+                                <PropertyName>Rename</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Milestone</Label>
+                                <ItemSelectionCondition>
+                                    <ScriptBlock>$_.Event -in 'milestoned','demilestoned'</ScriptBlock>
+                                </ItemSelectionCondition>
+                                <ScriptBlock>$_.Milestone.Title</ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>State</Label>
+                                <ItemSelectionCondition>
+                                    <ScriptBlock>$_.Event -eq 'reviewed'</ScriptBlock>
+                                </ItemSelectionCondition>
+                                <PropertyName>State</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Body</Label>
+                                <ItemSelectionCondition>
+                                    <PropertyName>Body</PropertyName>
+                                </ItemSelectionCondition>
+                                <ScriptBlock>
+                                    ($_.Body | ConvertFrom-Markdown -AsVT100EncodedString).VT100EncodedString
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>SubmittedAt</Label>
+                                <ItemSelectionCondition>
+                                    <ScriptBlock>$_.Event -eq 'reviewed'</ScriptBlock>
+                                </ItemSelectionCondition>
+                                <PropertyName>SubmittedAt</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>CommitId</Label>
+                                <ItemSelectionCondition>
+                                    <PropertyName>CommitId</PropertyName>
+                                </ItemSelectionCondition>
+                                <PropertyName>CommitId</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

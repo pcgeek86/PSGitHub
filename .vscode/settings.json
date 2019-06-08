@@ -1,4 +1,9 @@
 {
-    "editor.formatOnSave": true,
-    "powershell.codeFormatting.newLineAfterCloseBrace": true
+  "editor.formatOnSave": true,
+  "[powershell]": {
+    "editor.formatOnSave": false
+  },
+  "powershell.codeFormatting.newLineAfterCloseBrace": false,
+  "powershell.codeFormatting.alignPropertyValuePairs": false,
+  "xml.format.joinContentLines": false
 }

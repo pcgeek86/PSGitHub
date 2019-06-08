@@ -1,4 +1,4 @@
-function Get-GitHubIssue {
+﻿function Get-GitHubIssue {
     <#
     .SYNOPSIS
     Gets GitHub issues.
@@ -22,7 +22,7 @@ function Get-GitHubIssue {
 
     .PARAMETER Owner
     The GitHub username of the account or organization that owns the GitHub repository
-    specified in the -Repository parameter.
+    specified in the -RepositoryName parameter.
 
     .PARAMETER Repository
     Retrieve all open issues from the GitHub repository with the specified name,
@@ -30,7 +30,7 @@ function Get-GitHubIssue {
 
     .PARAMETER Number
     Retrieve the single issue with the specified number from the repo specified
-    by -Owner and -Repository.
+    by -Owner and -RepositoryName.
 
     .PARAMETER Page
     The page number of the results to return. Default: 1
@@ -85,105 +85,127 @@ function Get-GitHubIssue {
 
     .EXAMPLE
     # Retrieve all open issues in the repository Mary/WebApps:
-    Get-GitHubIssue -Owner Mary -Repository WebApps
+    Get-GitHubIssue -Owner Mary -RepositoryName WebApps
 
     .EXAMPLE
     # Retrieve all issues (both open and closed) in the repository Mary/WebApps:
-    Get-GitHubIssue -Owner Mary -Repository WebApps -State all
+    Get-GitHubIssue -Owner Mary -RepositoryName WebApps -State all
 
     #>
     [CmdletBinding()]
+    [OutputType('PSGitHub.Issue')]
     param (
-        [Parameter(Mandatory = $true, ParameterSetName = 'All')]
+
+        [Parameter(Mandatory, ParameterSetName = 'All')]
         [switch] $All,
-        [Parameter(Mandatory = $true, ParameterSetName = 'ForUser')]
+
+        [Parameter(Mandatory, ParameterSetName = 'ForUser')]
         [switch] $ForUser,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Organization')]
+
+        [Parameter(Mandatory, ParameterSetName = 'Organization')]
         [string] $Organization,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'Repository')]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Repository')]
-        [string] $Repository,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Repository')]
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'Repository')]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Repository')]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number,
-        [Parameter()]
+
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Page,
-        [Parameter()]
+
         [ValidateSet('assigned', 'created', 'mentioned', 'subscribed', 'all')]
         [string] $Filter,
-        [Parameter()]
+
         [ValidateSet('open', 'closed', 'all')]
         [string] $State,
-        [Parameter()]
+
         [string[]] $Labels,
-        [Parameter()]
+
         [ValidateSet('created', 'updated', 'comments')]
         [string] $Sort,
-        [Parameter()]
+
         [ValidateSet('asc', 'desc')]
         [string] $Direction,
-        [Parameter()]
+
         [string] $Since,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    if ($Repository) {
-        $uri = 'repos/{0}/{1}/issues' -f $Owner, $Repository
-        if ($Number -gt 0) {
-            $uri += ("/{0}" -f $Number)
+    process {
+
+        if ($RepositoryName) {
+            $uri = 'repos/{0}/{1}/issues' -f $Owner, $RepositoryName
+            if ($Number -gt 0) {
+                $uri += ("/{0}" -f $Number)
+            }
+        } elseif ($Organization) {
+            $uri = 'orgs/{0}/issues' -f $Organization
+        } elseif ($ForUser) {
+            $uri = 'user/issues'
+        } else {
+            $uri = 'issues'
+        }
+
+        $queryParameters = @()
+        if ($Page) {
+            $queryParameters += "page=$Page"
+        }
+
+        if ($Filter) {
+            $queryParameters += "filter=$Filter"
+        }
+
+        if ($State) {
+            $queryParameters += "state=$State"
+        }
+
+        if ($Labels) {
+            $queryParameters += "labels=" + ($Labels -join ',')
+        }
+
+        if ($Sort) {
+            $queryParameters += "sort=$Sort"
+        }
+
+        if ($Direction) {
+            $queryParameters += "direction=$Direction"
+        }
+
+        if ($Since) {
+            $queryParameters += "since=$Since"
+        }
+
+        if ($queryParameters) {
+            $uri += "?" + ($queryParameters -join '&')
+        }
+
+        $apiCall = @{
+            Method = 'Get';
+            Uri = $uri
+            Token = $Token
+        }
+
+        Invoke-GitHubApi @apiCall | ForEach-Object { $_ } | ForEach-Object {
+            $_.PSTypeNames.Insert(0, 'PSGitHub.Issue')
+            if ('pull_request' -in $_.PSObject.Properties.Name) {
+                $_.PSTypeNames.Insert(0, 'PSGitHub.PullRequest')
+            }
+            $_.User.PSTypeNames.Insert(0, 'PSGitHub.User')
+            foreach ($label in $_.Labels) {
+                $label.PSTypeNames.Insert(0, 'PSGitHub.Label')
+            }
+            Write-Verbose "Received issue $($_.Title)"
+            $_
         }
     }
-    elseif ($Organization) {
-        $uri = 'orgs/{0}/issues' -f $Organization
-    }
-    elseif ($ForUser) {
-        $uri = 'user/issues'
-    }
-    else {
-        $uri = 'issues'
-    }
-
-    $queryParameters = @()
-    if ($Page) {
-        $queryParameters += "page=$Page"
-    }
-
-    if ($Filter) {
-        $queryParameters += "filter=$Filter"
-    }
-
-    if ($State) {
-        $queryParameters += "state=$State"
-    }
-
-    if ($Labels) {
-        $queryParameters += "labels=" + ($Labels -join ',')
-    }
-
-    if ($Sort) {
-        $queryParameters += "sort=$Sort"
-    }
-
-    if ($Direction) {
-        $queryParameters += "direction=$Direction"
-    }
-
-    if ($Since) {
-        $queryParameters += "since=$Since"
-    }
-
-    if ($queryParameters) {
-        $uri += "?" + ($queryParameters -join '&')
-    }
-
-    $apiCall = @{
-        Method = 'Get';
-        Uri    = $uri
-        Token  = $Token
-    }
-
-    Invoke-GitHubApi @apiCall
 }
