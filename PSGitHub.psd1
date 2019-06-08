@@ -237,21 +237,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes =
-                "The theme of this release is to improve the experience when using PSGitHub interactively in a terminal." +
-                "This includes:" +
-                "- Autocompletion for parameters" +
-                "- Beautiful, colored output formatting with multiple views for issues, PRs, labels, comments, commit statuses, milestones" +
-                "  - As part of this, adds type names for all result objects and removes classes" +
-                "  - Also renders markdown in issue bodies and comments" +
-                "- Better error messages" +
-                "- Pipeline support and interop with PowerGit. This enables a workflow to locally create a new branch, push it and directly open a PR for that branch all in one line through piping." +
-                "- Automatic pagination. This means you don't have to supply `-Page`, PSGitHub will just keep streaming new pages until you got what you were looking for. Users can use `Select-Object -First` to limit the results (and not make too many API requests), or Ctrl+C to abort." +
-                "- New cmdlets: Add-GitHubAssignee, Find-GitHubIssue, Find-GitHubLabel, Find-GitHubUser, Get-GitHubCombinedCommitStatus, Get-GitHubIssueTimeline, Get-GitHubOrganization, Get-GitHubProject, Get-GitHubProjectCard, Get-GitHubProjectColumn, Get-GitHubPullRequest, Get-GitHubRateLimit, Get-GitHubTeam, Get-GitHubTeamMember, Get-GitHubUser, Merge-GitHubPullRequest, Move-GitHubProjectCard, New-GitHubProjectCard, New-GitHubReview, New-GitHubReviewRequest, Remove-GitHubAssignee, Remove-GitHubGitRef, Submit-GitHubReview, Update-GitHubIssue, Update-GitHubUser" +
-                "- New parameters for existing cmdlets: Support all options in New-GitHubRepository, -MilestoneName and -Draft for New-GitHubPullRequest, -TeamAssignees for New-GitHubPullRequest, Update-GitHubIssue" +
-                "- Rename Set- cmdlets to Update- as that name is more intuitive (aliaseed for BC)" +
-                "- Gist `files` property is now a hashmap instead of object" +
-                "- Rename `New-GitHubFork` to `Start-GitHubFork` as the process is async (aliased for BC)"
+            ReleaseNotes = ""
         } # End of PSData hashtable
     } # End of PrivateData hashtable
 
