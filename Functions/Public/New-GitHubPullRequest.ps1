@@ -1,4 +1,4 @@
-﻿function New-GitHubPullRequest {
+function New-GitHubPullRequest {
     <#
     .SYNOPSIS
         This cmdlet creates submitts a pull request to a repo
@@ -84,7 +84,7 @@
         [Parameter(ParameterSetName = 'title')]
         [string] $Body,
 
-        [string] $Labels,
+        [string[]] $Labels,
 
         [int] $MilestoneNumber,
         [string] $MilestoneTitle,
