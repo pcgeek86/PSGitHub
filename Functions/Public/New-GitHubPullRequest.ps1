@@ -1,4 +1,4 @@
-function New-GitHubPullRequest {
+﻿function New-GitHubPullRequest {
     <#
     .SYNOPSIS
         This cmdlet creates submitts a pull request to a repo
@@ -185,7 +185,7 @@ function New-GitHubPullRequest {
         }
 
         if ($Reviewers -or $TeamReviewers) {
-            $pr = New-GitHubReviewRequest -Reviewers $Reviewers -TeamReviewers $TeamReviewers -Token $Token
+            $pr = $pr | New-GitHubReviewRequest -Reviewers $Reviewers -TeamReviewers $TeamReviewers -Token $Token
         }
         if ($ProjectColumnId) {
             New-GitHubProjectCard -ColumnId $ProjectColumnId -ContentType PullRequest -ContentId $pr.Id -Token $Token
