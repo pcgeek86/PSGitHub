@@ -47,7 +47,7 @@
     [OutputType('PSGitHub.Repository')]
     param(
         [Parameter(ValueFromPipelineByPropertyName)]
-        [string] $Owner = (Get-GitHubUser -Token $Token).login,
+        [string] $Owner,
 
         [Parameter(ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
@@ -61,10 +61,10 @@
     process {
         $uri = if ($RepositoryName) {
             "repos/$Owner/$RepositoryName"
-        } elseif ($Owner -eq $(Get-GitHubUser -Token $Token).login) {
-            'user/repos'
-        } else {
+        } elseif ($Owner) {
             "users/$Owner/repos"
+        } else {
+            'user/repos'
         }
         # expand arrays
         Invoke-GitHubApi $uri -Token $Token |
