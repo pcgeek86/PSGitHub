@@ -106,8 +106,10 @@
         'Remove-GitHubLabel',
 
         ### Miscellaneous
-        'Get-GitHubLicense'
+        'Get-GitHubLicense',
 
+        ### GitHub Organization commands
+        'New-GitHubOrganization'
     )
 
     # Cmdlets to export from this module
