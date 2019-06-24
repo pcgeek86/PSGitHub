@@ -1,11 +1,11 @@
-function New-GitHubComment {
+﻿function New-GitHubComment {
     <#
     .SYNOPSIS
     Creates a comment on a GitHub issue.
 
     .PARAMETER Owner
     The GitHub username of the account or organization that owns the GitHub repository
-    specified in the -Repository parameter.
+    specified in the -RepositoryName parameter.
 
     .PARAMETER Repository
     The name of the GitHub repository containing the issue to which the comment
@@ -25,25 +25,31 @@ function New-GitHubComment {
     - A thing
     - Another thing
     "@
-    New-GitHubComment -Owner Mary -Repository WebApps -Number 42 -Body $body
+    New-GitHubComment -Owner Mary -RepositoryName WebApps -Number 42 -Body $body
 
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(Mandatory)]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number,
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string] $Body,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $uri = 'repos/{0}/{1}/issues/{2}/comments' -f $Owner, $Repository, $Number
+    $uri = 'repos/{0}/{1}/issues/{2}/comments' -f $Owner, $RepositoryName, $Number
 
     $apiBody = @{
         body = $Body
@@ -51,10 +57,14 @@ function New-GitHubComment {
 
     $apiCall = @{
         Method = 'Post';
-        Uri    = $uri;
-        Body   = $apiBody;
-        Token  = $Token
+        Uri = $uri;
+        Body = $apiBody;
+        Token = $Token
     }
 
-    Invoke-GitHubApi @apiCall
+    Invoke-GitHubApi @apiCall | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Comment')
+        $_.User.PSTypeNames.Insert(0, 'PSGitHub.User')
+        $_
+    }
 }

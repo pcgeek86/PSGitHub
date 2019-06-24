@@ -1,0 +1,35 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.Label</Name>
+        <Members>
+            <ScriptMethod>
+                <Name>ToColoredString</Name>
+                <Script>
+                    # rgb background
+                    $c = [System.Drawing.ColorTranslator]::fromHtml('#' + $this.Color)
+                    $textColor = if ($c.R * 0.299 + $c.G * 0.587 + $c.B * 0.114 -gt 186) { "`e[38;2;0;0;0m" } else { "`e[38;2;255;255;255m" }
+                    $bg = "`e[48;2;$($c.R);$($c.G);$($c.B)m"
+                    "`e[0m$textColor $($this.Name) `e[0m"
+                </Script>
+            </ScriptMethod>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Name</Name>
+                            <Name>Color</Name>
+                            <Name>Default</Name>
+                            <Name>Description</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                    <NoteProperty>
+                        <Name>DefaultDisplayProperty</Name>
+                        <Value>Name</Value>
+                    </NoteProperty>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

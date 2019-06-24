@@ -1,4 +1,4 @@
-function Get-GitHubRepository {
+﻿function Get-GitHubRepository {
     <#
     .SYNOPSIS
         This cmdlet will get the information about a GitHub repo.
@@ -23,7 +23,7 @@ function Get-GitHubRepository {
         See the return in https://developer.github.com/v3/repos/#get for detail
 
     .EXAMPLE
-        PS C:\> Get-GitHubRepository -Owner octocat -Repository Hello-World
+        PS C:\> Get-GitHubRepository -Owner octocat -RepositoryName Hello-World
         the return of this statement is shown in https://developer.github.com/v3/repos/#get
 
     .EXAMPLE
@@ -35,63 +35,47 @@ function Get-GitHubRepository {
         Returns all respositories for the specified user
 
     .EXAMPLE
-        PS C:\> Get-GitHubRepository -Owner exactmike -Repository OutSpeech -License
+        PS C:\> Get-GitHubRepository -Owner exactmike -RepositoryName OutSpeech -License
         Returns the license information for the specified owner's repository
 
     .EXAMPLE
-        PS C:\> Get-GitHubRepository -Owner exactmike -Repository OutSpeech -ReadMe
+        PS C:\> Get-GitHubRepository -Owner exactmike -RepositoryName OutSpeech -ReadMe
         Returns the ReadMe information for the specified owner's repository
     #>
 
-    [CmdletBinding(DefaultParameterSetName = 'AllForOwner')]
+    [CmdletBinding()]
+    [OutputType('PSGitHub.Repository')]
     param(
-        [Parameter(ParameterSetName = 'AllForOwner')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'SpecificOwnerAndRepository')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'SpecificOwnerAndRepositoryReadMe')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'SpecificOwnerAndRepositoryLicense')]
-        [string] $Owner = (Get-GitHubAuthenticatedUser).login,
-        [Parameter(Mandatory = $true, ParameterSetName = 'SpecificOwnerAndRepository')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'SpecificOwnerAndRepositoryReadMe')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'SpecificOwnerAndRepositoryLicense')]
-        [string] $Repository,
-        [Parameter(Mandatory, ParameterSetName = 'SpecificOwnerAndRepositoryLicense')]
-        [switch] $License,
-        [Parameter(Mandatory, ParameterSetName = 'SpecificOwnerAndRepositoryReadMe')]
-        [switch] $ReadMe,
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [string] $Owner,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    begin {
-        switch -Wildcard ($PSCmdlet.ParameterSetName) {
-            'AllForOwner' {
-                if ($Owner -eq $(Get-GitHubAuthenticatedUser).login) {
-                    $Uri = 'user/repos'
-                }
-                else {
-                    $Uri = 'users/{0}/repos' -f $Owner
-                }
-            }
-            'SpecificOwnerAndRepository*' {
-                $Uri = 'repos/{0}/{1}' -f $Owner, $Repository
-            }
-            'SpecificOwnerAndRepositoryReadMe' {
-                $Uri += '/readme'
-            }
-            'SpecificOwnerAndRepositoryLicense' {
-                $Uri += '/license'
-            }
-        }
-    }
-
     process {
-        $ApiCall = @{
-            Uri    = $Uri
-            Method = 'Get'
-            Token  = $Token
+        $uri = if ($RepositoryName) {
+            "repos/$Owner/$RepositoryName"
+        } elseif ($Owner) {
+            "users/$Owner/repos"
+        } else {
+            'user/repos'
         }
-    }
-
-    end {
-        Invoke-GitHubApi @ApiCall
+        # expand arrays
+        Invoke-GitHubApi $uri -Token $Token |
+            ForEach-Object { $_ } |
+            ForEach-Object {
+                $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')
+                $_.Owner.PSTypeNames.Insert(0, 'PSGitHub.User')
+                if ($_.License) {
+                    $_.License.PSTypeNames.Insert(0, 'PSGitHub.License')
+                }
+                $_
+            }
     }
 }

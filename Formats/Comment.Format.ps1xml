@@ -1,0 +1,59 @@
+﻿<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>Compact</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.Comment</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>"`e[4m`e[1m$($_.User.Login)`e[0m`e[4m on $($_.CreatedAt)`e[0m"</ScriptBlock>
+                            </ExpressionBinding>
+                            <NewLine />
+                            <ExpressionBinding>
+                                <ScriptBlock>($_.Body | ConvertFrom-Markdown -AsVT100EncodedString).VT100EncodedString</ScriptBlock>
+                            </ExpressionBinding>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+        <View>
+            <Name>List</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.Comment</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>User</Label>
+                                <ScriptBlock>$_.User.Login</ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>CreatedAt</Label>
+                                <PropertyName>CreatedAt</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>UpdatedAt</Label>
+                                <PropertyName>UpdatedAt</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>HtmlUrl</Label>
+                                <PropertyName>HtmlUrl</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Body</Label>
+                                <ScriptBlock>($_.Body | ConvertFrom-Markdown -AsVT100EncodedString).VT100EncodedString</ScriptBlock>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

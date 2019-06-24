@@ -1,4 +1,4 @@
-#
+﻿#
 # This is a PowerShell Unit Test file.
 # You need a unit test framework such as Pester to run PowerShell Unit tests.
 # You can download Pester from http://go.microsoft.com/fwlink/?LinkID=534084
@@ -16,25 +16,12 @@ Import-Module `
     -Name "$ModuleRoot\PSGitHub.psd1" `
     -Force `
     -DisableNameChecking
-$Global:ArtifactPath = "$ModuleRoot\Artifacts"
+$ArtifactPath = "$ModuleRoot\Artifacts"
 $null = New-Item `
     -Path $ArtifactPath `
     -ItemType Directory `
     -Force `
     -ErrorAction SilentlyContinue
-
-if (-not (Get-Module -Name PSScriptAnalyzer -ListAvailable)) {
-    # Perform PS Script Analyzer tests on module code only
-    $null = Set-PackageSource `
-        -Name PSGallery `
-        -Trusted `
-        -Force
-    $null = Install-Module `
-        -Name PSScriptAnalyzer `
-        -Confirm:$False
-    Import-Module `
-        -Name PSScriptAnalyzer
-}
 
 Describe 'PSScriptAnalyzer' {
     Context 'PSGitHub Module, Functions and TabCompleters' {
@@ -61,28 +48,25 @@ Describe 'PSScriptAnalyzer' {
                     } )
             }
         }
-        It 'Is formatted' {
-            . $ModuleRoot/format.ps1
-        }
     }
 }
 
 InModuleScope PSGitHub {
     #region *-GitHubLabel
     Describe 'Get-GitHubLabel' {
+        $mockOwnerName = 'Mary'
+        $mockRepositoryName = 'WebApps'
+        $mockLabelName = 'Label1'
+
+        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
+
         BeforeAll {
             Mock -CommandName Invoke-GitHubApi
-
-            $mockOwnerName = 'Mary'
-            $mockRepositoryName = 'WebApps'
-            $mockLabelName = 'Label1'
-
-            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
         }
 
         Context 'When getting first page of all labels in a repository' {
             It 'Should call the mock with the correct arguments' {
-                { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName } | Should -Not -Throw
+                Get-GitHubLabel -Owner $mockOwnerName -RepositoryName $mockRepositoryName
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Get' -and
@@ -93,18 +77,19 @@ InModuleScope PSGitHub {
 
         Context 'When getting second page of all labels in a repository' {
             It 'Should call the mock with the correct arguments' {
-                { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName -Page 2 } | Should -Not -Throw
+                Get-GitHubLabel -Owner $mockOwnerName -RepositoryName $mockRepositoryName -Page 2
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Get' -and
-                    $Uri -eq ('{0}?page=2' -f $mockExpectedDefaultUri)
+                    $Uri -eq $mockExpectedDefaultUri
+                    $Body.page -eq 2
                 }
             }
         }
 
         Context 'When getting a specific label in a repository' {
             It 'Should call the mock with the correct arguments' {
-                { Get-GitHubLabel -Owner $mockOwnerName -Repository $mockRepositoryName -Name $mockLabelName } | Should -Not -Throw
+                Get-GitHubLabel -Owner $mockOwnerName -RepositoryName $mockRepositoryName -Name $mockLabelName
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Get' -and
@@ -115,33 +100,33 @@ InModuleScope PSGitHub {
     }
 
     Describe 'New-GitHubLabel' {
+        $mockOwnerName = 'Mary'
+        $mockRepositoryName = 'WebApps'
+        $mockLabelName = 'Label1'
+        $mockLabelColor = 'ffffff'
+        $mockLabelDescription = 'Label description'
+
+        $newGitHubLabelParameters = @{
+            Owner = $mockOwnerName
+            RepositoryName = $mockRepositoryName
+            Name = $mockLabelName
+            Color = $mockLabelColor
+        }
+
+        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
+
+        $mockExpectedDefaultRequestBody = @{
+            name = $mockLabelName
+            color = $mockLabelColor
+        }
+
         BeforeAll {
             Mock -CommandName Invoke-GitHubApi
-
-            $mockOwnerName = 'Mary'
-            $mockRepositoryName = 'WebApps'
-            $mockLabelName = 'Label1'
-            $mockLabelColor = 'ffffff'
-            $mockLabelDescription = 'Label description'
-
-            $newGitHubLabelParameters = @{
-                Owner      = $mockOwnerName
-                Repository = $mockRepositoryName
-                Name       = $mockLabelName
-                Color      = $mockLabelColor
-            }
-
-            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
-
-            $mockExpectedDefaultRequestBody = @{
-                name  = $mockLabelName
-                color = $mockLabelColor
-            }
         }
 
         Context 'When adding a new label without description' {
             It 'Should call the mock with the correct arguments' {
-                { New-GitHubLabel @newGitHubLabelParameters -Confirm:$false } | Should -Not -Throw
+                New-GitHubLabel @newGitHubLabelParameters -Confirm:$false
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Post' -and
@@ -156,7 +141,7 @@ InModuleScope PSGitHub {
                 $mockTestParameters = $newGitHubLabelParameters.Clone()
                 $mockTestParameters['Description'] = $mockLabelDescription
 
-                { New-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+                New-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = $mockExpectedDefaultRequestBody.Clone()
                 $mockExpectedRequestBody['description'] = $mockLabelDescription
@@ -171,7 +156,7 @@ InModuleScope PSGitHub {
 
         Context 'When adding a new label and requesting explicit validation' {
             It 'Should not not call any mock' {
-                { New-GitHubLabel @newGitHubLabelParameters -WhatIf } | Should -Not -Throw
+                New-GitHubLabel @newGitHubLabelParameters -WhatIf
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 0
             }
@@ -179,34 +164,31 @@ InModuleScope PSGitHub {
 
         Context 'When adding a new label and requesting to forcibly execute' {
             It 'Should call the correct mock' {
-                {
-                    $ConfirmPreference = 'Medium'
-                    New-GitHubLabel @newGitHubLabelParameters -Force
-                } | Should -Not -Throw
-
+                $ConfirmPreference = 'Medium'
+                New-GitHubLabel @newGitHubLabelParameters -Force
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1
             }
         }
     }
 
     Describe 'Set-GitHubLabel' {
+        $mockOwnerName = 'Mary'
+        $mockRepositoryName = 'WebApps'
+        $mockLabelName = 'Label1'
+        $mockNewLabelName = 'NewName'
+        $mockLabelColor = 'ffffff'
+        $mockLabelDescription = 'Label description'
+
+        $newGitHubLabelParameters = @{
+            Owner = $mockOwnerName
+            RepositoryName = $mockRepositoryName
+            Name = $mockLabelName
+        }
+
+        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+
         BeforeAll {
             Mock -CommandName Invoke-GitHubApi
-
-            $mockOwnerName = 'Mary'
-            $mockRepositoryName = 'WebApps'
-            $mockLabelName = 'Label1'
-            $mockNewLabelName = 'NewName'
-            $mockLabelColor = 'ffffff'
-            $mockLabelDescription = 'Label description'
-
-            $newGitHubLabelParameters = @{
-                Owner      = $mockOwnerName
-                Repository = $mockRepositoryName
-                Name       = $mockLabelName
-            }
-
-            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
         }
 
         Context 'When updating a label with a new name' {
@@ -214,7 +196,7 @@ InModuleScope PSGitHub {
                 $mockTestParameters = $newGitHubLabelParameters.Clone()
                 $mockTestParameters['NewName'] = $mockNewLabelName
 
-                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+                Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
                     name = $mockNewLabelName
@@ -233,7 +215,7 @@ InModuleScope PSGitHub {
                 $mockTestParameters = $newGitHubLabelParameters.Clone()
                 $mockTestParameters['Color'] = $mockLabelColor
 
-                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+                Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
                     color = $mockLabelColor
@@ -252,7 +234,7 @@ InModuleScope PSGitHub {
                 $mockTestParameters = $newGitHubLabelParameters.Clone()
                 $mockTestParameters['Description'] = $mockLabelDescription
 
-                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+                Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
                     description = $mockLabelDescription
@@ -273,11 +255,11 @@ InModuleScope PSGitHub {
                 $mockTestParameters['Color'] = $mockLabelColor
                 $mockTestParameters['Description'] = $mockLabelDescription
 
-                { Set-GitHubLabel @mockTestParameters -Confirm:$false } | Should -Not -Throw
+                Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
-                    name        = $mockNewLabelName
-                    color       = $mockLabelColor
+                    name = $mockNewLabelName
+                    color = $mockLabelColor
                     description = $mockLabelDescription
                 }
 
@@ -291,7 +273,7 @@ InModuleScope PSGitHub {
 
         Context 'When adding a new label and requesting explicit validation' {
             It 'Should not not call any mock' {
-                { Set-GitHubLabel @newGitHubLabelParameters -WhatIf } | Should -Not -Throw
+                Update-GitHubLabel @newGitHubLabelParameters -WhatIf
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 0
             }
@@ -299,10 +281,9 @@ InModuleScope PSGitHub {
 
         Context 'When adding a new label and requesting to forcibly execute' {
             It 'Should call the correct mock' {
-                {
-                    $ConfirmPreference = 'Medium'
-                    Set-GitHubLabel @newGitHubLabelParameters -Force
-                } | Should -Not -Throw
+                $ConfirmPreference = 'Medium'
+                Update-GitHubLabel @newGitHubLabelParameters -Force
+
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1
             }
@@ -310,25 +291,25 @@ InModuleScope PSGitHub {
     }
 
     Describe 'Remove-GitHubLabel' {
+        $mockOwnerName = 'Mary'
+        $mockRepositoryName = 'WebApps'
+        $mockLabelName = 'Label1'
+
+        $newGitHubLabelParameters = @{
+            Owner = $mockOwnerName
+            RepositoryName = $mockRepositoryName
+            Name = $mockLabelName
+        }
+
+        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+
         BeforeAll {
             Mock -CommandName Invoke-GitHubApi
-
-            $mockOwnerName = 'Mary'
-            $mockRepositoryName = 'WebApps'
-            $mockLabelName = 'Label1'
-
-            $newGitHubLabelParameters = @{
-                Owner      = $mockOwnerName
-                Repository = $mockRepositoryName
-                Name       = $mockLabelName
-            }
-
-            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
         }
 
         Context 'When removing a label' {
             It 'Should call the mock with the correct arguments' {
-                { Remove-GitHubLabel @newGitHubLabelParameters -Confirm:$false } | Should -Not -Throw
+                Remove-GitHubLabel @newGitHubLabelParameters -Confirm:$false
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
                     $Method -eq 'Delete' -and
@@ -340,7 +321,7 @@ InModuleScope PSGitHub {
 
         Context 'When removing a label and requesting explicit validation' {
             It 'Should not not call any mock' {
-                { Remove-GitHubLabel @newGitHubLabelParameters -WhatIf } | Should -Not -Throw
+                Remove-GitHubLabel @newGitHubLabelParameters -WhatIf
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 0
             }
@@ -348,10 +329,9 @@ InModuleScope PSGitHub {
 
         Context 'When removing a label and requesting to forcibly execute' {
             It 'Should call the correct mock' {
-                {
-                    $ConfirmPreference = 'Medium'
-                    Remove-GitHubLabel @newGitHubLabelParameters -Force
-                } | Should -Not -Throw
+                $ConfirmPreference = 'Medium'
+                Remove-GitHubLabel @newGitHubLabelParameters -Force
+
 
                 Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1
             }

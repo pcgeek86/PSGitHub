@@ -8,13 +8,18 @@ function Remove-GitHubRepository {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string] $Owner,
-        [Parameter(Mandatory = $true)]
-        [string] $Name,
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $Method = 'repos/{0}/{1}' -f $Owner, $Name;
-    Invoke-GitHubApi -Uri $Method -Method Delete -Token $Token;
+    $uri = 'repos/{0}/{1}' -f $Owner, $Name;
+    Invoke-GitHubApi -Uri $uri -Method Delete -Token $Token;
 }

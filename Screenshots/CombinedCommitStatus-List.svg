@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="terminal" baseProfile="full" viewBox="0 0 800 206" width="800" version="1.1">
+    <defs>
+        <termtosvg:template_settings xmlns:termtosvg="https://github.com/nbedos/termtosvg">
+            <termtosvg:screen_geometry columns="100" rows="12"/>
+        </termtosvg:template_settings>
+        <style type="text/css" id="generated-style"><![CDATA[#screen {
+                font-family: 'DejaVu Sans Mono', monospace;
+                font-style: normal;
+                font-size: 14px;
+            }
+
+        text {
+            dominant-baseline: text-before-edge;
+            white-space: pre;
+        }]]></style>
+        <style type="text/css" id="user-style">
+            /* base16-default-dark color theme (source: http://chriskempson.com/projects/base16/) */
+            .foreground {fill: #d8d8d8;}
+            .background {fill: #181818;}
+            .color0 {fill: #181818;}
+            .color1 {fill: #ab4642;}
+            .color2 {fill: #a1b56c;}
+            .color3 {fill: #f7ca88;}
+            .color4 {fill: #7cafc2;}
+            .color5 {fill: #ba8baf;}
+            .color6 {fill: #86c1b9;}
+            .color7 {fill: #d8d8d8;}
+            .color8 {fill: #585858;}
+            .color9 {fill: #ab4642;}
+            .color10 {fill: #a1b56C;}
+            .color11 {fill: #f7ca88;}
+            .color12 {fill: #7cafc2;}
+            .color13 {fill: #ba8baf;}
+            .color14 {fill: #86c1b9;}
+            .color15 {fill: #f8f8f8;}
+        </style>
+    </defs>
+    <svg id="screen" width="800" viewBox="0 0 800 204" preserveAspectRatio="xMidYMin meet">
+        <rect class="background" height="100%" width="100%" x="0" y="0"/><defs><g id="g1"><text class="foreground" textLength="16" x="0">&gt; </text><text class="color11" font-weight="bold" textLength="240" x="16">Get-GitHubCombinedCommitStatus</text><text class="color15" font-weight="bold" textLength="8" x="256"> </text><text class="color8" font-weight="bold" textLength="48" x="264">-Owner</text><text class="color15" font-weight="bold" textLength="104" x="312"> sourcegraph </text><text class="color8" font-weight="bold" textLength="120" x="416">-RepositoryName</text><text class="color15" font-weight="bold" textLength="104" x="536"> sourcegraph </text><text class="color8" font-weight="bold" textLength="32" x="640">-Ref</text><text class="color15" font-weight="bold" textLength="128" x="672"> 73c7716f       </text></g><g id="g2"><text class="color15" font-weight="bold" textLength="424" x="0">                                                     </text></g><g id="g3"><text class="foreground" textLength="104" x="0">Sha        : </text><text class="color3" textLength="320" x="104">73c7716f8dfdf726385bd8c05e86203d96dfd88c</text></g><g id="g4"><text class="foreground" textLength="120" x="0">State      : &#9989; </text><text class="foreground" font-weight="bold" textLength="56" x="128">success</text></g><g id="g5"><text class="foreground" textLength="264" x="0">Statuses   : &#9989; percy/Sourcegraph </text><text class="foreground" font-style="italic" textLength="496" x="272">Visual review automatically approved, no visual changes found.</text></g><g id="g6"><text class="foreground" textLength="760" x="0">             https://percy.io/Sourcegraph/Sourcegraph/builds/1955947?utm_campaign=Sourcegraph&amp;u</text></g><g id="g7"><text class="foreground" textLength="536" x="0">             tm_content=Sourcegraph&amp;utm_source=github_status_public</text></g><g id="g8"><text class="foreground" textLength="296" x="0">             &#9989; buildkite/sourcegraph </text><text class="foreground" font-style="italic" textLength="352" x="304">Build #36235 passed (15 minutes, 52 seconds)</text></g><g id="g9"><text class="foreground" textLength="568" x="0">             https://buildkite.com/sourcegraph/sourcegraph/builds/36235</text></g><g id="g10"><text class="foreground" textLength="112" x="0">TotalCount : 2</text></g><g id="g11"><text class="background" textLength="8" x="0"> </text></g></defs><g><use y="0" xlink:href="#g1"/><use y="17" xlink:href="#g2"/><use y="34" xlink:href="#g3"/><use y="51" xlink:href="#g4"/><use y="68" xlink:href="#g5"/><use y="85" xlink:href="#g6"/><use y="102" xlink:href="#g7"/><use y="119" xlink:href="#g8"/><use y="136" xlink:href="#g9"/><use y="153" xlink:href="#g10"/><rect class="foreground" height="17" width="8" x="0" y="187"/><use y="187" xlink:href="#g11"/></g></svg>
+</svg>

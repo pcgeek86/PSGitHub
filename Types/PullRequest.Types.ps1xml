@@ -1,0 +1,56 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.PullRequest</Name>
+        <Members>
+            <!-- For piping to New-GitHubProjectCard -->
+            <NoteProperty>
+                <Name>Type</Name>
+                <Value>PullRequest</Value>
+            </NoteProperty>
+            <NoteProperty>
+                <Name>Icon</Name>
+                <Value>⎇</Value>
+            </NoteProperty>
+            <!-- For piping a pull request to Remove-GitHubGitRef -->
+            <ScriptProperty>
+                <Name>HeadRef</Name>
+                <GetScriptBlock>$this.head.ref</GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Sha</Name>
+                <GetScriptBlock>$this.head.sha</GetScriptBlock>
+            </ScriptProperty>
+            <AliasProperty>
+                <Name>MergedAt</Name>
+                <ReferencedMemberName>merged_at</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>ChangedFiles</Name>
+                <ReferencedMemberName>changed_files</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>RequestedReviewers</Name>
+                <ReferencedMemberName>requested_reviewers</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>RequestedTeams</Name>
+                <ReferencedMemberName>requested_teams</ReferencedMemberName>
+            </AliasProperty>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Title</Name>
+                            <Name>Number</Name>
+                            <Name>State</Name>
+                            <Name>User</Name>
+                            <Name>CreatedAt</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

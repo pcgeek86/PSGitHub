@@ -1,4 +1,4 @@
-function New-GitHubIssue {
+﻿function New-GitHubIssue {
     <#
     .Synopsis
     Creates a new GitHub issue.
@@ -11,7 +11,7 @@ function New-GitHubIssue {
     if you don't specify a body, so the recommendation would be to specify one.
 
     .Parameter Owner
-    The GitHub username of the account or organization that owns the GitHub repository specified in the -Repository parameter.
+    The GitHub username of the account or organization that owns the GitHub repository specified in the -RepositoryName parameter.
 
     .Parameter Repository
     Required. The name of the GitHub repository that is owned by the -Owner parameter, where the new GitHub issue will be
@@ -31,22 +31,26 @@ function New-GitHubIssue {
     https://developer.github.com/v3/issues
     #>
     [CmdletBinding()]
+    [OutputType('PSGitHub.Issue')]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory = $true)]
-        [string] $Repository,
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^[\w-]+$')]
+        [Alias('Repository')]
+        [string] $RepositoryName,
+
+        [Parameter(Mandatory)]
         [string] $Title,
-        [Parameter(Mandatory = $false)]
+
         [string] $Body,
-        [Parameter(Mandatory = $false)]
-        [string] $Assignee,
-        [Parameter(Mandatory = $false)]
+        [string[]] $Assignees,
         [string[]] $Labels,
-        [Parameter(Mandatory = $false)]
-        [string] $Milestone,
+        [string] $MilestoneTitle,
+        [int] $MilestoneNumber,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -56,26 +60,38 @@ function New-GitHubIssue {
     };
 
     ### Add an issue body to the message payload (optional)
-    if ($Body) { $ApiBody.Add('body', $Body); }
+    if ($Body) { $ApiBody.body = $Body }
 
-    ### TODO: Validate that this assignee is valid for this specific repository, before attempting to assign them.
-    ###       Use the Test-GitHubAssignee command for this.
-    if ($Assignee) { $ApiBody.Add('assignee', $Assignee); }
+    if ($Assignees) { $ApiBody.assignees = $Assignees }
 
     ### Add array of labels to the issue message body
-    if ($Labels) { $ApiBody.Add('labels', $Labels); }
+    if ($Labels) { $ApiBody.labels = $Labels }
 
     ### Add the milestone to the issue message body
-    if ($Milestone) { $ApiBody.Add('milestone', $Milestone); }
+    if ($MilestoneName) {
+        $MilestoneNumber = Get-GitHubMilestone | Where-Object { $_.Title -eq $MilestoneTitle } | ForEach-Object { $_.Number }
+        if (-not $MilestoneNumber) {
+            Write-Error "Milestone `"$($MilestoneTitle)`" does not exist"
+            return
+        }
+    }
+    if ($MilestoneNumber) { $ApiBody.milestone = $MilestoneNumber }
 
     ### Set up the API call
     $ApiCall = @{
-        Body   = $ApiBody | ConvertTo-Json
-        Uri    = 'repos/{0}/{1}/issues' -f $Owner, $Repository;
+        Body = $ApiBody | ConvertTo-Json
+        Uri = 'repos/{0}/{1}/issues' -f $Owner, $RepositoryName;
         Method = 'Post';
-        Token  = $Token
+        Token = $Token
     }
 
     ### Invoke the GitHub REST method
-    Invoke-GitHubApi @ApiCall;
+    Invoke-GitHubApi @ApiCall | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Issue')
+        $_.User.PSTypeNames.Insert(0, 'PSGitHub.User')
+        foreach ($label in $_.Labels) {
+            $label.PSTypeNames.Insert(0, 'PSGitHub.Label')
+        }
+        $_
+    }
 }

@@ -1,0 +1,97 @@
+﻿<Types>
+    <Type>
+        <Name>PSGitHub.Issue</Name>
+        <Members>
+            <!--
+                For piping to New-GitHubProjectCard
+                NOTE: This will return "Issue" even for PRs if they were retrieved from
+                Get-GitHubIssue or Find-GitHubIssue.
+                This is important because the id field refers to different values depending on this
+                (a PR has both an issue ID and a PR ID)
+            -->
+            <ScriptProperty>
+                <Name>ContentType</Name>
+                <GetScriptBlock>
+                    if ($this.url -match '/issues/\d+$') { 'Issue' } else { 'PullRequest' }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <!-- Aliases for piping Get-GitHubPullRequest to Merge-GitHubPullRequest -->
+            <ScriptProperty>
+                <Name>RepositoryName</Name>
+                <GetScriptBlock>
+                    if ('base' -in $this.PSObject.Properties.Name -and $null -ne $this.base) {
+                        return $this.base.repo.name
+                    }
+                    $this.repository_url -match '/([^/]+)$' | Out-Null
+                    $Matches[1]
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Owner</Name>
+                <GetScriptBlock>
+                    # pull requests
+                    if ('base' -in $this.PSObject.Properties.Name -and $null -ne $this.base) {
+                        return $this.base.repo.owner.login
+                    }
+                    $this.repository_url -match '/([^/]+)/[^/]+$' | Out-Null
+                    $Matches[1]
+                </GetScriptBlock>
+            </ScriptProperty>
+            <NoteProperty>
+                <Name>Icon</Name>
+                <Value>ⓘ</Value>
+            </NoteProperty>
+            <ScriptMethod>
+                <Name>GetVT100ForegroundColor</Name>
+                <Script>
+                    if ($this.State -eq 'open') {
+                        "`e[32m"
+                    } elseif ('pull_request' -in $this.PSObject.Properties.Name -and $null -ne $this.pull_request -and $null -ne $this.MergedAt) {
+                        "`e[35m"
+                    } else {
+                        "`e[31m"
+                    }
+                </Script>
+            </ScriptMethod>
+            <ScriptMethod>
+                <Name>GetVT100BackgroundColor</Name>
+                <Script>
+                    if ($this.State -eq 'open') {
+                        "`e[42m"
+                    } elseif ('pull_request' -in $this.PSObject.Properties.Name -and $null -ne $this.pull_request -and $null -ne $this.MergedAt) {
+                        "`e[45m"
+                    } else {
+                        "`e[41m"
+                    }
+                </Script>
+            </ScriptMethod>
+            <ScriptProperty>
+                <Name>HtmlUrl</Name>
+                <GetScriptBlock>$this.html_url</GetScriptBlock>
+            </ScriptProperty>
+            <AliasProperty>
+                <Name>CreatedAt</Name>
+                <ReferencedMemberName>created_at</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>UpdatedAt</Name>
+                <ReferencedMemberName>updated_at</ReferencedMemberName>
+            </AliasProperty>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Title</Name>
+                            <Name>Number</Name>
+                            <Name>State</Name>
+                            <Name>User</Name>
+                            <Name>CreatedAt</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

@@ -1,0 +1,58 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.ProjectCard</Name>
+        <Members>
+            <AliasProperty>
+                <Name>CardId</Name>
+                <ReferencedMemberName>id</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>CreatedAt</Name>
+                <ReferencedMemberName>created_at</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>UpdatedAt</Name>
+                <ReferencedMemberName>updated_at</ReferencedMemberName>
+            </AliasProperty>
+            <ScriptProperty>
+                <Name>Owner</Name>
+                <GetScriptBlock>
+                    if ($this.content_url -match '/([^/]+)/([^/]+)/(issues|pulls)/(\d+)$') {
+                        $Matches[1]
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>RepositoryName</Name>
+                <GetScriptBlock>
+                    if ($this.content_url -match '/([^/]+)/([^/]+)/(issues|pulls)/(\d+)$') {
+                        $Matches[2]
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>Number</Name>
+                <GetScriptBlock>
+                    if ($this.content_url -match '/([^/]+)/([^/]+)/(issues|pulls)/(\d+)$') {
+                        $Matches[4]
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Note</Name>
+                            <Name>Owner</Name>
+                            <Name>RepositoryName</Name>
+                            <Name>Number</Name>
+                            <Name>Archived</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>

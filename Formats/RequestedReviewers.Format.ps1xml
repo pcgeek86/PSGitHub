@@ -1,0 +1,26 @@
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>List</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.RequestedReviewers</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>Users</Label>
+                                <PropertyName>Users</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Teams</Label>
+                                <PropertyName>Teams</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

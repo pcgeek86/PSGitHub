@@ -1,4 +1,4 @@
-function New-GitHubRepository {
+﻿function New-GitHubRepository {
     <#
     .Synopsis
     Creates a new GitHub Repository, with the specified name.
@@ -27,40 +27,64 @@ function New-GitHubRepository {
     .Notes
     Created by Trevor Sullivan <trevor@trevorsullivan.net>
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'User')]
+    [OutputType('PSGitHub.Repository')]
     param (
-        [Parameter()]
+        [Parameter(Mandatory, ParameterSetName = 'Org')]
         [string] $Organization,
+
+        # The id of the team that will be granted access to this repository.
+        # This is only valid when creating a repository in an organization.
+        [Parameter(ParameterSetName = 'Org')]
+        [int] $TeamId,
+
         [Parameter(Mandatory, Position = 0)]
         [string] $Name,
-        [Parameter()]
+
         [string] $Description,
-        [Parameter()]
         [string] $Homepage,
-        [Parameter()]
+        [switch] $Private,
         [switch] $IncludeReadme,
-        [Parameter()]
-        [string] $DisableIssues,
-        [Parameter()]
-        [string] $Private,
+        [string] $GitIgnoreTemplate,
+        [string] $LicenseTemplate,
+        [switch] $DisableIssues,
+        [switch] $DisableProjects,
+        [switch] $DisableWiki,
+        [switch] $DisableSquashMerge,
+        [switch] $DisableMergeCommit,
+        [switch] $DisableRebaseMerge,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $Body = @{
-        name        = $Name;
-        description = $Description;
-        homepage    = $Homepage;
-        private     = [bool]$Private;
-        has_issues  = [bool]!$DisableIssues;
-        auto_init   = [bool]$IncludeReadme;
-    } | ConvertTo-Json;
-    Write-Verbose -Message $Body;
+        name = $Name
+        description = $Description
+        homepage = $Homepage
+        private = [bool]$Private
+        auto_init = [bool]$IncludeReadme
+        gitignore_template = $GitIgnoreTemplate
+        license_template = $LicenseTemplate
+        has_wiki = -not $DisableWiki
+        has_issues = -not $DisableIssues
+        allow_squash_merge = -not $DisableSquashMerge
+        allow_merge_commit = -not $DisableMergeCommit
+        allow_rebase_merge = -not $DisableRebaseMerge
+    }
+    if ($DisableProjects) {
+        $Body.has_projects = -not $DisableProjects
+    }
+    if ($TeamId) {
+        $Body.team_id = $TeamId
+    }
 
     $uri = if ($Organization) {
         "orgs/$Organization/repos"
-    }
-    else {
+    } else {
         "user/repos"
     }
-    Invoke-GitHubApi -Uri $uri -Body $Body -Method Post -Token $Token;
+    Invoke-GitHubApi -Method POST $uri -Body ($Body | ConvertTo-Json) -Token $Token | ForEach-Object {
+        $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')
+        $_.Owner.Insert(0, 'PSGitHub.User')
+        $_
+    }
 }

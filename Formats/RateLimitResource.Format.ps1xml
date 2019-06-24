@@ -1,0 +1,30 @@
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>List</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.RateLimitResource</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>Limit</Label>
+                                <PropertyName>Limit</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Remaining</Label>
+                                <PropertyName>Remaining</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Reset</Label>
+                                <PropertyName>Reset</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

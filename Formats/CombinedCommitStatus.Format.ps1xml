@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>GitHubCombinedCommitStatusList</Name>
+            <ViewSelectedBy>
+                <TypeName>PSGitHub.CombinedCommitStatus</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <Label>Sha</Label>
+                                <ScriptBlock>"`e[33m$($_.Sha)`e[0m"</ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>State</Label>
+                                <ScriptBlock>
+                                    $icon = switch ($_.State) {
+                                        'success' { "✅" }
+                                        'pending' { "🔄" }
+                                        'failure' { "❌" }
+                                    }
+                                    "$icon `e[1m$($_.State)`e[0m"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <Label>Statuses</Label>
+                                <ScriptBlock>
+                                    ($_.Statuses | ForEach-Object {
+                                        $icon = switch ($_.State) {
+                                            'success' { "✅" }
+                                            'pending' { "🔄" }
+                                            'failure' { "❌" }
+                                            'error' { "❗️" }
+                                        }
+                                        # iTerm 2 image inline
+                                        # $avatar = "`e]1337;File=inline=1;height=1:$([System.Convert]::ToBase64String((Invoke-WebRequest $_.avatar_url).Content))`a"
+                                        "$icon $($_.Context) `e[3m$($_.Description)`e[0m`n`e[2m$($_.TargetUrl)`e[0m"
+                                    }) -join "`n"
+                                </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>TotalCount</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
