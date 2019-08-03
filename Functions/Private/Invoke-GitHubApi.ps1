@@ -87,11 +87,13 @@
     # Invoke the REST API
     try {
         Invoke-RestMethod @apiRequest -ResponseHeadersVariable responseHeaders
-        Write-Verbose "Rate limit total: $($responseHeaders['X-RateLimit-Limit'])"
-        Write-Verbose "Rate limit remaining: $($responseHeaders['X-RateLimit-Remaining'])"
-        $resetUnixSeconds = [int]($responseHeaders['X-RateLimit-Reset'][0])
-        $resetDateTime = ([System.DateTimeOffset]::FromUnixTimeSeconds($resetUnixSeconds)).DateTime
-        Write-Verbose "Rate limit resets: $resetDateTime"
+        if ($responseHeaders.'X-RateLimit-Limit') { 
+            Write-Verbose "Rate limit total: $($responseHeaders['X-RateLimit-Limit'])"
+            Write-Verbose "Rate limit remaining: $($responseHeaders['X-RateLimit-Remaining'])"
+            $resetUnixSeconds = [int]($responseHeaders['X-RateLimit-Reset'][0])
+            $resetDateTime = ([System.DateTimeOffset]::FromUnixTimeSeconds($resetUnixSeconds)).DateTime
+            Write-Verbose "Rate limit resets: $resetDateTime"
+        }
     } catch [Microsoft.PowerShell.Commands.HttpResponseException] {
         $errors = , ($_.ErrorDetails.Message | ConvertFrom-Json)
         if ('errors' -in $err.PSObject.Properties.Name) {
