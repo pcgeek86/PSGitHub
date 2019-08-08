@@ -46,8 +46,8 @@ function New-GitHubOrganization {
     Process {
         foreach ($handle in $Name) {
             $Body = ConvertTo-Json -InputObject @{
-                login        = $handle
-                admin        = $Administrator
+                login = $handle
+                admin = $Administrator
                 profile_name = $Description
             }
             Write-Debug -Message "Current value of Body is: $(Out-String -InputObject $Body)"
