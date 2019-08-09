@@ -40,47 +40,66 @@ function Get-GitHubOrganization {
 	)
 
 	Begin {
-
 		Write-Debug -Message "Entered Function: Get-GitHubOrganization"
-
-		If ($HostName) {
-			Write-Debug -Message "Hostname is: $HostName"
-			$BaseUrl = "https://$HostName/api/v3"
-			Write-Debug -Message "BaseUrl is: $BaseUrl"
-		}
-
-		Else {
-			Write-Debug -Message 'Setting BaseUrl to GitHub.com'
-			$BaseUrl = 'https://api.github.com'
-			Write-Debug -Message "BaseUrl is: $BaseUrl"
-		}
 	}
 
 	Process {
-		if ($PSCmdlet.ParameterSetName -eq 'Org') {
-			foreach ($handle in $Name) {
-				Write-Verbose -Message "Current Org Name: $handle"
-
-				$Url = "$BaseUrl/orgs/$handle"
-				Write-Debug -Message "Querying API at Url: $Url"
-
-				Invoke-GitHubApi -Uri $Url -Token $Token | ForEach-Object { $_ } | ForEach-Object {
-					Write-Verbose -Message "Type is: $(Out-String -InputObject (Get-Member -InputObject $_))"
-					$_.PSTypeNames.Insert(0, 'PSGitHub.Organization')
-					$_
+		If ($PSCmdlet.ParameterSetName -eq 'Org') {
+			If ($HostName) {
+				ForEach ($handle in $Name) {
+					Write-Verbose -Message "Current Org Name: $handle"
+	
+					$Url = "/orgs/$handle"
+					Write-Debug -Message "Querying API at Url: $Url"
+	
+					Invoke-GitHubApi -HostName $HostName -Uri $Url -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+						Write-Verbose -Message "Type is: $(Out-String -InputObject (Get-Member -InputObject $_))"
+						$_.PSTypeNames.Insert(0, 'PSGitHub.Organization')
+						$_
+					}
+				}
+			}
+			Else {
+				ForEach ($handle in $Name) {
+					Write-Verbose -Message "Current Org Name: $handle"
+	
+					$Url = "/orgs/$handle"
+					Write-Debug -Message "Querying API at Url: $Url"
+	
+					Invoke-GitHubApi -Uri $Url -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+						Write-Verbose -Message "Type is: $(Out-String -InputObject (Get-Member -InputObject $_))"
+						$_.PSTypeNames.Insert(0, 'PSGitHub.Organization')
+						$_
+					}
 				}
 			}
 		}
+		ElseIf ($PSCmdlet.ParameterSetName -eq 'UserMemberships') {
+			If ($HostName) {
+				ForEach ($User in $UserName) {
+					Write-Verbose -Message "Retrieving user memberships for user: $User"
 
-		elseif ($PSCmdlet.ParameterSetName -eq 'UserMemberships') {
-			Write-Verbose -Message "Retrieving user memberships for user: $UserName"
+					$Url = "/users/$User/orgs"
+					Write-Debug -Message "Querying API at Url: $Url"
+		
+					Invoke-GitHubApi -HostName $HostName -Uri $Url -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+						$_.PSTypeNames.Insert(0, 'PSGitHub.Organization')
+						$_
+					}
+				}
+			}
+			Else {
+				ForEach ($User in $UserName) {
+					Write-Verbose -Message "Retrieving user memberships for user: $User"
 
-			$Url = "$BaseUrl/users/$Username/orgs"
-			Write-Debug -Message "Querying API at Url: $Url"
-
-			Invoke-GitHubApi -Uri $Url -Token $Token | ForEach-Object { $_ } | ForEach-Object {
-				$_.PSTypeNames.Insert(0, 'PSGitHub.Organization')
-				$_
+					$Url = "/users/$User/orgs"
+					Write-Debug -Message "Querying API at Url: $Url"
+		
+					Invoke-GitHubApi -Uri $Url -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+						$_.PSTypeNames.Insert(0, 'PSGitHub.Organization')
+						$_
+					}
+				}
 			}
 		}
 	}

@@ -16,24 +16,25 @@ function New-GitHubOrganization {
     https://twitter.com/michaelsainz
     https://developer.github.com/enterprise/2.17/v3/enterprise-admin/orgs/#create-an-organization
     #>
+    [OutputType('PSGitHub.Organization')]
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory, Position = 0)]
+        [Parameter(Mandatory = $true)]
         [Alias('Organization', 'Org')]
         [string[]]$Name,
 
-        [Parameter(Mandatory, Position = 1)]
+        [Parameter(Mandatory = $true)]
         [Alias('Admin')]
         [string]$Administrator,
 
-        [Parameter()]
+        [Parameter(Mandatory = $false)]
         [string]$Description,
 
-        [Parameter(Position = 3)]
+        [Parameter(Mandatory = $true)]
         [Security.SecureString]$Token,
 
-        [Parameter(Mandatory)]
-        [Alias('ComputerName')]
+        [Parameter(Mandatory = $true)]
+        [Alias('ComputerName', 'Host')]
         [string]$HostName
     )
     

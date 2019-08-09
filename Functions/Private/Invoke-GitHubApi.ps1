@@ -35,6 +35,9 @@
         [Parameter(Mandatory, Position = 0)]
         [string] $Uri,
 
+        [Parameter(Mandatory = $false)]
+        [String]$HostName,
+
         [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json' },
         [Microsoft.PowerShell.Commands.WebRequestMethod] $Method = [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
         $Body,
@@ -45,17 +48,25 @@
         [switch] $Anonymous,
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
-
     $Headers['User-Agent'] = 'PowerShell PSGitHub'
 
     if ($Accept) {
         $Headers.Accept = ($Accept -join ',')
     }
 
+    If ($HostName) {
+        Write-Debug -Message "Hostname is: $HostName"
+        $Uri = [Uri]::new([Uri]::new("https://$HostName"), "/api/v3$Uri")
+    }
+    Else {
+        Write-Debug -Message 'Setting BaseUrl to GitHub.com'
+        $Uri = [Uri]::new([Uri]::new('https://api.github.com'), $Uri)
+    }
+
     # Resolve the Uri parameter with https://api.github.com as a base URI
     # This allows to call this function with just a path,
     # but also supply a full URI (e.g. for a GitHub enterprise instance)
-    $Uri = [Uri]::new([Uri]::new('https://api.github.com'), $Uri)
+    # $Uri = [Uri]::new([Uri]::new('https://api.github.com'), $Uri)
 
     $apiRequest = @{
         Headers = $Headers;
