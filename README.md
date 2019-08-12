@@ -77,6 +77,7 @@ Get-Command -Name *-GitHub* -CommandType Function | Group-Object -Property { ($_
 | Get, Move, New                 | ProjectCard          |
 | Get                            | ProjectColumn        |
 | Get, Merge, New                | PullRequest          |
+| Get                            | PullRequestFile      |
 | Get                            | RateLimit            |
 | Get, New                       | Release              |
 | Get, New, Remove               | ReleaseAsset         |

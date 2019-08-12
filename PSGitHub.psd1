@@ -61,6 +61,7 @@
         'Types/ProjectCard.Types.ps1xml',
         'Types/ProjectColumn.Types.ps1xml',
         'Types/PullRequest.Types.ps1xml',
+        'Types/PullRequestFile.Types.ps1xml',
         'Types/RateLimit.Types.ps1xml',
         'Types/RateLimitResource.Types.ps1xml',
         'Types/RateLimitResources.Types.ps1xml',
@@ -80,6 +81,7 @@
         'Formats/ProjectCard.Format.ps1xml',
         'Formats/ProjectColumn.Format.ps1xml',
         'Formats/PullRequest.Format.ps1xml'
+        'Formats/PullRequestFile.Format.ps1xml'
         'Formats/RateLimit.Format.ps1xml',
         'Formats/RequestedReviewers.Format.ps1xml',
         'Formats/RateLimitResource.Format.ps1xml'
@@ -149,6 +151,7 @@
         ### Pull Request commands
         'New-GitHubPullRequest',
         'Get-GitHubPullRequest',
+        'Get-GitHubPullRequestFile',
         'Merge-GitHubPullRequest',
         'New-GitHubReviewRequest',
         'New-GitHubReview',

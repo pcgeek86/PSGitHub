@@ -1,0 +1,28 @@
+<Types>
+    <Type>
+        <Name>PSGitHub.PullRequestFile</Name>
+        <Members>
+            <AliasProperty>
+                <Name>RawUrl</Name>
+                <ReferencedMemberName>raw_url</ReferencedMemberName>
+            </AliasProperty>
+            <MemberSet>
+                <Name>PSStandardMembers</Name>
+                <Members>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>FileName</Name>
+                            <Name>Status</Name>
+                            <Name>Sha</Name>
+                            <Name>Changes</Name>
+                            <Name>Additions</Name>
+                            <Name>Deletions</Name>
+                            <Name>Patch</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
+                </Members>
+            </MemberSet>
+        </Members>
+    </Type>
+</Types>
