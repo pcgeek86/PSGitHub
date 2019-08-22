@@ -146,7 +146,7 @@
         if ($MilestoneNumber) {
             $apiBody.milestone = $MilestoneNumber
         }
-        if ($Lables) {
+        if ($Labels) {
             $apiBody.labels = $Labels
         }
         if ($PSCmdlet.ParameterSetName -eq 'title') {
