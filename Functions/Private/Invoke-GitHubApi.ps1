@@ -92,7 +92,14 @@
         $resetUnixSeconds = [int]($responseHeaders['X-RateLimit-Reset'][0])
         $resetDateTime = ([System.DateTimeOffset]::FromUnixTimeSeconds($resetUnixSeconds)).DateTime
         Write-Verbose "Rate limit resets: $resetDateTime"
-    } catch [Microsoft.PowerShell.Commands.HttpResponseException] {
+    } catch {
+        if (
+            $_.Exception.PSObject.TypeNames -notcontains 'Microsoft.PowerShell.Commands.HttpResponseException' -or # PowerShell Core
+            $_.Exception -isnot [System.Net.WebException] # Windows PowerShell
+        ) {
+            # Throw any error that is not a HTTP response error (e.g. server not reachable)
+            throw $_
+        }
         $errors = , ($_.ErrorDetails.Message | ConvertFrom-Json)
         if ('errors' -in $err.PSObject.Properties.Name) {
             $errors += $err.errors
