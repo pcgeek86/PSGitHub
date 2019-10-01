@@ -104,7 +104,20 @@
         $res
         # Only delete the branch if merge was successful
         if ($res -and $res.merged -and $DeleteBranch) {
-            Get-GitHubPullRequest -Owner $Owner -RepositoryName $RepositoryName -Number $Number -Token $Token | Remove-GitHubGitRef -Token $Token
+            $pr = Get-GitHubPullRequest -Owner $Owner -RepositoryName $RepositoryName -Number $Number -Token $Token
+            try {
+                $pr | Remove-GitHubGitRef -Token $Token
+            } catch {
+                # Ignore Reference not found errors from the branch being auto-deleted
+                # See https://help.github.com/en/articles/managing-the-automatic-deletion-of-branches
+                if (
+                    $_.Exception.PSObject.TypeNames -notcontains 'Microsoft.PowerShell.Commands.HttpResponseException' -or # PowerShell Core
+                    $_.Exception -isnot [System.Net.WebException] -or # Windows PowerShell
+                    $_.Exception.Response.StatusCode -ne 422 # Unprocessable Entity
+                ) {
+                    Write-Error $_
+                }
+            }
         }
     }
 }
