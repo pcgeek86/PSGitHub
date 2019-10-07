@@ -22,7 +22,7 @@ s    PSGitHub.PullRequest. You can pipe the output of Get-GitHubPullRequest
         # The name of the target repository
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [ValidatePattern('^[\w-]+$')]
+        [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [ValidateNotNullOrEmpty()]
         [string] $RepositoryName,

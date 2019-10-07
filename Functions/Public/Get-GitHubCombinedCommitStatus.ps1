@@ -13,7 +13,7 @@
         # The name of the repository
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [ValidatePattern('^[\w-]+$')]
+        [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 
