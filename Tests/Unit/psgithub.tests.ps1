@@ -218,6 +218,7 @@ InModuleScope PSGitHub {
                 Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
+                    name = $mockLabelName
                     color = $mockLabelColor
                 }
 
@@ -237,6 +238,7 @@ InModuleScope PSGitHub {
                 Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
+                    name = $mockLabelName
                     description = $mockLabelDescription
                 }
 

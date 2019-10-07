@@ -84,6 +84,8 @@
 
         if ($NewName) {
             $bodyProperties['name'] = $NewName
+        } else {
+            $bodyProperties['name'] = $Name
         }
 
         if ($Color) {
