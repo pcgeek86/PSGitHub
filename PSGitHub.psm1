@@ -1,6 +1,6 @@
 ### Created by Trevor Sullivan <trevor@trevorsullivan.net>
 
-Get-ChildItem $PSScriptRoot/Functions, $PSScriptRoot/Completers -Recurse -File -Filter *.ps1 | ForEach-Object {
+Get-ChildItem $PSScriptRoot/Functions, $PSScriptRoot/Completers -Recurse -File -Include *.ps1 | ForEach-Object {
     . $_.FullName;
 }
 
