@@ -36,7 +36,7 @@
     [CmdletBinding()]
     param(
         [Parameter(Mandatory, ParameterSetName = 'Release', ValueFromPipeline)]
-        [ValidateScript( { 'assets_url' -in $_.PSObject.Properties.Name })]
+        [ValidateScript( { $null -ne $_.PSObject.Properties['assets_url'] })]
         [object] $Release,
 
         [Parameter(Mandatory, ParameterSetName = 'Id')]
