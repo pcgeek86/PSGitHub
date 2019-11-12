@@ -46,7 +46,7 @@
         [Parameter(Mandatory, ParameterSetName = 'Id')]
         [Parameter(Mandatory, ParameterSetName = 'ReleaseId')]
         [ValidateNotNullOrEmpty()]
-        [ValidatePattern('^[\w-]+$')]
+        [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 

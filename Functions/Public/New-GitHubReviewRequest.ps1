@@ -15,13 +15,13 @@
 
         # The owner of the target repository
         [Parameter(ValueFromPipelineByPropertyName)]
-        [ValidatePattern('^[\w-]+$')] # safety check to make sure no owner/repo slug (with slash) was passed
+        [ValidatePattern('^[\w-\.]+$')] # safety check to make sure no owner/repo slug (with slash) was passed
         [string] $Owner = (Get-GitHubUser -Token $Token).login, # This doesn't work for org repos.
 
         # The name of the target repository
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [ValidatePattern('^[\w-]+$')]
+        [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 

@@ -53,7 +53,7 @@
 
         [Parameter(Mandatory, ParameterSetName = 'Repository')]
         [ValidateNotNullOrEmpty()]
-        [ValidatePattern('^[\w-]+$')]
+        [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 
