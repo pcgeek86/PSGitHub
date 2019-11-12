@@ -197,7 +197,7 @@
 
         Invoke-GitHubApi @apiCall | ForEach-Object { $_ } | ForEach-Object {
             $_.PSTypeNames.Insert(0, 'PSGitHub.Issue')
-            if ('pull_request' -in $_.PSObject.Properties.Name) {
+            if ($null -ne $_.PSObject.Properties['pull_request']) {
                 $_.PSTypeNames.Insert(0, 'PSGitHub.PullRequest')
             }
             $_.User.PSTypeNames.Insert(0, 'PSGitHub.User')

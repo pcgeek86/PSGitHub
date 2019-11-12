@@ -101,24 +101,24 @@
             throw $_
         }
         $errors = , ($_.ErrorDetails.Message | ConvertFrom-Json)
-        if ('errors' -in $err.PSObject.Properties.Name) {
+        if ($null -ne $err.PSObject.Properties['errors']) {
             $errors += $err.errors
         }
         foreach ($err in $errors) {
             $message = ""
             $errorId = $null
             $docUrl = $null
-            if ('code' -in $err.PSObject.Properties.Name) {
+            if ($null -ne $err.PSObject.Properties['code']) {
                 $errorId = $err.code
                 $message += "$($err.code): "
             }
-            if ('field' -in $err.PSObject.Properties.Name) {
+            if ($null -ne $err.PSObject.Properties['field']) {
                 $message += "$($err.field): "
             }
-            if ('message' -in $err.PSObject.Properties.Name) {
+            if ($null -ne $err.PSObject.Properties['message']) {
                 $message += $err.message
             }
-            if ('documentation_url' -in $err.PSObject.Properties.Name) {
+            if ($null -ne $err.PSObject.Properties['documentation_url']) {
                 $message += "`nSee $($err.documentation_url)"
                 $docUrl = $err.documentation_url
             }

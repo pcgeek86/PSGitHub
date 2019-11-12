@@ -30,17 +30,16 @@
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [Alias('User')]
         [string] $Owner,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('^[\w-\.]+$')]
-        [Alias('Repository')]
         [string] $RepositoryName,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number,
 

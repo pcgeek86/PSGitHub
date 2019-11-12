@@ -86,8 +86,11 @@
 
         [string[]] $Labels,
 
-        [int] $MilestoneNumber,
-        [string] $MilestoneTitle,
+        # The number of the milestone to associate this pull request with.
+        $MilestoneNumber,
+
+        # The title of the milestone to associate this pull request with.
+        $MilestoneTitle,
 
         [string[]] $Assignees,
 
@@ -127,28 +130,6 @@
             base = $Base
             draft = [bool]$Draft
         }
-        if ($TeamAssignees) {
-            $Assignees += $TeamAssignees |
-                ForEach-Object { Get-GitHubTeam -OrganizationName $Owner -Slug $_ -Token $Token } |
-                Get-GitHubTeamMember -Token $Token |
-                ForEach-Object { $_.Login }
-        }
-        if ($Assignees) {
-            $apiBody.assignees = $Assignees
-        }
-        if ($MilestoneTitle) {
-            $MilestoneNumber = Get-GitHubMilestone | Where-Object { $_.Title -eq $MilestoneTitle } | ForEach-Object { $_.Number }
-            if (-not $MilestoneNumber) {
-                Write-Error "Milestone `"$($MilestoneTitle)`" does not exist"
-                return
-            }
-        }
-        if ($MilestoneNumber) {
-            $apiBody.milestone = $MilestoneNumber
-        }
-        if ($Labels) {
-            $apiBody.labels = $Labels
-        }
         if ($PSCmdlet.ParameterSetName -eq 'title') {
             # send the pull request via title and body
             $apiBody['title'] = $Title
@@ -182,6 +163,19 @@
         }
         foreach ($reviewer in $pr.RequestedReviewers) {
             $reviewer.PSTypeNames.Insert(0, 'PSGitHub.User')
+        }
+
+        if ($Labels -or $TeamAssignees -or $Assignees -or $MilestoneTitle -or $MilestoneNumber) {
+            # Update PR with issue properties
+            $pr = $pr | Update-GitHubIssue `
+                -TeamAssignees $TeamAssignees `
+                -Assignees $Assignees `
+                -MilestoneNumber $MilestoneNumber `
+                -MilestoneTitle $MilestoneTitle `
+                -Labels $Labels `
+                -Token $Token |
+                # Update PR object
+                Get-GitHubPullRequest -Token $Token
         }
 
         if ($Reviewers -or $TeamReviewers) {

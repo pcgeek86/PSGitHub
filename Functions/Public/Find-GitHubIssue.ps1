@@ -29,7 +29,7 @@
             ForEach-Object { $_.items } |
             ForEach-Object {
                 $_.PSTypeNames.Insert(0, 'PSGitHub.Issue')
-                if ('pull_request' -in $_.PSObject.Properties.Name) {
+                if ($null -ne $_.PSObject.Properties['pull_request']) {
                     $_.PSTypeNames.Insert(0, 'PSGitHub.PullRequest')
                 }
                 foreach ($label in $_.Labels) {

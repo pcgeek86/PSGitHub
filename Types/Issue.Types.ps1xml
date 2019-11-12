@@ -19,7 +19,7 @@
             <ScriptProperty>
                 <Name>RepositoryName</Name>
                 <GetScriptBlock>
-                    if ('base' -in $this.PSObject.Properties.Name -and $null -ne $this.base) {
+                    if ($null -ne $this.PSObject.Properties['base'] -and $null -ne $this.base) {
                         return $this.base.repo.name
                     }
                     $this.repository_url -match '/([^/]+)$' | Out-Null
@@ -30,7 +30,7 @@
                 <Name>Owner</Name>
                 <GetScriptBlock>
                     # pull requests
-                    if ('base' -in $this.PSObject.Properties.Name -and $null -ne $this.base) {
+                    if ($null -ne $this.PSObject.Properties['base'] -and $null -ne $this.base) {
                         return $this.base.repo.owner.login
                     }
                     $this.repository_url -match '/([^/]+)/[^/]+$' | Out-Null
@@ -46,7 +46,12 @@
                 <Script>
                     if ($this.State -eq 'open') {
                         "`e[32m"
-                    } elseif ('pull_request' -in $this.PSObject.Properties.Name -and $null -ne $this.pull_request -and $null -ne $this.MergedAt) {
+                    } elseif (
+                        $null -ne $this.PSObject.Properties['pull_request'] -and
+                        $null -ne $this.pull_request -and
+                        $null -ne $this.PSObject.Properties['merged_at'] -and
+                        $null -ne $this.merged_at
+                    ) {
                         "`e[35m"
                     } else {
                         "`e[31m"
@@ -58,7 +63,12 @@
                 <Script>
                     if ($this.State -eq 'open') {
                         "`e[42m"
-                    } elseif ('pull_request' -in $this.PSObject.Properties.Name -and $null -ne $this.pull_request -and $null -ne $this.MergedAt) {
+                    } elseif (
+                        $null -ne $this.PSObject.Properties['pull_request'] -and
+                        $null -ne $this.pull_request -and
+                        $null -ne $this.PSObject.Properties['merged_at'] -and
+                        $null -ne $this.merged_at
+                    ) {
                         "`e[45m"
                     } else {
                         "`e[41m"
