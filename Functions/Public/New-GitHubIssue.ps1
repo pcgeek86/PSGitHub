@@ -23,9 +23,6 @@
     .Parameter Labels
     Optional. An array of strings that indicate the labels that will be assigned to this GitHub issue upon creation.
 
-    .Parameter Milestone
-    The number of the milestone that the issue will be assigned to. Use Get-GitHubMilestone to retrieve a list of milestones.
-
     .Link
     https://trevorsullivan.net
     https://developer.github.com/v3/issues
@@ -49,8 +46,15 @@
         [string] $Body,
         [string[]] $Assignees,
         [string[]] $Labels,
-        [string] $MilestoneTitle,
-        [int] $MilestoneNumber,
+
+        # The title of the milestone to associate this issue with. Optional.
+        [AllowNull()]
+        $MilestoneTitle,
+
+        # The number of the milestone to associate this issue with. Optional.
+        [AllowNull()]
+        $MilestoneNumber,
+
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 

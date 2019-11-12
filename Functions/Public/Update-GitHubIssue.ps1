@@ -17,12 +17,6 @@
     Required. The name of the GitHub repository that is owned by the -Owner parameter, where the new GitHub issue will be
     created.
 
-    .Parameter Labels
-    Optional. An array of strings that indicate the labels that will be assigned to this GitHub issue upon creation.
-
-    .Parameter Milestone
-    The number of the milestone that the issue will be assigned to. Use Get-GitHubMilestone to retrieve a list of milestones.
-
     .Parameter State
     Optional. The state to which the issue will be set ('open' or 'closed').
 
@@ -59,8 +53,16 @@
         # Previous assignees are replaced.
         [string[]] $Assignees,
 
+        # An array of strings that indicate the labels that will replace the current list of labels of this GitHub issue. Optional.
         [string[]] $Labels,
-        [string] $Milestone,
+
+        # The number of the milestone to associate this issue with or null to remove current. Optional.
+        [AllowNull()]
+        $MilestoneNumber,
+
+        # The title of the milestone to associate this issue with or null to remove current. Optional.
+        [AllowNull()]
+        $MilestoneTitle,
 
         [ValidateSet('open', 'closed')]
         [string] $State,
@@ -88,8 +90,17 @@
         if ($Labels) {
             $apiBody.labels = $Labels
         }
-        if ($Milestone) {
-            $apiBody.milestone = $Milestone
+        if ($MilestoneTitle) {
+            $MilestoneNumber = Get-GitHubMilestone -Owner $Owner -RepositoryName $RepositoryName |
+                Where-Object { $_.Title -eq $MilestoneTitle } |
+                ForEach-Object { $_.Number }
+            if (-not $MilestoneNumber) {
+                Write-Error "Milestone `"$($MilestoneTitle)`" does not exist"
+                return
+            }
+        }
+        if ($PSBoundParameters.ContainsKey('MilestoneNumber') -or $PSBoundParameters.ContainsKey('MilestoneTitle')) {
+            $apiBody.milestone = $MilestoneNumber
         }
         if ($State) {
             $apiBody.state = $State
