@@ -26,27 +26,19 @@
         [string] $RepositoryName,
 
         # User logins that will be requested.
-        [string[]] $Reviewers,
+        [string[]] $Reviewers = @(),
 
         # Team slugs that will be requested.
         # The team must exist in the organization of the repository.
-        [string[]] $TeamReviewers,
+        [string[]] $TeamReviewers = @(),
 
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     process {
-        # team_reviewers only works in GitHub Enterprise.
-        # Emulate it on github.com by requesting all members of the team (at the time of request).
-        if ($TeamReviewers) {
-            $Reviewers += $TeamReviewers |
-                ForEach-Object { Get-GitHubTeam -OrganizationName $Owner -Slug $_ } |
-                Get-GitHubTeamMember |
-                ForEach-Object { $_.Login }
-        }
-
         $body = @{
             reviewers = $Reviewers
+            team_reviewers = $TeamReviewers
         }
 
         Invoke-GithubApi -Method POST "/repos/$Owner/$RepositoryName/pulls/$Number/requested_reviewers" `

@@ -98,11 +98,11 @@
         [string[]] $TeamAssignees,
 
         # User logins that will be requested for review.
-        [string[]] $Reviewers,
+        [string[]] $Reviewers = @(),
 
         # Team slugs whose members will be requested for review.
         # The team must exist in the organization of the repository.
-        [string[]] $TeamReviewers,
+        [string[]] $TeamReviewers = @(),
 
         # The ID of the project column this pull request should be added too.
         [int] $ProjectColumnId,
