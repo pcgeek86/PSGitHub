@@ -45,7 +45,7 @@ function Start-GitHubFork {
         if ($organization) {
             $body.organization = $organization
         }
-        Invoke-GithubApi -Method POST "repos/$Owner/$RepositoryName/forks" -Body ($body | ConvertTo-Json) -Token $Token | ForEach-Object {
+        Invoke-GitHubApi -Method POST "repos/$Owner/$RepositoryName/forks" -Body ($body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token | ForEach-Object {
             $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')
             $_
         }

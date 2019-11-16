@@ -43,6 +43,9 @@
         # If given, delete the branch and after merging.
         [switch] $DeleteBranch,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
@@ -100,7 +103,7 @@
                 Start-Sleep -Seconds 10
             }
         }
-        $res = Invoke-GithubApi "repos/$Owner/$RepositoryName/pulls/$Number/merge" -Method PUT -Body ($apiBody | ConvertTo-Json) -Token $Token
+        $res = Invoke-GitHubApi "repos/$Owner/$RepositoryName/pulls/$Number/merge" -Method PUT -Body ($apiBody | ConvertTo-Json) -BaseUri $BaseUri -Token $Token
         $res
         # Only delete the branch if merge was successful
         if ($res -and $res.merged -and $DeleteBranch) {

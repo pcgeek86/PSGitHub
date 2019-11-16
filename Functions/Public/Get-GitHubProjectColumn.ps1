@@ -13,16 +13,19 @@ function Get-GitHubProjectColumn {
 
         [string] $Name,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
     process {
         $url = if ($Id) {
-            "/projects/columns/$ColumnId"
+            "projects/columns/$ColumnId"
         } else {
-            "/projects/$ProjectId/columns"
+            "projects/$ProjectId/columns"
         }
-        Invoke-GitHubApi $url -Accept 'application/vnd.github.inertia-preview+json' -Token $Token |
+        Invoke-GitHubApi $url -Accept 'application/vnd.github.inertia-preview+json' -BaseUri $BaseUri -Token $Token |
             ForEach-Object { $_ } |
             Where-Object { -not $Name -or $_.Name -like $Name } |
             ForEach-Object {

@@ -260,8 +260,8 @@ InModuleScope PSGitHub {
                 Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
-                    name = $mockNewLabelName
                     color = $mockLabelColor
+                    name = $mockNewLabelName
                     description = $mockLabelDescription
                 }
 

@@ -15,7 +15,11 @@
 
     .Parameter Uri
     This parameter is a mandatory parameter that specifies the URL to request.
-    If not absolute, it will be resolved relative to https://api.github.com.
+    If not absolute, it will be resolved relative to the BaseUri parameter.
+
+    .Parameter BaseUri
+    Optional base URL of the GitHub API to resolve Uri from, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+    Defaults to "https://api.github.com".
 
     .Parameter Anonymous
     If, for some reason, you need to ensure that the REST method is invoked anonymously, you can specify the
@@ -34,10 +38,19 @@
     param (
         [Parameter(Mandatory, Position = 0)]
         [string] $Uri,
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
 
+        # HTTP headers
         [HashTable] $Headers = @{Accept = 'application/vnd.github.v3+json' },
+
+        # HTTP request method
         [Microsoft.PowerShell.Commands.WebRequestMethod] $Method = [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
+
+        # Request body or query parameters for GET requests
         $Body,
+
+        # File path to use as body (instead of $Body).
+        [string] $InFile,
 
         # Accept header to be added (for accessing preview APIs or different resource representations)
         [string[]] $Accept,
@@ -55,7 +68,7 @@
     # Resolve the Uri parameter with https://api.github.com as a base URI
     # This allows to call this function with just a path,
     # but also supply a full URI (e.g. for a GitHub enterprise instance)
-    $Uri = [Uri]::new([Uri]::new('https://api.github.com'), $Uri)
+    $Uri = [Uri]::new($BaseUri, $Uri)
 
     $apiRequest = @{
         Headers = $Headers;
@@ -80,6 +93,9 @@
         $apiRequest.Body = $Body
         Write-Verbose -Message ("Request body: " + ($Body | Out-String))
     }
+    if ($InFile) {
+        $apiRequest.InFile = $InFile
+    }
 
     # We need to communicate using TLS 1.2 against GitHub.
     [Net.ServicePointManager]::SecurityProtocol = 'tls12'
@@ -87,11 +103,13 @@
     # Invoke the REST API
     try {
         Invoke-RestMethod @apiRequest -ResponseHeadersVariable responseHeaders
-        Write-Verbose "Rate limit total: $($responseHeaders['X-RateLimit-Limit'])"
-        Write-Verbose "Rate limit remaining: $($responseHeaders['X-RateLimit-Remaining'])"
-        $resetUnixSeconds = [int]($responseHeaders['X-RateLimit-Reset'][0])
-        $resetDateTime = ([System.DateTimeOffset]::FromUnixTimeSeconds($resetUnixSeconds)).DateTime
-        Write-Verbose "Rate limit resets: $resetDateTime"
+        if ($responseHeaders.ContainsKey('X-RateLimit-Limit')) {
+            Write-Verbose "Rate limit total: $($responseHeaders['X-RateLimit-Limit'])"
+            Write-Verbose "Rate limit remaining: $($responseHeaders['X-RateLimit-Remaining'])"
+            $resetUnixSeconds = [int]($responseHeaders['X-RateLimit-Reset'][0])
+            $resetDateTime = ([System.DateTimeOffset]::FromUnixTimeSeconds($resetUnixSeconds)).DateTime
+            Write-Verbose "Rate limit resets: $resetDateTime"
+        }
     } catch {
         if (
             $_.Exception.PSObject.TypeNames -notcontains 'Microsoft.PowerShell.Commands.HttpResponseException' -or # PowerShell Core

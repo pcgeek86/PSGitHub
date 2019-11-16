@@ -10,18 +10,21 @@ function Get-GitHubOrganization {
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'Org')]
         [string] $OrganizationName,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
     $url = if ($Username) {
-        "/users/$Username/orgs"
+        "users/$Username/orgs"
     } elseif ($OrganizationName) {
-        "/orgs/$OrganizationName"
+        "orgs/$OrganizationName"
     } else {
-        "/organizations"
+        "organizations"
     }
 
-    Invoke-GitHubApi $url -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+    Invoke-GitHubApi $url -BaseUri $BaseUri -Token $Token | ForEach-Object { $_ } | ForEach-Object {
         $_.PSTypeNames.Insert(0, 'PSGitHub.Organization')
         $_
     }

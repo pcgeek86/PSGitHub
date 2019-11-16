@@ -23,10 +23,13 @@ function Get-GitHubAssignee {
         [Alias('Repository')]
         [string] $RepositoryName,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
     process {
-        Invoke-GitHubApi "/repos/$Owner/$RepositoryName/assignees" -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+        Invoke-GitHubApi "repos/$Owner/$RepositoryName/assignees" -BaseUri $BaseUri -Token $Token | ForEach-Object { $_ } | ForEach-Object {
             $_.PSTypeNames.Insert(0, 'PSGitHub.User')
             $_
         }

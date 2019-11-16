@@ -24,11 +24,14 @@
         [Alias('FriendlyName')]
         [string] $Ref,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
     process {
-        Invoke-GithubApi "/repos/$Owner/$RepositoryName/commits/$Ref/status" -Token $Token | ForEach-Object {
+        Invoke-GitHubApi "repos/$Owner/$RepositoryName/commits/$Ref/status" -BaseUri $BaseUri -Token $Token | ForEach-Object {
             $_.PSTypeNames.Insert(0, 'PSGitHub.CombinedCommitStatus')
             $_.Repository.PSTypeNames.Insert(0, 'PSGitHub.Repository')
             $_.Repository.Owner.PSTypeNames.Insert(0, 'PSGitHub.User')

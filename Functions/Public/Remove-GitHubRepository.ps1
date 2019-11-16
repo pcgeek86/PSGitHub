@@ -17,9 +17,12 @@ function Remove-GitHubRepository {
         [Alias('Repository')]
         [string] $RepositoryName,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
     $uri = 'repos/{0}/{1}' -f $Owner, $Name;
-    Invoke-GitHubApi -Uri $uri -Method Delete -Token $Token;
+    Invoke-GitHubApi -Uri $uri -Method Delete -BaseUri $BaseUri -Token $Token;
 }

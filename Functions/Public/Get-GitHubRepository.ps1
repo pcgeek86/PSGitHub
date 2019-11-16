@@ -55,6 +55,9 @@
         [Alias('Repository')]
         [string] $RepositoryName,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -67,7 +70,7 @@
             'user/repos'
         }
         # expand arrays
-        Invoke-GitHubApi $uri -Token $Token |
+        Invoke-GitHubApi $uri -BaseUri $BaseUri -Token $Token |
             ForEach-Object { $_ } |
             ForEach-Object {
                 $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')

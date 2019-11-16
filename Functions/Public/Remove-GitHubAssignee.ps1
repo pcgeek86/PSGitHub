@@ -21,6 +21,9 @@
         # Team slugs whose members will be added as assignees to the issue (in addition to Assignees).
         [string[]] $TeamAssignees,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
@@ -43,6 +46,7 @@
         if ($PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
             Invoke-GitHubApi -Method DELETE "repos/$Owner/$RepositoryName/issues/$Number/assignees" `
                 -Body ($body | ConvertTo-Json) `
+                -BaseUri $BaseUri `
                 -Token $Token |
                 ForEach-Object {
                     $_.PSTypeNames.Insert(0, 'PSGitHub.Issue')

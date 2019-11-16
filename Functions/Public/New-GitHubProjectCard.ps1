@@ -28,6 +28,9 @@ function New-GitHubProjectCard {
         [Alias('Id')]
         [int] $ContentId,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
@@ -54,7 +57,7 @@ function New-GitHubProjectCard {
         $shouldProcessWarning = "Do you want to create a new GitHub project card in column $ColumnId?"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-            Invoke-GitHubApi -Method POST "/projects/columns/$ColumnId/cards" -Headers $headers -Body ($body | ConvertTo-Json) -Token $Token |
+            Invoke-GitHubApi -Method POST "projects/columns/$ColumnId/cards" -Headers $headers -Body ($body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token |
                 ForEach-Object {
                     $_.PSTypeNames.Insert(0, 'PSGitHub.ProjectCard')
                     $_.Creator.PSTypeNames.Insert(0, 'PSGitHub.User')

@@ -7,10 +7,10 @@
         Create a GitHub release asset for a given release
 
     .PARAMETER Owner
-        Optional, the Owner of the repo that you want to create the release on, default to the authenticated user
+        Optional, the Owner of the repo that you want to upload the release asset for, default to the authenticated user
 
     .PARAMETER Repository
-        Mandatory, the name of the Repository that you want to create the release on.
+        Mandatory, the name of the Repository that you want to upload the release asset for.
 
     .PARAMETER ReleaseId
         Mandatory, the name of the tag of this release
@@ -19,7 +19,10 @@
         Optional, specify the branch of the tag, default to the default branch (usually `master`)
 
     .PARAMETER ContentType
-        Optional, the SHA of the commit that correspond to the tag
+        Mandatory, the content type of the file.
+
+    .INPUTS
+        PSGitHub.Release
 
     .EXAMPLE
         Create a new release asset in release with id 1234567 of project 'test-organization/test-repo'
@@ -34,45 +37,70 @@
     #>
     [CmdletBinding()]
     param(
-        [string] $Owner = (Get-GitHubUser).login,
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
+        [Security.SecureString] $Token = (Get-GitHubToken),
 
-        [Parameter(Mandatory)]
+        [Parameter(ParameterSetName = 'NoUploadUrl', ValueFromPipelineByPropertyName)]
+        [string] $Owner = (Get-GitHubUser -Token $Token -BaseUri $BaseUri).login,
+
+        [Parameter(Mandatory, ParameterSetName = 'NoUploadUrl', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ParameterSetName = 'NoUploadUrl')]
         [string] $ReleaseId,
+
+        [Parameter(Mandatory, DontShow, ParameterSetName = 'UploadUrl', ValueFromPipelineByPropertyName)]
+        [string] $UploadUrl,
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [Alias('FullName')]
         [string] $Path,
 
-        [string] $ContentType = 'application/zip',
+        [string] $Label,
 
-        [Security.SecureString] $Token = (Get-GitHubToken)
+        [string] $ContentType = 'application/zip' # TODO this is not a good default.
     )
 
     process {
-        ### check path of asset
-        if (-Not (Test-Path -Path $Path)) {
-            Write-Error "Failed to locate asset at $Path"
+        $name = (Get-Item -Path $Path -Force -ErrorAction Stop).Name
+        if (-not $Label) {
+            $Label = $name
         }
 
-        ### extract name
-        $Name = Get-Item -Path $Path | Select-Object -ExpandProperty Name
+        # Get upload URL from release object
+        if (-not $UploadUrl) {
+            $UploadUrl = (Get-GitHubRelease -Owner $Owner -RepositoryName $RepositoryName -Id $ReleaseId -Token $Token -BaseUri $BaseUri -ErrorAction Stop).UploadUrl
+        }
 
-        ### create a API call
+        Write-Verbose "Expanding upload URL $UploadUrl with name=`"$name`" and label=`"$label`""
+
+        # Expand query parameters in upload URL
+        if ($UploadUrl -match '\{\?(.+)\}') {
+            $vars = @{ name = $name; label = $Label }
+            $allowedVars = $Matches[1] -split ','
+            $query = '?' + (($allowedVars | ForEach-Object {
+                if ($vars.ContainsKey($_)) {
+                    $value = [System.Web.HttpUtility]::UrlEncode($vars[$_])
+                    "$_=$value"
+                }
+            }) -join '&')
+            $UploadUrl = $UploadUrl -replace '\{\?.+\}', $query
+        }
+
         $apiCall = @{
-            Body = Get-Content -Path $Path -Raw
+            InFile = $Path
             Headers = @{'Content-Type' = $ContentType }
             Method = 'post'
-            Uri = "https://uploads.github.com/repos/$Owner/$RepositoryName/releases/$ReleaseId/assets?name=$Name&label=$Name"
+            Uri = $UploadUrl
             Token = $Token
+            BaseUri = $BaseUri
         }
 
-        # invoke the api call
         Invoke-GitHubApi @apiCall
     }
 }

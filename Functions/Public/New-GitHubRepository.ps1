@@ -53,6 +53,9 @@
         [switch] $DisableSquashMerge,
         [switch] $DisableMergeCommit,
         [switch] $DisableRebaseMerge,
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -82,7 +85,7 @@
     } else {
         "user/repos"
     }
-    Invoke-GitHubApi -Method POST $uri -Body ($Body | ConvertTo-Json) -Token $Token | ForEach-Object {
+    Invoke-GitHubApi -Method POST $uri -Body ($Body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token | ForEach-Object {
         $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')
         $_.Owner.Insert(0, 'PSGitHub.User')
         $_

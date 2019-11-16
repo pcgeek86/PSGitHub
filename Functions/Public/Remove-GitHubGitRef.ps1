@@ -26,6 +26,9 @@ function Remove-GitHubGitRef {
         [Alias('FriendlyName')]
         [string] $HeadRef,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
     process {
@@ -38,7 +41,7 @@ function Remove-GitHubGitRef {
         $shouldProcessWarning = "Do you want to create the GitHub git ref `e[1m$Name`e[0m in the repository `e[1m$Owner/$RepositoryName`e[0m?"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-            Invoke-GitHubApi -Method DELETE "/repos/$Owner/$RepositoryName/git/refs/$Ref" -Token $Token
+            Invoke-GitHubApi -Method DELETE "repos/$Owner/$RepositoryName/git/refs/$Ref" -BaseUri $BaseUri -Token $Token
             Write-Information "Removed GitHub git ref `e[1m$Ref`e[0m"
         }
     }

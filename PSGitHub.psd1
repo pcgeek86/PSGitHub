@@ -65,6 +65,7 @@
         'Types/RateLimit.Types.ps1xml',
         'Types/RateLimitResource.Types.ps1xml',
         'Types/RateLimitResources.Types.ps1xml',
+        'Types/Release.Types.ps1xml',
         'Types/Repository.Types.ps1xml',
         'Types/Review.Types.ps1xml',
         'Types/Team.Types.ps1xml',

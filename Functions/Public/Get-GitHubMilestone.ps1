@@ -53,6 +53,9 @@
         [ValidateSet('Ascending', 'Descending')]
         [string] $Direction,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -67,12 +70,12 @@
         $queryParams.direction = ($Direction -replace 'ending$', '').ToLower();
     }
     $Uri = if ($Number) {
-        '/repos/{0}/{1}/milestones/{2}' -f $Owner, $RepositoryName, $Number;
+        'repos/{0}/{1}/milestones/{2}' -f $Owner, $RepositoryName, $Number;
     } else {
-        '/repos/{0}/{1}/milestones' -f $Owner, $RepositoryName;
+        'repos/{0}/{1}/milestones' -f $Owner, $RepositoryName;
     }
 
-    Invoke-GitHubApi -Method GET $Uri -Body $queryParams -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+    Invoke-GitHubApi -Method GET $Uri -Body $queryParams -BaseUri $BaseUri -Token $Token | ForEach-Object { $_ } | ForEach-Object {
         $_.PSTypeNames.Insert(0, 'PSGitHub.Milestone')
         $_.Creator.PSTypeNames.Insert(0, 'PSGitHub.User')
         $_

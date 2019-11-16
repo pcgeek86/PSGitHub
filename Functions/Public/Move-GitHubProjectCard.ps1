@@ -24,6 +24,9 @@ function Move-GitHubProjectCard {
         # Optional: Column to move the card to
         [int] $ColumnId,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
@@ -56,7 +59,7 @@ function Move-GitHubProjectCard {
         $shouldProcessWarning = "Do you want to move GitHub project card $CardId $position?"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-            Invoke-GitHubApi -Method POST "/projects/columns/cards/$CardId/moves" -Accept 'application/vnd.github.inertia-preview+json' -Body ($body | ConvertTo-Json) -Token $Token | Out-Null
+            Invoke-GitHubApi -Method POST "projects/columns/cards/$CardId/moves" -Accept 'application/vnd.github.inertia-preview+json' -Body ($body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token | Out-Null
             Write-Information "Moved GitHub project card $CardId $position"
         }
     }

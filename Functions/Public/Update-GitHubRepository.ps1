@@ -49,6 +49,9 @@
         [string] $Homepage,
         [Boolean] $DisableIssues,
         [Boolean] $Private,
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -67,6 +70,7 @@
         Body = $Body;
         Method = 'Patch';
         Token = $Token
+        BaseUri = $BaseUri
     }
     Invoke-GitHubApi @ApiCall;
 }

@@ -24,6 +24,9 @@
     param(
         [Parameter(Position = 0)]
         [string] $LicenseId,
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -36,9 +39,8 @@
 
         $headers = @{
             Accept = 'application/vnd.github.drax-preview+json'
-            Token = $Token
         }
-        Invoke-GitHubApi -Method get -Uri $uri -Headers $headers -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+        Invoke-GitHubApi -Method get -Uri $uri -Headers $headers -BaseUri $BaseUri -Token $Token | ForEach-Object { $_ } | ForEach-Object {
             $_.PSTypeNames.Insert(0, 'PSGitHub.License')
             $_
         }

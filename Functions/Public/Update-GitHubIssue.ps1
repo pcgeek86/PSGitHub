@@ -67,6 +67,9 @@
         [ValidateSet('open', 'closed')]
         [string] $State,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -112,6 +115,7 @@
             Uri = 'repos/{0}/{1}/issues/{2}' -f $Owner, $RepositoryName, $Number;
             Method = 'Patch';
             Token = $Token
+            BaseUri = $BaseUri
         }
 
         $shouldProcessCaption = "Updating GitHub issue"

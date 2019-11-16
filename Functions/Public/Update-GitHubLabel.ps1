@@ -70,6 +70,9 @@
         [Parameter(ParameterSetName = 'Repository')]
         [string] $Description,
         [switch] $Force,
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -104,6 +107,7 @@
             Uri = $uri
             Body = $bodyProperties | ConvertTo-Json
             Token = $Token
+            BaseUri = $BaseUri
         }
 
         # Variable scope ensures that parent session remains unchanged

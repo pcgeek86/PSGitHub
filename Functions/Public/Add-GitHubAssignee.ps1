@@ -21,6 +21,9 @@
         # Team slugs whose members will be added as assignees to the issue (in addition to Assignees).
         [string[]] $TeamAssignees,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
@@ -41,7 +44,7 @@
         $shouldProcessWarning = "Do you want to add $($Assignees.Count) assignees the GitHub issue `e[1m#$Number`e[0m in repository `e[1m$Owner/$RepositoryName`e[0m?"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-            Invoke-GitHubApi -Method POST "repos/$Owner/$RepositoryName/issues/$Number/assignees" -Body ($body | ConvertTo-Json) -Token $Token |
+            Invoke-GitHubApi -Method POST "repos/$Owner/$RepositoryName/issues/$Number/assignees" -Body ($body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token |
                 ForEach-Object {
                     $_.PSTypeNames.Insert(0, 'PSGitHub.Issue')
                     $_.User.PSTypeNames.Insert(0, 'PSGitHub.User')

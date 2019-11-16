@@ -68,6 +68,9 @@
         [ValidateSet('asc', 'desc')]
         [string] $Direction,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -103,7 +106,7 @@
             $queryParams.filter = $Filter
         }
         # expand arrays
-        Invoke-GithubApi $url -Body $queryParams -Token $Token -Accept 'application/vnd.github.shadow-cat-preview' | ForEach-Object { $_ } | ForEach-Object {
+        Invoke-GitHubApi $url -Body $queryParams -BaseUri $BaseUri -Token $Token -Accept 'application/vnd.github.shadow-cat-preview' | ForEach-Object { $_ } | ForEach-Object {
             $_.PSTypeNames.Insert(0, 'PSGitHub.Issue') # every PR is an issue
             $_.PSTypeNames.Insert(0, 'PSGitHub.PullRequest')
             $_.User.PSTypeNames.Insert(0, 'PSGitHub.User')

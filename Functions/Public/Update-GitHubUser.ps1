@@ -26,6 +26,9 @@
         [bool] $Hireable,
 
         [string] $Biography,
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
@@ -52,7 +55,7 @@
         $body.biography = $Biography
     }
 
-    Invoke-GitHubApi -Method PATCH -Uri user -Body ($body | ConvertTo-Json) -Token $Token;
+    Invoke-GitHubApi -Method PATCH -Uri user -Body ($body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token;
 }
 
 Export-ModuleMember -Alias @(

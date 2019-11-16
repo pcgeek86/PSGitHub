@@ -46,15 +46,16 @@
     #>
     [CmdletBinding()]
     param(
+        [Parameter(ValueFromPipelineByPropertyName)]
         [string] $Owner = (Get-GitHubUser).login,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string] $TagName,
 
         [string] $Branch,
@@ -63,17 +64,18 @@
 
         [string] $Name,
 
-        [string] $ReleaseNote,
+        [Alias('ReleaseNote')]
+        [string] $Body,
 
         [switch] $Draft,
 
         [switch] $PreRelease,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
-
-    begin {
-    }
 
     process {
         ### create the request Body
@@ -96,8 +98,8 @@
         }
 
         # add Body
-        if ($ReleaseNote) {
-            $RequestBody.Add('body', $ReleaseNote)
+        if ($Body) {
+            $RequestBody.Add('body', $Body)
         }
 
         # add draft
@@ -116,11 +118,12 @@
             Method = 'post'
             Uri = "repos/$Owner/$RepositoryName/releases"
             Token = $Token
+            BaseUri = $BaseUri
         }
-    }
-
-    end {
-        # invoke the api call
-        Invoke-GitHubApi @apiCall
+        Invoke-GitHubApi @apiCall | ForEach-Object {
+            $_.PSTypeNames.Insert(0, 'PSGitHub.Release')
+            $_.Author.PSTypeNames.Insert(0, 'PSGitHub.User')
+            $_
+        }
     }
 }

@@ -22,6 +22,9 @@
         [Alias('Direction')]
         [string] $Order,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
@@ -35,7 +38,7 @@
         $headers = @{
             Accept = 'application/vnd.github.symmetra-preview+json'
         }
-        Invoke-GitHubApi '/search/labels' -Body $params -Token $Token -Headers $headers |
+        Invoke-GitHubApi 'search/labels' -Body $params -BaseUri $BaseUri -Token $Token -Headers $headers |
             ForEach-Object { $_.items } |
             ForEach-Object {
                 $_.PSTypeNames.Insert(0, 'PSGitHub.Label')

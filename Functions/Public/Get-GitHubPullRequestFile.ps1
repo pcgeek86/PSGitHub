@@ -32,11 +32,14 @@ s    PSGitHub.PullRequest. You can pipe the output of Get-GitHubPullRequest
         [ValidateRange(1, [int]::MaxValue)]
         [int] $Number,
 
+        # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
+        # Defaults to "https://api.github.com"
+        [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
 
     process {
-        Invoke-GithubApi "repos/$Owner/$RepositoryName/pulls/$Number/files" -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+        Invoke-GitHubApi "repos/$Owner/$RepositoryName/pulls/$Number/files" -BaseUri $BaseUri -Token $Token | ForEach-Object { $_ } | ForEach-Object {
             $_.PSTypeNames.Insert(0, 'PSGitHub.PullRequestFile')
             $_
         }
