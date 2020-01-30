@@ -69,15 +69,15 @@ $issueSearchCompleter = {
                 'archived' { 'true', 'false' }
                 'in' { 'body', 'title', 'comments' }
                 'status' { 'pending', 'success', 'failure' }
-                'org' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
-                'author' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
-                'review-requested' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
-                'reviewed-by' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
+                'org' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
+                'author' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
+                'review-requested' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
+                'reviewed-by' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
                 'review' { 'none', 'required', 'approved', 'changes_requested' }
-                'assignee' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
-                'mentions' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
-                'involves' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
-                'commenter' { Find-GitHubUser -Query $value @tokenParam | ForEach-Object Login }
+                'assignee' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
+                'mentions' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
+                'involves' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
+                'commenter' { Find-GitHubUser -Query "in:login $value" @tokenParam | ForEach-Object Login }
                 'repo' {
                     $query = if ($value.Contains('/')) {
                         $org, $repo = $value -split '/'
@@ -85,7 +85,7 @@ $issueSearchCompleter = {
                     } else {
                         $value
                     }
-                    Find-GitHubRepository -Query $query @tokenParam | ForEach-Object FullName
+                    Find-GitHubRepository -Query "in:name $query" @tokenParam | ForEach-Object FullName
                 }
             }
         } |

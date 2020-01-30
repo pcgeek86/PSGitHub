@@ -24,7 +24,7 @@ $ownerCompleter = {
             return ($user, $orgs) | ForEach-Object { $_ }
         }
         # Requesting any other repo
-        Find-GitHubUser -Query $wordToComplete @tokenParam |
+        Find-GitHubUser -Query "in:login $wordToComplete" @tokenParam |
             Where-Object { $_.Login -like "$wordToComplete*" } |
             Select-Object -First 10
     } | ForEach-Object {
