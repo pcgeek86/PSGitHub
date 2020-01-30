@@ -1,6 +1,6 @@
 function Get-GitHubOrganization {
     [OutputType('PSGitHub.Organization')]
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'All')]
     param (
         # Gets the org a specific user is part of.
         [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'User')]
