@@ -113,6 +113,7 @@
 
         ### GitHub Repository commands
         'New-GitHubRepository',
+        'Copy-GitHubTemplateRepository',
         'Remove-GitHubRepository',
         'Find-GitHubRepository',
         'Get-GitHubRepository',

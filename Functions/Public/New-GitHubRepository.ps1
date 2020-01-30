@@ -53,6 +53,9 @@
         [switch] $DisableSquashMerge,
         [switch] $DisableMergeCommit,
         [switch] $DisableRebaseMerge,
+        [switch] $DeleteBranchOnMerge,
+        [switch] $IsTemplate,
+
         # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
         # Defaults to "https://api.github.com"
         [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
@@ -72,6 +75,8 @@
         allow_squash_merge = -not $DisableSquashMerge
         allow_merge_commit = -not $DisableMergeCommit
         allow_rebase_merge = -not $DisableRebaseMerge
+        delete_branch_on_merge = [bool]$DeleteBranchOnMerge
+        is_template = [bool]$IsTemplate
     }
     if ($DisableProjects) {
         $Body.has_projects = -not $DisableProjects
@@ -85,7 +90,8 @@
     } else {
         "user/repos"
     }
-    Invoke-GitHubApi -Method POST $uri -Body ($Body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token | ForEach-Object {
+    $templatePreview = 'application/vnd.github.baptiste-preview+json'
+    Invoke-GitHubApi -Method POST $uri -Body ($Body | ConvertTo-Json) -Accept $templatePreview -BaseUri $BaseUri -Token $Token | ForEach-Object {
         $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')
         $_.Owner.Insert(0, 'PSGitHub.User')
         $_

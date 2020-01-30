@@ -38,6 +38,22 @@
                 <Name>OpenIssues</Name>
                 <ReferencedMemberName>open_issues</ReferencedMemberName>
             </AliasProperty>
+            <AliasProperty>
+                <Name>TemplateRepository</Name>
+                <ReferencedMemberName>template_repository</ReferencedMemberName>
+            </AliasProperty>
+            <ScriptProperty>
+                <Name>TemplateOwner</Name>
+                <GetScriptBlock>
+                    if ($this.is_template) { $this.owner } else { $null }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>TemplateRepositoryName</Name>
+                <GetScriptBlock>
+                    if ($this.is_template) { $this.name } else { $null }
+                </GetScriptBlock>
+            </ScriptProperty>
             <MemberSet>
                 <Name>PSStandardMembers</Name>
                 <Members>

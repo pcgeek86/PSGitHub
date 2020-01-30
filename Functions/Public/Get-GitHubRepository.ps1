@@ -69,8 +69,9 @@
         } else {
             'user/repos'
         }
+        $templatePreview = 'application/vnd.github.baptiste-preview+json'
         # expand arrays
-        Invoke-GitHubApi $uri -BaseUri $BaseUri -Token $Token |
+        Invoke-GitHubApi $uri -Accept $templatePreview -BaseUri $BaseUri -Token $Token |
             ForEach-Object { $_ } |
             ForEach-Object {
                 $_.PSTypeNames.Insert(0, 'PSGitHub.Repository')
