@@ -13,7 +13,6 @@ function Get-GitHubCommitLog {
         [Parameter(ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('^[\w-\.]+$')]
-        [Alias('Repository')]
         [string] $RepositoryName,
 
         [Parameter(ValueFromPipelineByPropertyName)]
@@ -28,7 +27,7 @@ function Get-GitHubCommitLog {
         # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
         # Defaults to "https://api.github.com"
         [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
-        [Security.SecureString] $Token = (Get-GitHubToken)
+        [Security.SecureString] $Token
     )
 
     process {
