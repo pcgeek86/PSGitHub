@@ -9,6 +9,14 @@
                         <Name>DefaultDisplayProperty</Name>
                         <Value>Sha</Value>
                     </NoteProperty>
+                    <PropertySet>
+                        <Name>DefaultDisplayPropertySet</Name>
+                        <ReferencedProperties>
+                            <Name>Sha</Name>
+                            <Name>Author</Name>
+                            <Name>Committer</Name>
+                        </ReferencedProperties>
+                    </PropertySet>
                 </Members>
             </MemberSet>
         </Members>

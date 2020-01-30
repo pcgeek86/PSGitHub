@@ -117,6 +117,9 @@
         'Find-GitHubRepository',
         'Get-GitHubRepository',
 
+        ### GitHub Commits
+        'Get-GitHubCommitLog',
+
         ### GitHub Git Ref commands
         'Remove-GitHubGitRef',
 
