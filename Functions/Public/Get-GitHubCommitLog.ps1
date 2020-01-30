@@ -54,9 +54,12 @@ function Get-GitHubCommitLog {
             ForEach-Object { $_ } |
             ForEach-Object {
                 $_.PSTypeNames.Insert(0, 'PSGitHub.Commit')
-                $_.PSTypeNames.Insert(0, 'PSGitHub.GitCommit')
-                $_.Author.PSTypeNames.Insert(0, 'PSGitHub.User')
-                $_.Committer.PSTypeNames.Insert(0, 'PSGitHub.User')
+                if ($null -ne $_.Author) {
+                    $_.Author.PSTypeNames.Insert(0, 'PSGitHub.User')
+                }
+                if ($null -ne $_.Committer) {
+                    $_.Committer.PSTypeNames.Insert(0, 'PSGitHub.User')
+                }
                 foreach ($parent in $_.Parents) {
                     $parent.PSTypeNames.Insert(0, 'PSGitHub.Commit')
                 }
