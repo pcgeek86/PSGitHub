@@ -112,36 +112,50 @@
         }
     } catch {
         if (
-            $_.Exception.PSObject.TypeNames -notcontains 'Microsoft.PowerShell.Commands.HttpResponseException' -or # PowerShell Core
+            $_.Exception.PSObject.TypeNames -notcontains 'Microsoft.PowerShell.Commands.HttpResponseException' -and # PowerShell Core
             $_.Exception -isnot [System.Net.WebException] # Windows PowerShell
         ) {
             # Throw any error that is not a HTTP response error (e.g. server not reachable)
             throw $_
         }
-        $errors = , ($_.ErrorDetails.Message | ConvertFrom-Json)
-        if ($null -ne $err.PSObject.Properties['errors']) {
-            $errors += $err.errors
+        # This is the only way to get access to the response body for errors in old PowerShell versions.
+        # PowerShell >=7.0 could use -SkipHttpErrorCheck with -StatusCodeVariable
+        $_.ErrorDetails.Message | ConvertFrom-Json | ConvertTo-GitHubErrorRecord | Write-Error
+    }
+}
+
+function ConvertTo-GitHubErrorRecord {
+    [CmdletBinding()]
+    [OutputType([ErrorRecord])]
+    param (
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [ValidateNotNull()]
+        [PSObject] $Err
+    )
+    process {
+        $message = ""
+        $errorId = $null
+        $docUrl = $null
+        if ($null -ne $Err.PSObject.Properties['code']) {
+            $errorId = $Err.code
+            $message += "$($Err.code): "
         }
-        foreach ($err in $errors) {
-            $message = ""
-            $errorId = $null
-            $docUrl = $null
-            if ($null -ne $err.PSObject.Properties['code']) {
-                $errorId = $err.code
-                $message += "$($err.code): "
-            }
-            if ($null -ne $err.PSObject.Properties['field']) {
-                $message += "$($err.field): "
-            }
-            if ($null -ne $err.PSObject.Properties['message']) {
-                $message += $err.message
-            }
-            if ($null -ne $err.PSObject.Properties['documentation_url']) {
-                $message += "`nSee $($err.documentation_url)"
-                $docUrl = $err.documentation_url
-            }
-            $message += "`n$($Method.ToString().ToUpper()) $Uri $($_.Exception.Response.StatusCode)"
-            Write-Error -Message $message -ErrorId $errorId -RecommendedAction $docUrl
+        if ($null -ne $Err.PSObject.Properties['field']) {
+            $message += "Field `"$($Err.field)`": "
         }
+        if ($null -ne $Err.PSObject.Properties['message']) {
+            $message += $Err.message
+        }
+        if ($null -ne $Err.PSObject.Properties['documentation_url']) {
+            $docUrl = $Err.documentation_url
+        }
+        # Validation errors have nested errors
+        $exception = if ($null -ne $Err.PSObject.Properties['errors']) {
+            [AggregateException]::new($message, @($Err.errors | ConvertTo-GitHubErrorRecord | ForEach-Object Exception))
+        } else {
+            [Exception]::new($message)
+        }
+        $exception.HelpLink = $docUrl
+        [ErrorRecord]::new($exception, $errorId, [ErrorCategory]::NotSpecified, $null)
     }
 }
