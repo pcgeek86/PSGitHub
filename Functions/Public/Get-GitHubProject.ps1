@@ -6,14 +6,12 @@ function Get-GitHubProject {
     [CmdletBinding()]
     [OutputType('PSGitHub.Project')]
     param(
-        [Parameter(Mandatory, ParameterSetName = 'Repo', ValueFromPipelineByPropertyName)]
+        [Parameter(Mandatory, ParameterSetName = 'Owner', ValueFromPipelineByPropertyName)]
+        [Alias('OrganizationName')]
         [string] $Owner,
 
-        [Parameter(Mandatory, ParameterSetName = 'Repo', ValueFromPipelineByPropertyName)]
+        [Parameter(ParameterSetName = 'Owner', ValueFromPipelineByPropertyName)]
         [string] $RepositoryName,
-
-        [Parameter(Mandatory, ParameterSetName = 'Org', ValueFromPipelineByPropertyName)]
-        [string] $OrganizationName,
 
         [Parameter(Mandatory, ParameterSetName = 'Id', ValueFromPipelineByPropertyName)]
         [int] $ProjectId,
@@ -28,11 +26,12 @@ function Get-GitHubProject {
 
     process {
         $url = switch ($PSCmdlet.ParameterSetName) {
-            'Repo' {
-                "repos/$Owner/$RepositoryName/projects"
-            }
-            'Org' {
-                "orgs/$OrganizationName/projects"
+            'Owner' {
+                if ($RepositoryName) {
+                    "repos/$Owner/$RepositoryName/projects"
+                } else {
+                    "orgs/$Owner/projects"
+                }
             }
             'Id' {
                 "projects/$ProjectId"
