@@ -3,6 +3,10 @@
         <Name>PSGitHub.Milestone</Name>
         <Members>
             <AliasProperty>
+                <Name>Name</Name>
+                <ReferencedMemberName>title</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
                 <Name>OpenIssues</Name>
                 <ReferencedMemberName>open_issues</ReferencedMemberName>
             </AliasProperty>
