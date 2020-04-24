@@ -87,6 +87,14 @@
                 <Name>UpdatedAt</Name>
                 <ReferencedMemberName>updated_at</ReferencedMemberName>
             </AliasProperty>
+            <AliasProperty>
+                <Name>ClosedBy</Name>
+                <ReferencedMemberName>closed_by</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>ClosedAt</Name>
+                <ReferencedMemberName>closed_at</ReferencedMemberName>
+            </AliasProperty>
             <MemberSet>
                 <Name>PSStandardMembers</Name>
                 <Members>
