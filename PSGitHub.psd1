@@ -117,6 +117,7 @@
         'Remove-GitHubRepository',
         'Find-GitHubRepository',
         'Get-GitHubRepository',
+        'Get-GitHubRepositoryLanguages',
 
         ### GitHub Commits
         'Get-GitHubCommitLog',
