@@ -22,7 +22,7 @@
     If this parameter is present, then the GitHub Issue Tracker will be disable for the new GitHub Repository.
 
     .Parameter Private
-    If this switch parameter is present, then the repository will be created as a Private (non-public) repository. This requires a subscription to GitHub. Free accounts are eligible for public repositories only.
+    If this switch parameter is present, then the repository will be created as a Private (non-public) repository.
 
     .Notes
     Created by Trevor Sullivan <trevor@trevorsullivan.net>
