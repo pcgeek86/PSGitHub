@@ -72,7 +72,7 @@ deploy_script:
       $null = New-Item -Path $VersionFolder -Type directory
 
       # Populate Version Folder
-      $null = Copy-Item -Path "$buildFolder\*" -Destination $VersionFolder -Recurse -Exclude '.*','AppVeyor.yml'
+      $null = Copy-Item -Path "$buildFolder\*" -Destination $VersionFolder -Recurse -Exclude '.*','AppVeyor.yml', 'Screenshots\*', 'Assets\*'
 
       # Create and Push zip Artifact
       $zipFilePath = Join-Path -Path $buildFolder -ChildPath "${env:APPVEYOR_PROJECT_NAME}_${env:APPVEYOR_BUILD_VERSION}.zip"
@@ -98,11 +98,7 @@ deploy_script:
       if ((! $ENV:APPVEYOR_PULL_REQUEST_NUMBER) `
         -and ($ENV:APPVEYOR_REPO_BRANCH -eq 'master'))
       {
-        Write-Host "Publishing Module to PowerShell Gallery"
-        
-        # Exclude unnecessary directories from published project
-        Remove-Item -Path $ModuleFolder\Screenshots, $ModuleFolder\Assets -Recurse -Force
-        
+        Write-Host -Object "Publishing Module to PowerShell Gallery"
         Copy-Item -Path $ModuleFolder -Destination ($ENV:PSModulePath -split ';')[0] -Recurse
         Get-PackageProvider -Name NuGet -ForceBootstrap
         Publish-Module -Name 'PSGitHub' -RequiredVersion ${ENV:APPVEYOR_BUILD_VERSION} -NuGetApiKey $ENV:PowerShellGalleryApiKey -Confirm:$false
