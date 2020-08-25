@@ -9,6 +9,8 @@ PowerShell module with commands to query and manage GitHub through its REST API.
 
 ## Installation
 
+![Install PSGitHub](https://raw.githubusercontent.com/pcgeek86/PSGitHub/master/Assets/psgithub.svg)
+
 You can install the PSGitHub PowerShell module using one of the following methods.
 
 1. Install from the PowerShell Gallery (requires PowerShell 5.0+)
