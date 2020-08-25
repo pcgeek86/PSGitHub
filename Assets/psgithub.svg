@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="animated.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 297 120"
+   height="120mm"
+   width="297mm">
+   <style>
+   #xbuttongroup:hover > rect {
+      fill-opacity: 1;
+      opacity: 1;
+      fill: red;
+   }
+   #xbuttongroup > rect {
+      opacity: 0;
+   }
+   .systemButton > rect {
+      fill:#4f4f4f;
+   }
+   .systemButton:hover > rect {
+      fill: #5c5c5cff;
+   }
+   .cursorpointer {
+      cursor: default;
+   }
+   </style>
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect951"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,1,1,0,0,0,1 @ F,0,0,1,0,0.14346325,0,1 @ F,0,0,1,0,0,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="0"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect929"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,1,1,0,0,0,1 @ F,0,0,1,0,0.14346325,0,1 @ F,0,0,1,0,0,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="0"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       hide_knots="false"
+       only_selected="false"
+       apply_with_radius="true"
+       apply_no_radius="true"
+       use_knot_distance="true"
+       flexible="false"
+       chamfer_steps="1"
+       radius="0"
+       mode="F"
+       method="auto"
+       unit="px"
+       satellites_param="F,0,1,1,0,0,0,1 @ F,0,0,1,0,0.14346325,0,1 @ F,0,0,1,0,0,0,1"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect995"
+       effect="fillet_chamfer" />
+    <linearGradient
+       id="linearGradient973"
+       inkscape:collect="always">
+      <stop
+         id="stop969"
+         offset="0"
+         style="stop-color:#2c4462;stop-opacity:1" />
+      <stop
+         id="stop971"
+         offset="1"
+         style="stop-color:#000000;stop-opacity:1" />
+    </linearGradient>
+    <inkscape:path-effect
+       only_selected="false"
+       apply_with_weight="true"
+       apply_no_weight="true"
+       helper_size="0"
+       steps="2"
+       weight="33.333333"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect942"
+       effect="bspline" />
+    <inkscape:path-effect
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect916"
+       effect="spiro" />
+    <inkscape:path-effect
+       end_linecap_type="round"
+       scale_width="1"
+       miter_limit="4"
+       linejoin_type="spiro"
+       start_linecap_type="round"
+       interpolator_beta="0.75"
+       interpolator_type="CentripetalCatmullRom"
+       sort_points="true"
+       offset_points="1.4758699,0.066441129"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect910"
+       effect="powerstroke" />
+    <inkscape:path-effect
+       step="1"
+       simplify_just_coalesce="false"
+       simplify_individual_paths="false"
+       helper_size="0"
+       smooth_angles="0"
+       threshold="0.0045371578"
+       steps="1"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect908"
+       effect="simplify" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       y2="9.7052088"
+       x2="7.7965193"
+       y1="6.4194403"
+       x1="3.7478986"
+       id="linearGradient975"
+       xlink:href="#linearGradient973"
+       inkscape:collect="always"
+       gradientTransform="matrix(0.77618533,0,0,0.77618533,3.6483009,1.3008308)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient973"
+       id="linearGradient957"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77618533,0,0,0.77618533,77.361233,1.3008308)"
+       x1="3.7478986"
+       y1="6.4194403"
+       x2="7.7965193"
+       y2="9.7052088" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-maximized="0"
+     inkscape:window-y="319"
+     inkscape:window-x="582"
+     inkscape:window-height="1707"
+     inkscape:window-width="3003"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="261.58665"
+     inkscape:cx="483.8132"
+     inkscape:zoom="2"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <rect
+       ry="0.0077180862"
+       y="11.139319"
+       x="0.18898815"
+       height="137.97227"
+       width="296.7113"
+       id="term-bg"
+       style="fill:#2a2139;fill-opacity:1;stroke-width:0.216424" />
+    <text
+       id="text845"
+       y="21.069124"
+       x="3.0316198"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;line-height:1.25;font-family:'Cascadia Code';-inkscape-font-specification:'Cascadia Code';text-align:start;text-anchor:start;fill:#ffffff;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:'Cascadia Code';-inkscape-font-specification:'Cascadia Code';text-align:start;text-anchor:start;fill:#ffffff;stroke-width:0.264583"
+         y="21.069124"
+         x="3.0316198"
+         id="tspan843"
+         sodipodi:role="line">PS &gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;line-height:1.25;font-family:'Cascadia Code';-inkscape-font-specification:'Cascadia Code';text-align:start;text-anchor:start;fill:#fede5d;fill-opacity:1;stroke-width:0.265;stroke-miterlimit:4;stroke-dasharray:none"
+       x="25.918077"
+       y="21.069124"
+       id="text888"><tspan
+         sodipodi:role="line"
+         id="tspan886"
+         x="25.918077"
+         y="21.069124"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:'Cascadia Code';-inkscape-font-specification:'Cascadia Code';text-align:start;text-anchor:start;fill:#fede5d;fill-opacity:1;stroke-width:0.265;stroke-miterlimit:4;stroke-dasharray:none">Install-Module <tspan
+   style="fill:#f92aad;fill-opacity:1"
+   id="tspan926">-Name</tspan><tspan
+   id="tspan890"
+   style="fill:#ffffff;fill-opacity:1"> PSGitHub </tspan><tspan
+   id="tspan924"
+   style="fill:#f92aad;fill-opacity:1">-Scope</tspan><tspan
+   id="tspan936"
+   style="fill:#ffffff;fill-opacity:1"> CurrentUser </tspan><tspan
+   id="tspan928"
+   style="fill:#f92aad;fill-opacity:1">-Force</tspan></tspan><animate attributeName="opacity" values="1;.5;1" dur="750ms" repeatCount="indefinite" /></text>
+    <rect
+       ry="0.37799963"
+       y="0.18898812"
+       x="0.18898815"
+       height="10.95805"
+       width="296.7113"
+       id="rect874"
+       style="fill:#4f4f4f;fill-opacity:1;stroke-width:0.264583" />
+  </g>
+  <g
+     inkscape:label="Buttons"
+     id="layer2"
+     inkscape:groupmode="layer">
+    <path
+       sodipodi:nodetypes="ssssccssss"
+       d="M 1.6360659,1.1185671 H 72.825246 c 0.801681,0 1.447078,0.6453965 1.447078,1.4470775 v 7.1222138 c 0,0.8016786 0.0063,1.4594536 0.0063,1.4594536 L 0.21620053,11.134933 c 0,0 -0.0272084,-0.645396 -0.0272084,-1.4470746 V 2.5656446 c 0,-0.801681 0.64539668,-1.4470775 1.44707777,-1.4470775 z"
+       style="fill:#000;fill-opacity:1;stroke-width:0.264583"
+       id="rect14" />
+    <text
+       id="text849"
+       y="8.2294636"
+       x="41.356262"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';text-align:end;text-anchor:end;fill:#ffffff;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';fill:#ffffff;stroke-width:0.264583"
+         y="8.2294636"
+         x="41.356262"
+         id="tspan847"
+         sodipodi:role="line">PowerShell</tspan></text>
+    <path
+       id="rect14-0"
+       style="fill:#5c5c5c;fill-opacity:1;stroke-width:0.264583"
+       d="m 75.201567,1.1185672 h 72.224853 c 0.5148,0 0.92924,0.4144424 0.92924,0.9292431 v 9.0975017 c 0,0 0.27044,0.0064 -0.24436,0.0063 l -73.832674,-0.0043 -0.0063,-0.941645 V 2.0478103 c 0,-0.5148007 0.414442,-0.9292431 0.929243,-0.9292431 z"
+       sodipodi:nodetypes="ssscsccss" />
+   </g>
+   <g id="minimizeGroup" class="systemButton">
+    <rect
+       ry="0.56356311"
+       y="0.18898812"
+       x="251.19717"
+       height="10.958051"
+       width="15.234363"
+       id="rect882"
+       style="fill-opacity:1;stroke-width:0.323064" />
+    <text
+       id="text887"
+       y="9.3544331"
+       x="261.65683"
+       style="font-size:10.5833px;line-height:1.25;font-family:'Font Awesome 5 Free';-inkscape-font-specification:'Font Awesome 5 Free';text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         y="9.3544331"
+         x="261.65683"
+         id="tspan885"
+         sodipodi:role="line">-</tspan></text>
+   </g>
+   <g class="systemButton">
+      <rect
+      style="fill-opacity:1;stroke-width:0.323064"
+      id="rect876"
+      width="15.234363"
+      height="10.958051"
+      x="266.43155"
+      y="0.18898812"
+      ry="0.56356311" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.44799;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect892"
+       width="4.7893624"
+       height="4.7893624"
+       x="271.62341"
+       y="3.0843439"
+       ry="0" />
+   </g>
+   <g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;line-height:1.25;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';text-align:end;text-anchor:end;fill:#ffffff;stroke-width:0.264583"
+       x="115.06919"
+       y="8.2294636"
+       id="text942"><tspan
+         sodipodi:role="line"
+         id="tspan940"
+         x="115.06919"
+         y="8.2294636"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';fill:#ffffff;stroke-width:0.264583">PowerShell</tspan></text>
+  </g>
+  <g id="xbuttongroup">
+     <rect
+      ry="0"
+      y="0.18898812"
+      x="281.66592"
+      height="10.958051"
+      width="15.234363"
+      id="xbuttonbg"
+      style="stroke-width:0.323064" />
+   <text
+      id="text886"
+      y="9.3544331"
+      x="292.12558"
+      class="cursorpointer"
+      style="font-size:10.5833px;line-height:1.25;font-family:'Font Awesome 5 Free';-inkscape-font-specification:'Font Awesome 5 Free';text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+      xml:space="preserve"><tspan
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         y="9.3544331"
+         x="292.12558"
+         id="tspan884"
+         sodipodi:role="line" class="cursorpointer">x</tspan></text>
+
+  </g>
+  <g
+     style="display:inline"
+     inkscape:label="PowerShell Logo"
+     id="layer3"
+     inkscape:groupmode="layer">
+    <rect
+       transform="matrix(1,0,-0.22994335,0.97320402,0,0)"
+       ry="0.30147612"
+       y="3.2192938"
+       x="6.5573668"
+       height="6.1284242"
+       width="5.9642072"
+       id="rect889"
+       style="display:inline;fill:url(#linearGradient975);fill-opacity:1;fill-rule:nonzero;stroke-width:0.208501;stroke-miterlimit:4;stroke-dasharray:none" />
+    <rect
+       transform="rotate(-35.785316)"
+       ry="0.32754627"
+       y="9.7346678"
+       x="0.011201352"
+       height="0.66864556"
+       width="3.6775506"
+       id="rect999"
+       style="display:inline;fill:#2c5591;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.202719;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:path-effect="#path-effect995"
+       inkscape:original-d="M 6.9430835,4.1447607 8.721697,6.0884004 6.0446083,8.0137038"
+       id="path944"
+       d="M 6.9430835,4.1447607 8.6248458,5.982563 a 0.12751018,0.12751018 95.907844 0 1 -0.019619,0.1896006 l -2.560618,1.8415402"
+       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.593782;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="display:inline;fill:#2c5591;fill-opacity:1;stroke:none;stroke-width:2.18541;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect946-0"
+       width="2.2416034"
+       height="0.55467075"
+       x="7.6471276"
+       y="7.7928834"
+       ry="0.27733538" />
+    <rect
+       ry="0.027504334"
+       y="7.9586954"
+       x="7.9149046"
+       height="0.055008668"
+       width="1.6685963"
+       id="rect946"
+       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.593782;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="display:inline;fill:url(#linearGradient957);fill-opacity:1;fill-rule:nonzero;stroke-width:0.208501;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect944"
+       width="5.9642072"
+       height="6.1284242"
+       x="80.270294"
+       y="3.2192938"
+       ry="0.30147612"
+       transform="matrix(1,0,-0.22994335,0.97320402,0,0)" />
+    <rect
+       style="display:inline;fill:#2c5591;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.202719;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect947"
+       width="3.6775506"
+       height="0.66864556"
+       x="59.808159"
+       y="52.83828"
+       ry="0.32754627"
+       transform="rotate(-35.785316)" />
+    <path
+       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.593782;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 80.656016,4.1447607 1.681762,1.8378023 a 0.12751019,0.12751019 95.90785 0 1 -0.01962,0.1896006 L 79.75754,8.0137038"
+       id="path949"
+       inkscape:original-d="M 80.656016,4.1447607 82.434629,6.0884004 79.75754,8.0137038"
+       inkscape:path-effect="#path-effect951" />
+    <rect
+       ry="0.27733538"
+       y="7.7928834"
+       x="81.360062"
+       height="0.55467075"
+       width="2.2416034"
+       id="rect953"
+       style="display:inline;fill:#2c5591;fill-opacity:1;stroke:none;stroke-width:2.18541;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.593782;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect955"
+       width="1.6685963"
+       height="0.055008668"
+       x="81.627838"
+       y="7.9586954"
+       ry="0.027504334" />
+  </g>
+</svg>
