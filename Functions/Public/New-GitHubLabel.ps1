@@ -47,23 +47,23 @@
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
     [OutputType('PSGitHub.Label')]
     param (
-        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [Alias('User')]
         [string] $Owner,
 
-        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 
-        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [string] $Name,
 
-        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [string] $Color,
 
-        [Parameter(ParameterSetName = 'Repository')]
+        [Parameter(ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [string] $Description,
 
         [switch] $Force,
@@ -74,39 +74,41 @@
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $shouldProcessCaption = 'Creating new GitHub label'
-    $shouldProcessDescription = 'Creating the GitHub label ''{0}'' in the repository ''{1}/{2}''.' -f $Name, $Owner, $RepositoryName
-    $shouldProcessWarning = 'Do you want to create the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $RepositoryName
+    process {
+        $shouldProcessCaption = 'Creating new GitHub label'
+        $shouldProcessDescription = 'Creating the GitHub label ''{0}'' in the repository ''{1}/{2}''.' -f $Name, $Owner, $RepositoryName
+        $shouldProcessWarning = 'Do you want to create the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $RepositoryName
 
-    if ($Force -or $PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-        $uri = 'repos/{0}/{1}/labels' -f $Owner, $RepositoryName
+        if ($Force -or $PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
+            $uri = 'repos/{0}/{1}/labels' -f $Owner, $RepositoryName
 
-        $bodyProperties = @{
-            name = $Name
-            color = $Color
-        }
-
-        if ($Description) {
-            $bodyProperties['description'] = $Description
-        }
-
-        $apiCall = @{
-            Headers = @{
-                Accept = 'application/vnd.github.symmetra-preview+json'
+            $bodyProperties = @{
+                name = $Name
+                color = $Color
             }
-            Method = 'Post'
-            Uri = $uri
-            Body = $bodyProperties | ConvertTo-Json
-            Token = $Token
-            BaseUri = $BaseUri
-        }
 
-        # Variable scope ensures that parent session remains unchanged
-        $ConfirmPreference = 'None'
+            if ($Description) {
+                $bodyProperties['description'] = $Description
+            }
 
-        Invoke-GitHubApi @apiCall | ForEach-Object {
-            $_.PSTypeNames.Insert(0, 'PSGitHub.Label')
-            $_
+            $apiCall = @{
+                Headers = @{
+                    Accept = 'application/vnd.github.symmetra-preview+json'
+                }
+                Method = 'Post'
+                Uri = $uri
+                Body = $bodyProperties | ConvertTo-Json
+                Token = $Token
+                BaseUri = $BaseUri
+            }
+
+            # Variable scope ensures that parent session remains unchanged
+            $ConfirmPreference = 'None'
+
+            Invoke-GitHubApi @apiCall | ForEach-Object {
+                $_.PSTypeNames.Insert(0, 'PSGitHub.Label')
+                $_
+            }
         }
     }
 }
