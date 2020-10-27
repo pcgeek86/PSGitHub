@@ -12,6 +12,22 @@
                     "`e[0m$textColor$bg $($this.Name) `e[0m"
                 </Script>
             </ScriptMethod>
+            <ScriptProperty>
+                <Name>Owner</Name>
+                <GetScriptBlock>
+                    if ($this.url -match '/repos/([^/]+)/([^/]+)/labels') {
+                        $Matches[1]
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>RepositoryName</Name>
+                <GetScriptBlock>
+                    if ($this.url -match '/repos/([^/]+)/([^/]+)/labels') {
+                        $Matches[2]
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
             <MemberSet>
                 <Name>PSStandardMembers</Name>
                 <Members>
