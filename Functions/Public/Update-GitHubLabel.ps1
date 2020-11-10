@@ -51,23 +51,23 @@
     New-GitHubLabel -Owner Mary -RepositoryName WebApps -Name 'Label1' -NewName 'NewLabelName' -Color '5319e7' -Description 'Label description'
 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
-        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [Alias('User')]
         [string] $Owner,
-        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('^[\w-\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
-        [Parameter(Mandatory, ParameterSetName = 'Repository')]
+        [Parameter(Mandatory, ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [string] $Name,
         [Parameter(ParameterSetName = 'Repository')]
         [string] $NewName,
-        [Parameter(ParameterSetName = 'Repository')]
+        [Parameter(ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [string] $Color,
-        [Parameter(ParameterSetName = 'Repository')]
+        [Parameter(ParameterSetName = 'Repository', ValueFromPipelineByPropertyName)]
         [string] $Description,
         [switch] $Force,
         # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
@@ -76,44 +76,49 @@
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $shouldProcessCaption = 'Updating an existing GitHub label'
-    $shouldProcessDescription = 'Updating the GitHub label ''{0}'' in the repository ''{1}/{2}''.' -f $Name, $Owner, $RepositoryName
-    $shouldProcessWarning = 'Do you want to update the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $RepositoryName
+    process {
+        $shouldProcessCaption = 'Updating an existing GitHub label'
+        $shouldProcessDescription = 'Updating the GitHub label ''{0}'' in the repository ''{1}/{2}''.' -f $Name, $Owner, $RepositoryName
+        $shouldProcessWarning = 'Do you want to update the GitHub label ''{0}'' in the repository ''{1}/{2}''?' -f $Name, $Owner, $RepositoryName
 
-    if ($Force -or $PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
-        $uri = 'repos/{0}/{1}/labels/{2}' -f $Owner, $RepositoryName, $Name
+        if ($Force -or $PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
+            $uri = 'repos/{0}/{1}/labels/{2}' -f $Owner, $RepositoryName, $Name
 
-        $bodyProperties = @{ }
+            $bodyProperties = @{ }
 
-        if ($NewName) {
-            $bodyProperties['name'] = $NewName
-        } else {
-            $bodyProperties['name'] = $Name
-        }
-
-        if ($Color) {
-            $bodyProperties['color'] = $Color
-        }
-
-        if ($Description) {
-            $bodyProperties['description'] = $Description
-        }
-
-        $apiCall = @{
-            Headers = @{
-                Accept = 'application/vnd.github.symmetra-preview+json'
+            if ($NewName) {
+                $bodyProperties['name'] = $NewName
+            } else {
+                $bodyProperties['name'] = $Name
             }
-            Method = 'Patch'
-            Uri = $uri
-            Body = $bodyProperties | ConvertTo-Json
-            Token = $Token
-            BaseUri = $BaseUri
+
+            if ($Color) {
+                $bodyProperties['color'] = $Color
+            }
+
+            if ($Description) {
+                $bodyProperties['description'] = $Description
+            }
+
+            $apiCall = @{
+                Headers = @{
+                    Accept = 'application/vnd.github.symmetra-preview+json'
+                }
+                Method = 'Patch'
+                Uri = $uri
+                Body = $bodyProperties | ConvertTo-Json
+                Token = $Token
+                BaseUri = $BaseUri
+            }
+
+            # Variable scope ensures that parent session remains unchanged
+            $ConfirmPreference = 'None'
+
+            Invoke-GitHubApi @apiCall | ForEach-Object {
+                $_.PSTypeNames.Insert(0, 'PSGitHub.Label')
+                $_
+            }
         }
-
-        # Variable scope ensures that parent session remains unchanged
-        $ConfirmPreference = 'None'
-
-        Invoke-GitHubApi @apiCall
     }
 }
 
