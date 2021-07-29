@@ -96,8 +96,8 @@
         if ($Labels) {
             $queryParams.labels = $Labels
         }
-        if ($Base) {
-            $queryParams.base = $Base
+        if ($BaseBranch) {
+            $queryParams.base = $BaseBranch
         }
         if ($Since) {
             $queryParams.since = $Since.ToString('o')
