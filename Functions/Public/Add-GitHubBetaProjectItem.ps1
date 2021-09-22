@@ -41,7 +41,7 @@ function Add-GitHubBetaProjectItem {
                         createdAt
                     }
                 }
-            }'
+            }' `
             -Variables @{
                 input = @{
                     projectId = $ProjectNodeId

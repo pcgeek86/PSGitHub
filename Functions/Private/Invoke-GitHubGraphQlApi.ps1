@@ -31,7 +31,7 @@
         # HTTP headers
         [HashTable] $Headers = @{ },
 
-        [Security.SecureString] $Token = (Get-GitHubToken)
+        [Security.SecureString] $Token
     )
 
     process {

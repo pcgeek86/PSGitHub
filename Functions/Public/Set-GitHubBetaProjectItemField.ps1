@@ -43,10 +43,8 @@ function Set-GitHubBetaProjectItemField {
                         }
                     }
                 }
-            }'
-            -Variables @{
-                projectId = $ProjectNodeId
-            } `
+            }' `
+            -Variables @{ projectId = $ProjectNodeId } `
             -BaseUri $BaseUri `
             -Token $Token |
             ForEach-Object { $_.node.fields } |
@@ -74,7 +72,7 @@ function Set-GitHubBetaProjectItemField {
                         createdAt
                     }
                 }
-            }'
+            }' `
             -Variables @{
                 input = @{
                     projectId = $ProjectNodeId
