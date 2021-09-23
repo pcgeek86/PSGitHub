@@ -163,6 +163,7 @@
         ### Pull Request commands
         'New-GitHubPullRequest',
         'Get-GitHubPullRequest',
+        'Update-GitHubPullRequest',
         'Get-GitHubPullRequestFile',
         'Merge-GitHubPullRequest',
         'New-GitHubReviewRequest',
