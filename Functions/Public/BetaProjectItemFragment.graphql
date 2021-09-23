@@ -16,6 +16,7 @@ fragment BetaProjectItemFragment on ProjectNextItem {
             __typename
             number
             state
+            url
             repository {
                 owner {
                     login
@@ -28,6 +29,7 @@ fragment BetaProjectItemFragment on ProjectNextItem {
             __typename
             number
             state
+            url
             repository {
                 owner {
                     login
