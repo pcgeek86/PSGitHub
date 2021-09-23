@@ -1,3 +1,5 @@
+$betaProjectItemFragment = Get-Content -Raw "$PSScriptRoot/BetaProjectItemFragment.graphql"
+
 function Get-GitHubBetaProjectItem {
     <#
     .SYNOPSIS
@@ -21,7 +23,7 @@ function Get-GitHubBetaProjectItem {
             Write-Verbose "Requesting previous page (paginating backwards)"
             $result = Invoke-GitHubGraphQlApi `
                 -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
-                -Query 'query($projectId: ID!, $before: String) {
+                -Query ('query($projectId: ID!, $before: String) {
                     node(id: $projectId) {
                         ... on ProjectNext {
                             items(last: 100, before: $before) {
@@ -30,49 +32,13 @@ function Get-GitHubBetaProjectItem {
                                     startCursor
                                 }
                                 nodes {
-                                    id
-                                    title
-                                    createdAt
-                                    updatedAt
-                                    fieldValues(first: 20) {
-                                        nodes {
-                                            value
-                                            projectField {
-                                                name
-                                            }
-                                        }
-                                    }
-                                    content {
-                                        ...on Issue {
-                                            __typename
-                                            number
-                                            state
-                                            repository {
-                                                owner {
-                                                    login
-                                                }
-                                                name
-                                                nameWithOwner
-                                            }
-                                        }
-                                        ...on PullRequest {
-                                            __typename
-                                            number
-                                            state
-                                            repository {
-                                                owner {
-                                                    login
-                                                }
-                                                name
-                                                nameWithOwner
-                                            }
-                                        }
-                                    }
+                                    ...BetaProjectItemFragment
                                 }
                             }
                         }
                     }
-                }' `
+                }
+                ' + $betaProjectItemFragment) `
                 -Variables @{
                     projectId = $ProjectNodeId
                     before = $before

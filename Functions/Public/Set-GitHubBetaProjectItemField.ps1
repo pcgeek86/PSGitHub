@@ -1,3 +1,5 @@
+$betaProjectItemFragment = Get-Content -Raw "$PSScriptRoot/BetaProjectItemFragment.graphql"
+
 function Set-GitHubBetaProjectItemField {
     <#
     .SYNOPSIS
@@ -39,6 +41,7 @@ function Set-GitHubBetaProjectItemField {
                             nodes {
                                 id
                                 name
+                                settings
                             }
                         }
                     }
@@ -48,43 +51,45 @@ function Set-GitHubBetaProjectItemField {
             -BaseUri $BaseUri `
             -Token $Token |
             ForEach-Object { $_.node.fields.nodes }
+        # Parse JSON field
+        foreach ($field in $fields) {
+            $field.settings = $field.settings | ConvertFrom-Json
+        }
+
         $field = $fields | Where-Object { $_.name -eq $Name }
         if (!$field) {
-            throw "Field name does not exist: `"$Name`". Existing fields are: $($fields | ForEach-Object name)"
+            throw "Field name does not exist: `"$Name`". Existing fields are: $($fields | ForEach-Object { '"' + $_.name + '"' })"
         }
     }
     process {
+        $input = @{
+            projectId = $ProjectNodeId
+            itemId = $ItemNodeId
+            fieldId = $field.id
+            value = $Value
+        }
+
+        # If the field is a select, we need to get the option ID for the provided value.
+        if ($field.settings -and $field.settings.PSObject.Properties['options']) {
+            $option = $field.settings.options | Where-Object { $_.name -eq $Value }
+            if (!$option) {
+                Write-Error "Invalid option value provided for field `"$Name`": `"$Value`". Available options are: $($field.settings.options | ForEach-Object { '"' + $_.name + '"' })"
+            }
+            $input.value = $option.id
+        }
+
         Invoke-GitHubGraphQlApi `
             -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
-            -Query 'mutation($input: UpdateProjectNextItemFieldInput!) {
+            -Query ('mutation($input: UpdateProjectNextItemFieldInput!) {
                 updateProjectNextItemField(input: $input) {
                     projectNextItem {
-                        id
-                        title
-                        creator {
-                            login
-                        }
-                        fieldValues(first: 20) {
-                            nodes {
-                                value
-                                projectField {
-                                    name
-                                }
-                                updatedAt
-                            }
-                        }
-                        updatedAt
-                        createdAt
+                        ...BetaProjectItemFragment
                     }
                 }
-            }' `
+            }
+            ' + $betaProjectItemFragment) `
             -Variables @{
-                input = @{
-                    projectId = $ProjectNodeId
-                    itemId = $ItemNodeId
-                    fieldId = $field.id
-                    value = $Value
-                }
+                input = $input
             } `
             -BaseUri $BaseUri `
             -Token $Token |

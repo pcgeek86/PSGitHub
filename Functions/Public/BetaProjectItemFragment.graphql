@@ -1,0 +1,40 @@
+fragment BetaProjectItemFragment on ProjectNextItem {
+    id
+    title
+    createdAt
+    updatedAt
+    fieldValues(first: 20) {
+        nodes {
+            value
+            projectField {
+                name
+            }
+        }
+    }
+    content {
+        ... on Issue {
+            __typename
+            number
+            state
+            repository {
+                owner {
+                    login
+                }
+                name
+                nameWithOwner
+            }
+        }
+        ... on PullRequest {
+            __typename
+            number
+            state
+            repository {
+                owner {
+                    login
+                }
+                name
+                nameWithOwner
+            }
+        }
+    }
+}

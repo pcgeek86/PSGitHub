@@ -1,3 +1,5 @@
+$betaProjectItemFragment = Get-Content -Raw "$PSScriptRoot/BetaProjectItemFragment.graphql"
+
 function Add-GitHubBetaProjectItem {
     <#
     .SYNOPSIS
@@ -22,28 +24,14 @@ function Add-GitHubBetaProjectItem {
     process {
         Invoke-GitHubGraphQlApi `
             -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
-            -Query 'mutation($input: AddProjectNextItemInput!) {
+            -Query ('mutation($input: AddProjectNextItemInput!) {
                 addProjectNextItem(input: $input) {
                     projectNextItem {
-                        id
-                        title
-                        creator {
-                            login
-                        }
-                        fieldValues(first: 20) {
-                            nodes {
-                                value
-                                projectField {
-                                    name
-                                }
-                                updatedAt
-                            }
-                        }
-                        updatedAt
-                        createdAt
+                        ...BetaProjectItemFragment
                     }
                 }
-            }' `
+            }
+            ' + $betaProjectItemFragment) `
             -Variables @{
                 input = @{
                     projectId = $ProjectNodeId
