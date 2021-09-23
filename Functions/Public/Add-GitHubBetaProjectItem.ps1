@@ -31,11 +31,13 @@ function Add-GitHubBetaProjectItem {
                             login
                         }
                         fieldValues(first: 20) {
-                            value
-                            projectField {
-                                name
+                            nodes {
+                                value
+                                projectField {
+                                    name
+                                }
+                                updatedAt
                             }
-                            updatedAt
                         }
                         updatedAt
                         createdAt
