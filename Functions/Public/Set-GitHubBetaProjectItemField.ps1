@@ -30,7 +30,7 @@ function Set-GitHubBetaProjectItemField {
     )
     begin {
         # Find the ID of the field by name
-        $field = Invoke-GitHubGraphQlApi `
+        $fields = Invoke-GitHubGraphQlApi `
             -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
             -Query 'query($projectId: ID!) {
                 node(id: $projectId) {
@@ -47,8 +47,11 @@ function Set-GitHubBetaProjectItemField {
             -Variables @{ projectId = $ProjectNodeId } `
             -BaseUri $BaseUri `
             -Token $Token |
-            ForEach-Object { $_.node.fields } |
-            Where-Object { $_.name -eq $Name }
+            ForEach-Object { $_.node.fields.nodes }
+        $field = $fields | Where-Object { $_.name -eq $Name }
+        if (!$field) {
+            throw "Field name does not exist: `"$Name`". Existing fields are: $($fields | ForEach-Object name)"
+        }
     }
     process {
         Invoke-GitHubGraphQlApi `
