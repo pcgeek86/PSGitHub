@@ -91,7 +91,7 @@
     ### Append the HTTP message body (payload), if the caller specified one.
     if ($Body) {
         $apiRequest.Body = $Body
-        Write-Verbose -Message ("Request body: " + ($Body | Out-String))
+        Write-Debug -Message ("Request body: " + ($Body | Out-String))
     }
     if ($InFile) {
         $apiRequest.InFile = $InFile
@@ -151,7 +151,7 @@ function ConvertTo-GitHubErrorRecord {
         }
         # Validation errors have nested errors
         $exception = if ($null -ne $Err.PSObject.Properties['errors']) {
-            [AggregateException]::new($message, @($Err.errors | ConvertTo-GitHubErrorRecord | ForEach-Object Exception))
+            [AggregateException]::new($message, @($Err.errors | ConvertTo-GitHubErrorRecord | ForEach-Object Exception -Confirm:$false))
         } else {
             [Exception]::new($message)
         }
