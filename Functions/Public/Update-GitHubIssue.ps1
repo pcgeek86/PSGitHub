@@ -35,7 +35,7 @@
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [ValidatePattern('^[\w-\.]+$')]
+        [ValidatePattern('^[\w-_\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 
@@ -94,7 +94,7 @@
             $apiBody.labels = $Labels
         }
         if ($MilestoneTitle) {
-            $MilestoneNumber = Get-GitHubMilestone -Owner $Owner -RepositoryName $RepositoryName |
+            $MilestoneNumber = Get-GitHubMilestone -Owner $Owner -RepositoryName $RepositoryName -Token $Token |
                 Where-Object { $_.Title -eq $MilestoneTitle } |
                 ForEach-Object { $_.Number }
             if (-not $MilestoneNumber) {
