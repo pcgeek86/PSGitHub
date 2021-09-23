@@ -111,7 +111,7 @@
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'Repository')]
         [ValidateNotNullOrEmpty()]
-        [ValidatePattern('^[\w-\.]+$')]
+        [ValidatePattern('^[\w-_\.]+$')]
         [Alias('Repository')]
         [string] $RepositoryName,
 
