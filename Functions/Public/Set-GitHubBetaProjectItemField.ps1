@@ -93,6 +93,6 @@ function Set-GitHubBetaProjectItemField {
             } `
             -BaseUri $BaseUri `
             -Token $Token |
-            ForEach-Object { $_.addProjectNextItem.projectNextItem }
+            ForEach-Object { $_.updateProjectNextItemField.projectNextItem }
     }
 }
