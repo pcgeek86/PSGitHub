@@ -136,10 +136,13 @@
         'Get-GitHubAssignee',
         'Get-GitHubIssue',
         'Get-GitHubIssueTimeline',
-        'Get-GitHubMilestone',
         'New-GitHubIssue',
         'Remove-GitHubAssignee',
         'Update-GitHubIssue',
+
+        ### GitHub Milestone commands
+        'Get-GitHubMilestone',
+        'New-GitHubMilestone',
 
         ### GitHub Comment commands
         'Get-GitHubComment',

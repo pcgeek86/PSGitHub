@@ -1,16 +1,15 @@
 ﻿function Get-GitHubMilestone {
     <#
     .Synopsis
-    Creates a new GitHub issue.
+    Gets GitHub milestones.
 
     .Parameter Owner
     The GitHub username of the account or organization that owns the GitHub repository specified in the -RepositoryName parameter.
 
     .Parameter Repository
-    Required. The name of the GitHub repository that is owned by the -Owner parameter, where the new GitHub issue will be
-    created.
+    Required. The name of the GitHub repository that is owned by the -Owner parameter.
 
-    .Parameter Milestone
+    .Parameter Number
     The number of the milestone that you want to retrieve.
 
     .Example
@@ -25,10 +24,10 @@
     https://trevorsullivan.net
     https://developer.github.com/v3/issues
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'FindMilestones')]
     [OutputType('PSGitHub.Milestone')]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [Alias('User')]
         [string] $Owner,
 
@@ -59,25 +58,27 @@
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $queryParams = @{ };
-    if ($Sort) {
-        $queryParams.sort = ($Sort -creplace '([a-z])([A-Z])', '$1_$2').ToLower(); # PascalCase to snake_case
-    }
-    if ($State) {
-        $queryParams.state = $State.ToLower();
-    }
-    if ($Direction) {
-        $queryParams.direction = ($Direction -replace 'ending$', '').ToLower();
-    }
-    $Uri = if ($Number) {
-        'repos/{0}/{1}/milestones/{2}' -f $Owner, $RepositoryName, $Number;
-    } else {
-        'repos/{0}/{1}/milestones' -f $Owner, $RepositoryName;
-    }
+    process {
+        $queryParams = @{ };
+        if ($Sort) {
+            $queryParams.sort = ($Sort -creplace '([a-z])([A-Z])', '$1_$2').ToLower(); # PascalCase to snake_case
+        }
+        if ($State) {
+            $queryParams.state = $State.ToLower();
+        }
+        if ($Direction) {
+            $queryParams.direction = ($Direction -replace 'ending$', '').ToLower();
+        }
+        $Uri = if ($Number) {
+            'repos/{0}/{1}/milestones/{2}' -f $Owner, $RepositoryName, $Number;
+        } else {
+            'repos/{0}/{1}/milestones' -f $Owner, $RepositoryName;
+        }
 
-    Invoke-GitHubApi -Method GET $Uri -Body $queryParams -BaseUri $BaseUri -Token $Token | ForEach-Object { $_ } | ForEach-Object {
-        $_.PSTypeNames.Insert(0, 'PSGitHub.Milestone')
-        $_.Creator.PSTypeNames.Insert(0, 'PSGitHub.User')
-        $_
+        Invoke-GitHubApi -Method GET $Uri -Body $queryParams -BaseUri $BaseUri -Token $Token | ForEach-Object { $_ } | ForEach-Object {
+            $_.PSTypeNames.Insert(0, 'PSGitHub.Milestone')
+            $_.Creator.PSTypeNames.Insert(0, 'PSGitHub.User')
+            $_
+        }
     }
 }
