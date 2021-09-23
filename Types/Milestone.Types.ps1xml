@@ -6,6 +6,22 @@
                 <Name>Name</Name>
                 <ReferencedMemberName>title</ReferencedMemberName>
             </AliasProperty>
+            <ScriptProperty>
+                <Name>Owner</Name>
+                <GetScriptBlock>
+                    if ($this.url -match '/repos/([^/]+)/([^/]+)/milestones') {
+                        $Matches[1]
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
+            <ScriptProperty>
+                <Name>RepositoryName</Name>
+                <GetScriptBlock>
+                    if ($this.url -match '/repos/([^/]+)/([^/]+)/milestones') {
+                        $Matches[2]
+                    }
+                </GetScriptBlock>
+            </ScriptProperty>
             <AliasProperty>
                 <Name>OpenIssues</Name>
                 <ReferencedMemberName>open_issues</ReferencedMemberName>

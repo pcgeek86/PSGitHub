@@ -12,6 +12,12 @@
                     "`e[0m$textColor$bg $($this.Name) `e[0m"
                 </Script>
             </ScriptMethod>
+            <ScriptMethod>
+                <Name>ToString</Name>
+                <Script>
+                    $this.Name
+                </Script>
+            </ScriptMethod>
             <ScriptProperty>
                 <Name>Owner</Name>
                 <GetScriptBlock>

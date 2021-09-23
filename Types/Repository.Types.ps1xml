@@ -19,6 +19,10 @@
                 <ReferencedMemberName>clone_url</ReferencedMemberName>
             </AliasProperty>
             <AliasProperty>
+                <Name>DefaultBranch</Name>
+                <ReferencedMemberName>default_branch</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
                 <Name>CreatedAt</Name>
                 <ReferencedMemberName>created_at</ReferencedMemberName>
             </AliasProperty>
