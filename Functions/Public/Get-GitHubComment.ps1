@@ -63,7 +63,7 @@
     [CmdletBinding()]
     [OutputType('PSGitHub.Comment')]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [Alias('User')]
         [string] $Owner,
 
