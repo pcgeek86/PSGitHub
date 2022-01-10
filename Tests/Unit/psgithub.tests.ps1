@@ -4,29 +4,20 @@
 # You can download Pester from http://go.microsoft.com/fwlink/?LinkID=534084
 #
 
-$ModuleRoot = "$($Script:MyInvocation.MyCommand.Path)\..\..\.."
+$ModuleRoot = '{0}\..\..\' -f $PSScriptRoot
 
-Push-Location `
-    -Path $ModuleRoot
-Get-Module `
-    -Name PSGitHub `
-    -All | Remove-Module
+# Push-Location -Path $ModuleRoot
+Get-Module -Name PSGitHub -All | Remove-Module
 
-Import-Module `
-    -Name "$ModuleRoot\PSGitHub.psd1" `
-    -Force `
-    -DisableNameChecking
+Import-Module -Name "$ModuleRoot\PSGitHub.psd1" -Force -DisableNameChecking
 $ArtifactPath = "$ModuleRoot\Artifacts"
-$null = New-Item `
-    -Path $ArtifactPath `
-    -ItemType Directory `
-    -Force `
-    -ErrorAction SilentlyContinue
+$null = New-Item -Path $ArtifactPath -ItemType Directory -Force -ErrorAction SilentlyContinue
 
 Describe 'PSScriptAnalyzer' {
     Context 'PSGitHub Module, Functions and TabCompleters' {
         It 'Passes Invoke-ScriptAnalyzer' {
             # Perform PSScriptAnalyzer scan.
+            $ModuleRoot = (Get-Module -Name PSGitHub).ModuleBase
             $PSScriptAnalyzerResult = Invoke-ScriptAnalyzer -Path $ModuleRoot -Recurse -ErrorAction SilentlyContinue
             $PSScriptAnalyzerErrors = $PSScriptAnalyzerResult | Where-Object { $_.Severity -eq 'Error' }
             $PSScriptAnalyzerWarnings = $PSScriptAnalyzerResult | Where-Object { $_.Severity -eq 'Warning' }
@@ -54,13 +45,14 @@ Describe 'PSScriptAnalyzer' {
 InModuleScope PSGitHub {
     #region *-GitHubLabel
     Describe 'Get-GitHubLabel' {
-        $mockOwnerName = 'Mary'
-        $mockRepositoryName = 'WebApps'
-        $mockLabelName = 'Label1'
-
-        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
-
+        
         BeforeAll {
+            $mockOwnerName = 'Mary'
+            $mockRepositoryName = 'WebApps'
+            $mockLabelName = 'Label1'
+    
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
+
             Mock -CommandName Invoke-GitHubApi
         }
 
@@ -100,27 +92,28 @@ InModuleScope PSGitHub {
     }
 
     Describe 'New-GitHubLabel' {
-        $mockOwnerName = 'Mary'
-        $mockRepositoryName = 'WebApps'
-        $mockLabelName = 'Label1'
-        $mockLabelColor = 'ffffff'
-        $mockLabelDescription = 'Label description'
-
-        $newGitHubLabelParameters = @{
-            Owner = $mockOwnerName
-            RepositoryName = $mockRepositoryName
-            Name = $mockLabelName
-            Color = $mockLabelColor
-        }
-
-        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
-
-        $mockExpectedDefaultRequestBody = @{
-            name = $mockLabelName
-            color = $mockLabelColor
-        }
-
+        
         BeforeAll {
+            $mockOwnerName = 'Mary'
+            $mockRepositoryName = 'WebApps'
+            $mockLabelName = 'Label1'
+            $mockLabelColor = 'ffffff'
+            $mockLabelDescription = 'Label description'
+    
+            $newGitHubLabelParameters = @{
+                Owner = $mockOwnerName
+                RepositoryName = $mockRepositoryName
+                Name = $mockLabelName
+                Color = $mockLabelColor
+            }
+    
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels' -f $mockOwnerName, $mockRepositoryName
+    
+            $mockExpectedDefaultRequestBody = @{
+                name = $mockLabelName
+                color = $mockLabelColor
+            }
+
             Mock -CommandName Invoke-GitHubApi
         }
 
@@ -172,22 +165,23 @@ InModuleScope PSGitHub {
     }
 
     Describe 'Set-GitHubLabel' {
-        $mockOwnerName = 'Mary'
-        $mockRepositoryName = 'WebApps'
-        $mockLabelName = 'Label1'
-        $mockNewLabelName = 'NewName'
-        $mockLabelColor = 'ffffff'
-        $mockLabelDescription = 'Label description'
-
-        $newGitHubLabelParameters = @{
-            Owner = $mockOwnerName
-            RepositoryName = $mockRepositoryName
-            Name = $mockLabelName
-        }
-
-        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
-
+        
         BeforeAll {
+            $mockOwnerName = 'Mary'
+            $mockRepositoryName = 'WebApps'
+            $mockLabelName = 'Label1'
+            $mockNewLabelName = 'NewName'
+            $mockLabelColor = 'ffffff'
+            $mockLabelDescription = 'Label description'
+    
+            $newGitHubLabelParameters = @{
+                Owner = $mockOwnerName
+                RepositoryName = $mockRepositoryName
+                Name = $mockLabelName
+            }
+    
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+
             Mock -CommandName Invoke-GitHubApi
         }
 
@@ -260,12 +254,12 @@ InModuleScope PSGitHub {
                 Update-GitHubLabel @mockTestParameters -Confirm:$false
 
                 $mockExpectedRequestBody = @{
-                    color = $mockLabelColor
                     name = $mockNewLabelName
                     description = $mockLabelDescription
+                    color = $mockLabelColor
                 }
 
-                Assert-MockCalled -CommandName Invoke-GitHubApi -Exactly -Times 1 -ParameterFilter {
+                Should -Invoke Invoke-GitHubApi -Times 1 -Exactly -ParameterFilter {
                     $Method -eq 'Patch' -and
                     $Uri -eq $mockExpectedDefaultUri -and
                     $Body -eq ($mockExpectedRequestBody | ConvertTo-Json)
@@ -292,20 +286,20 @@ InModuleScope PSGitHub {
         }
     }
 
-    Describe 'Remove-GitHubLabel' {
-        $mockOwnerName = 'Mary'
-        $mockRepositoryName = 'WebApps'
-        $mockLabelName = 'Label1'
-
-        $newGitHubLabelParameters = @{
-            Owner = $mockOwnerName
-            RepositoryName = $mockRepositoryName
-            Name = $mockLabelName
-        }
-
-        $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
-
+    Describe 'Remove-GitHubLabel' { 
         BeforeAll {
+            $mockOwnerName = 'Mary'
+            $mockRepositoryName = 'WebApps'
+            $mockLabelName = 'Label1'
+    
+            $newGitHubLabelParameters = @{
+                Owner = $mockOwnerName
+                RepositoryName = $mockRepositoryName
+                Name = $mockLabelName
+            }
+    
+            $mockExpectedDefaultUri = 'repos/{0}/{1}/labels/{2}' -f $mockOwnerName, $mockRepositoryName, $mockLabelName
+
             Mock -CommandName Invoke-GitHubApi
         }
 
