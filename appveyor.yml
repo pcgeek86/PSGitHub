@@ -32,8 +32,8 @@ install:
 
       Get-PackageProvider -Name nuget -ForceBootStrap -Force
 
-      Install-Module PSScriptAnalyzer -RequiredVersion 1.18.0 -Force
-      Install-Module Pester -RequiredVersion 4.8.1 -Force -SkipPublisherCheck
+      Install-Module PSScriptAnalyzer -RequiredVersion 1.20.0 -Force
+      Install-Module Pester -RequiredVersion 5.3.1 -Force -SkipPublisherCheck
 
 #---------------------------------#
 #      build configuration        #
