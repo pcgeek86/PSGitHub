@@ -196,6 +196,14 @@
         'Find-GitHubLabel',
         'Remove-GitHubLabel',
 
+        ### GitHub Actions
+        'Add-GitHubRunnerLabel',
+        'Get-GitHubRunner',
+        'Get-GitHubRunnerApplication',
+        'Get-GitHubRunnerRegistrationToken',
+        'Remove-GitHubRunner',
+        'Remove-GitHubRunnerLabel'
+
         ### Miscellaneous
         'Get-GitHubLicense',
 
