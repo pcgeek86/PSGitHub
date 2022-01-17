@@ -44,25 +44,45 @@ Get-Command *-GitHub* | Where-Object { $_.Parameters -and $_.Parameters.Contains
 
 $repositoryNameCompleter = {
     [CmdletBinding()]
-    param([string]$command, [string]$parameter, [string]$wordToComplete, [CommandAst]$commandAst, [Hashtable]$params)
-    Add-DefaultParameterValues -Command $command -Parameters $params
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
+
+    #Add-DefaultParameterValues -Command $commandName -Parameters $fakeBoundParameter
+    $RepoArray = [System.Object[]]::new(40)
+
     $findRepoParams = @{
-        Query = $wordToComplete
+            Query = $wordToComplete
     }
-    if ($params.ContainsKey('Token')) {
-        $findRepoParams.Token = $params.Token
+    if ($fakeBoundParameter.ContainsKey('Owner')) {
+        $findRepoParams.Query += ' user:{0}' -f $fakeBoundParameter.Owner
     }
-    if ($params.ContainsKey('Owner')) {
-        $findRepoParams.Query += " user:$($params.Owner)"
-    }
-    Find-GitHubRepository @findRepoParams |
-        Where-Object { $_.Name -like "$wordToComplete*" } |
-        Select-Object -First 5 |
-        ForEach-Object {
-            $tooltip = if ($_.Description) { $_.Description } else { $_.Name }
-            [CompletionResult]::new($_.Name, $_.Name, [CompletionResultType]::ParameterValue, $tooltip)
+    try {
+        Find-GitHubRepository @findRepoParams | ForEach-Object -Begin { $i = 0 } -Process {
+            $RepoArray[$i] = $PSItem
+            $i++
         }
+    }
+    catch {
+        # Once array is filled up, stop execution
+    }
+
+    try {
+        foreach ($Repo in $RepoArray) {
+            $tooltip = if ($Repo.Description) { $Repo.Description } else { $Repo.Name }
+            if (!$fakeBoundParameter.ContainsKey('Owner')) {
+                $CompletionText = '{0} -Owner {1}' -f $Repo.Name, $Repo.Owner
+                [CompletionResult]::new($CompletionText, $Repo.Name, [CompletionResultType]::ParameterValue, $tooltip)
+            }
+            else {
+                [CompletionResult]::new($Repo.Name, $Repo.Name, [CompletionResultType]::ParameterValue, $tooltip)
+            }
+        }
+    }
+    catch {
+        # Set-Content -Path $HOME/psgithub.error.log -Value $PSItem
+        # Add-Content -Path $HOME/psgithub.error.log -Value ($RepoArray.SyncRoot | ConvertTo-Json)
+    }
 }
+
 Get-Command *-GitHub* | Where-Object { $_.Parameters -and $_.Parameters.ContainsKey('RepositoryName') } | ForEach-Object {
     Register-ArgumentCompleter -CommandName $_.Name -ParameterName RepositoryName -ScriptBlock $repositoryNameCompleter
 }

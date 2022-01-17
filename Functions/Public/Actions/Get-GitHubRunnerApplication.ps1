@@ -11,7 +11,7 @@ function Get-GitHubRunnerApplication {
       
       [Parameter(Mandatory, Position = 1)]
       [Alias('RepositoryName')]
-      [string] $Repo,
+      [string] $RepositoryName,
 
       # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
       # Defaults to "https://api.github.com"
@@ -20,7 +20,7 @@ function Get-GitHubRunnerApplication {
   )
 
   process {
-      $Path = 'repos/{0}/{1}/actions/runners/downloads' -f $Owner, $Repo
+      $Path = 'repos/{0}/{1}/actions/runners/downloads' -f $Owner, $RepositoryName
       Invoke-GitHubApi $Path -BaseUri $BaseUri -Token $Token |
           ForEach-Object { $_ } |
           ForEach-Object {
@@ -31,5 +31,5 @@ function Get-GitHubRunnerApplication {
 }
 
 Export-ModuleMember -Alias @(
-  (New-Alias -Name gghrunapp -Value Get-GitHubRunner -PassThru)
+(New-Alias -Name gghrunapp -Value Get-GitHubRunnerApplication -PassThru)
 )

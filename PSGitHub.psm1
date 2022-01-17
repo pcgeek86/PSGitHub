@@ -1,7 +1,11 @@
 ### Created by Trevor Sullivan <trevor@trevorsullivan.net>
 
-Get-ChildItem $PSScriptRoot/Functions, $PSScriptRoot/Completers -Recurse -File -Include *.ps1 | ForEach-Object {
-    . $_.FullName;
+Get-ChildItem $PSScriptRoot/Functions -Recurse -File -Include *.ps1 | ForEach-Object {
+    . $PSItem.FullName
+}
+
+Get-ChildItem $PSScriptRoot/Completers -Recurse -File -Include *.ps1 | ForEach-Object {
+    . $PSItem.FullName
 }
 
 ### Export all functions

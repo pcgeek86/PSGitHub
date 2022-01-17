@@ -1,19 +1,14 @@
-function Remove-GitHubRunner {
+function Remove-GitHubCodespace {
   <#
   .SYNOPSIS
-      Removes a registered GitHub Runner from a GitHub repository.
+      Deletes a user's codespace.
   #>
   [CmdletBinding()]
-  [OutputType('PSGitHub.Runner')]
+  [OutputType('PSGitHub.Codespace')]
   param(
-      [Parameter(Mandatory, Position = 0)]
-      [string] $Owner,
-      
-      [Parameter(Mandatory, Position = 1)]
-      [string] $Repo,
-      
-      [Parameter(Mandatory, Position = 2)]
-      [int] $RunnerId,
+      [Parameter(Mandatory = $true, Position = 0)]
+      [Alias('Name')]
+      [string] $CodespaceName,
 
       # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
       # Defaults to "https://api.github.com"
@@ -22,8 +17,11 @@ function Remove-GitHubRunner {
   )
 
   process {
-      $Path = 'repos/{0}/{1}/actions/runners/{2}' -f $Owner, $Repo, $RunnerId
+      $Path = 'user/codespaces/{0}' -f $CodespaceName
       $null = Invoke-GitHubApi $Path -BaseUri $BaseUri -Token $Token -Method Delete
   }
 }
 
+Export-ModuleMember -Alias @(
+  (New-Alias -Name rmghcs -Value Remove-GitHubCodespace -PassThru)
+)

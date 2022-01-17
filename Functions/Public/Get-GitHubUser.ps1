@@ -4,8 +4,11 @@ function Get-GitHubUser {
     param (
         # Gets a specific user by username.
         # If not given, returns the authenticated user of the token.
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [string] $Username,
+        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'SpecificUser')]
+        [string] $Username = '',
+
+        [Parameter(ParameterSetName = 'ListAllUsers')]
+        [switch] $All,
 
         # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
         # Defaults to "https://api.github.com"
@@ -13,10 +16,21 @@ function Get-GitHubUser {
         [Security.SecureString] $Token = (Get-GitHubToken)
     )
 
-    $url = if ($Username) {
-        "users/$Username"
-    } else {
-        "user"
+    switch ($PSCmdlet.ParameterSetName) {
+        'SpecificUser' {
+            $url = if ($Username -ne '') {
+                "users/$Username"
+            } else {
+                "user"
+            }
+        
+            $url = 'users/{0}' -f $Username
+            break
+        }
+        'ListAllUsers' {
+            $url = 'users'
+            break
+        }
     }
 
     Invoke-GitHubApi $url -BaseUri $BaseUri -Token $Token | ForEach-Object {

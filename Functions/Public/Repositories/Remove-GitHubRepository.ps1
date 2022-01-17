@@ -14,8 +14,8 @@ function Remove-GitHubRepository {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('^[\w-\.]+$')]
-        [Alias('Repository', 'RepositoryName')]
-        [string] $Name,
+        [Alias('Repository', 'Name')]
+        [string] $RepositoryName,
 
         # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
         # Defaults to "https://api.github.com"

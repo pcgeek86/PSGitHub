@@ -11,7 +11,7 @@ function Get-GitHubRunner {
       
       [Parameter(Mandatory, Position = 1)]
       [Alias('RepositoryName')]
-      [string] $Repo,
+      [string] $RepositoryName,
 
       # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
       # Defaults to "https://api.github.com"
@@ -20,7 +20,7 @@ function Get-GitHubRunner {
   )
 
   process {
-      $Path = 'repos/{0}/{1}/actions/runners' -f $Owner, $Repo
+      $Path = 'repos/{0}/{1}/actions/runners' -f $Owner, $RepositoryName
       Invoke-GitHubApi $Path -BaseUri $BaseUri -Token $Token |
           ForEach-Object { $_.runners } |
           ForEach-Object {

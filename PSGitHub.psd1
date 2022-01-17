@@ -75,6 +75,7 @@
     # Format files (.ps1xml) to be loaded when importing this module
     FormatsToProcess = @(
         'Formats/CombinedCommitStatus.Format.ps1xml',
+        'Formats/Codespace.Format.ps1xml',
         'Formats/Comment.Format.ps1xml',
         'Formats/Event.Format.ps1xml',
         'Formats/Label.Format.ps1xml',
@@ -87,6 +88,7 @@
         'Formats/RequestedReviewers.Format.ps1xml',
         'Formats/RateLimitResource.Format.ps1xml'
         'Formats/RateLimitResources.Format.ps1xml'
+        'Formats/Runner.Format.ps1xml'
     )
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
@@ -204,6 +206,15 @@
         'Remove-GitHubRunner',
         'Remove-GitHubRunnerLabel'
 
+        ### GitHub Codespaces
+        'Get-GitHubCodespace',
+        'Get-GitHubCodespaceMachine',
+        'New-GitHubCodespace',
+        'Remove-GitHubCodespace',
+        'Start-GitHubCodespace',
+        'Stop-GitHubCodespace',
+        'Update-GitHubCodespace',
+
         ### Miscellaneous
         'Get-GitHubLicense',
 
@@ -237,6 +248,12 @@
         'Set-GitHubLabel',
         'Set-GitHubRepository'
         'Update-GitHubAuthenticatedUser'
+        'nghcs'
+        'rmghcs'
+        'upghcs'
+        'gghcs'
+        'saghcs'
+        'spghcs'
     )
 
     # DSC resources to export from this module
