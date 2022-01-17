@@ -10,7 +10,7 @@ function Get-GitHubRunnerApplication {
       [string] $Owner,
       
       [Parameter(Mandatory, Position = 1)]
-      [Alias('RepositoryName')]
+      [Alias('Name')]
       [string] $RepositoryName,
 
       # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
