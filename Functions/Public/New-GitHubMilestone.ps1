@@ -10,7 +10,7 @@
     Required. The name of the GitHub repository that is owned by the -Owner parameter, where the new GitHub milestone will be
     created.
     #>
-    [CmdletBinding(DefaultParameterSetName = 'FindMilestones')]
+    [CmdletBinding(DefaultParameterSetName = 'FindMilestones', SupportsShouldProcess)]
     [OutputType('PSGitHub.Milestone')]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
@@ -50,13 +50,23 @@
             title = $Title
             state = $State
             description = $Description
-            due_on = $DueOn.ToString('o')
+            due_on = $DueOn.ToString('yyyy-MM-dd')
         }
 
-        Invoke-GitHubApi -Method POST "repos/$Owner/$RepositoryName/milestones" -Body ($body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token | ForEach-Object {
-            $_.PSTypeNames.Insert(0, 'PSGitHub.Milestone')
-            $_.Creator.PSTypeNames.Insert(0, 'PSGitHub.User')
-            $_
+        $shouldProcessCaption = 'Creating new GitHub milestone'
+        $shouldProcessDescription = "Creating the GitHub milestone `e[1m$Title`e[0m in the repository `e[1m$Owner/$RepositoryName`e[0m."
+        $shouldProcessWarning = "Do you want to create the GitHub milestone `e[1m$Title`e[0m in the repository `e[1m$Owner/$RepositoryName`e[0m?"
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessDescription, $shouldProcessWarning, $shouldProcessCaption)) {
+
+            Invoke-GitHubApi -Method POST "repos/$Owner/$RepositoryName/milestones" -Body ($body | ConvertTo-Json) -BaseUri $BaseUri -Token $Token | ForEach-Object {
+                $_.PSTypeNames.Insert(0, 'PSGitHub.Milestone')
+                $_.Creator.PSTypeNames.Insert(0, 'PSGitHub.User')
+                if ($null -ne $_.DueOn) {
+                    $_.DueOn = Get-Date -Date $_.DueOn -DisplayHint Date
+                }
+                $_
+            }
         }
    }
 }
