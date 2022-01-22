@@ -17,6 +17,10 @@ fragment BetaProjectItemFragment on ProjectNextItem {
             number
             state
             url
+            milestone {
+                number
+                title
+            }
             repository {
                 owner {
                     login
@@ -30,6 +34,10 @@ fragment BetaProjectItemFragment on ProjectNextItem {
             number
             state
             url
+            milestone {
+                number
+                title
+            }
             repository {
                 owner {
                     login

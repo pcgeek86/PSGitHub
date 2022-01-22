@@ -180,6 +180,7 @@
         'Move-GitHubProjectCard',
 
         ### Project Beta commands
+        'Get-GitHubBetaProject',
         'Add-GitHubBetaProjectItem',
         'Get-GitHubBetaProjectItem',
         'Set-GitHubBetaProjectItemField',

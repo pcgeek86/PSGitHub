@@ -17,6 +17,11 @@ function Get-GitHubBetaProjectItem {
     )
 
     process {
+        $project = Get-GitHubBetaProject -Id $ProjectNodeId -Token $Token -BaseUri $BaseUri
+        if (!$project) {
+            return
+        }
+
         # Paginate in reverse, to get the most recent items first.
         $before = $null
         do {
@@ -50,9 +55,15 @@ function Get-GitHubBetaProjectItem {
             [array]::Reverse($nodes) | Out-Null
             foreach ($node in $nodes) {
                 # Expose fields as ergonomic name=>value hashtable
-                $fieldHashTable = @{ }
+                $fieldHashTable = [ordered]@{ }
                 foreach ($field in $node.fieldValues.nodes) {
-                    $fieldHashTable[$field.projectField.name] = $field.value
+                    $fieldSettings = $project.fields[$field.projectField.name].settings
+                    $value = if ($fieldSettings -and $fieldSettings.PSObject.Properties['options']) {
+                        ($fieldSettings.options | Where-Object { $_.id -eq $field.value }).Name
+                    } else {
+                        $field.value
+                    }
+                    $fieldHashTable[$field.projectField.name] = $value
                 }
                 Add-Member -InputObject $node -NotePropertyName 'Fields' -NotePropertyValue $fieldHashTable
 
