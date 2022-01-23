@@ -5,7 +5,7 @@
 version: 1.0.0.{build}
 environment:
   PowerShellGalleryApiKey:
-    secure: SlvbZKurugx1nGHlyk6VB1dXh3IJOWsY/Ds2bGBpknpze8R3os5pHGmPeyJXHv9K
+    secure: 2C/PUxyJoxqhj89U3GjpVLDNpqLySz/qJiG77rTnOR8FvmD9Ia83QYpRe7sIDurQ
 install:
   - ps: |
       # Update AppVeyor Build Version by pulling from Manifest
