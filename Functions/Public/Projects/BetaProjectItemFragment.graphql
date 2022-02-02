@@ -16,11 +16,28 @@ fragment BetaProjectItemFragment on ProjectNextItem {
             __typename
             number
             state
-            url
             milestone {
                 number
                 title
             }
+        }
+        ... on PullRequest {
+            __typename
+            number
+            state
+            milestone {
+                number
+                title
+            }
+        }
+        ... on Labelable {
+            labels(first: 20) {
+                nodes {
+                    name
+                }
+            }
+        }
+        ... on RepositoryNode {
             repository {
                 owner {
                     login
@@ -29,22 +46,8 @@ fragment BetaProjectItemFragment on ProjectNextItem {
                 nameWithOwner
             }
         }
-        ... on PullRequest {
-            __typename
-            number
-            state
+        ... on UniformResourceLocatable {
             url
-            milestone {
-                number
-                title
-            }
-            repository {
-                owner {
-                    login
-                }
-                name
-                nameWithOwner
-            }
         }
     }
 }

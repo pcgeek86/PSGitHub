@@ -67,6 +67,10 @@ function Get-GitHubBetaProjectItem {
                 }
                 Add-Member -InputObject $node -NotePropertyName 'Fields' -NotePropertyValue $fieldHashTable
 
+                if ($node.content) {
+                    $node.content.labels = $node.content.labels.nodes
+                }
+
                 $node
             }
 
