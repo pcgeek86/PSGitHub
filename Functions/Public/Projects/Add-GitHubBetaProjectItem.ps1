@@ -8,11 +8,12 @@ function Add-GitHubBetaProjectItem {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string] $ProjectNodeId,
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [Alias('node_id')]
-        [Alias('id')]
+        [Alias('node_id', 'id')]
+        [ValidateNotNullOrEmpty()]
         [string] $ContentNodeId,
 
         # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).

@@ -75,10 +75,14 @@
                     }
                 </Script>
             </ScriptMethod>
-            <ScriptProperty>
+            <AliasProperty>
                 <Name>HtmlUrl</Name>
-                <GetScriptBlock>$this.html_url</GetScriptBlock>
-            </ScriptProperty>
+                <ReferencedMemberName>html_url</ReferencedMemberName>
+            </AliasProperty>
+            <AliasProperty>
+                <Name>NodeId</Name>
+                <ReferencedMemberName>node_id</ReferencedMemberName>
+            </AliasProperty>
             <AliasProperty>
                 <Name>CreatedAt</Name>
                 <ReferencedMemberName>created_at</ReferencedMemberName>

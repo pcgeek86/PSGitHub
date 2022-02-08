@@ -64,7 +64,7 @@
 
         $apiRequest.Body = $body | ConvertTo-Json -Depth 100
         Write-Debug ("Query: " + $Query)
-        Write-Debug ("Variables: " + $Variables)
+        Write-Debug ("Variables: " + ($Variables | ConvertTo-Json))
 
         # We need to communicate using TLS 1.2 against GitHub.
         [Net.ServicePointManager]::SecurityProtocol = 'tls12'

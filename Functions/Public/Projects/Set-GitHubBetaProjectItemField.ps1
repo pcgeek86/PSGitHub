@@ -7,23 +7,25 @@ function Set-GitHubBetaProjectItemField {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
         [string] $ProjectNodeId,
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [Alias('node_id')]
         [Alias('id')]
+        [ValidateNotNullOrEmpty()]
         [string] $ItemNodeId,
 
         # The name of the field to set
         [Parameter(Mandatory)]
         [Alias('FieldName')]
+        [ValidateNotNullOrEmpty()]
         [string] $Name,
 
         # The value to set the field to
         [Parameter(Mandatory)]
         [Alias('FieldValue')]
-        $Value,
+        [string] $Value,
 
         # Optional base URL of the GitHub API, for example "https://ghe.mycompany.com/api/v3/" (including the trailing slash).
         # Defaults to "https://api.github.com"
@@ -62,7 +64,7 @@ function Set-GitHubBetaProjectItemField {
         }
     }
     process {
-        $input = @{
+        $update = @{
             projectId = $ProjectNodeId
             itemId = $ItemNodeId
             fieldId = $field.id
@@ -75,13 +77,13 @@ function Set-GitHubBetaProjectItemField {
             if (!$option) {
                 Write-Error "Invalid option value provided for field `"$Name`": `"$Value`". Available options are: $($field.settings.options | ForEach-Object { '"' + $_.name + '"' })"
             }
-            $input.value = $option.id
+            $update.value = $option.id
         }
 
         Invoke-GitHubGraphQlApi `
             -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
-            -Query ('mutation($input: UpdateProjectNextItemFieldInput!) {
-                updateProjectNextItemField(input: $input) {
+            -Query ('mutation($update: UpdateProjectNextItemFieldInput!) {
+                updateProjectNextItemField(input: $update) {
                     projectNextItem {
                         ...BetaProjectItemFragment
                     }
@@ -89,7 +91,7 @@ function Set-GitHubBetaProjectItemField {
             }
             ' + $betaProjectItemFragment) `
             -Variables @{
-                input = $input
+                update = $update
             } `
             -BaseUri $BaseUri `
             -Token $Token |
