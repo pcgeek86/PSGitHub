@@ -3,13 +3,22 @@ fragment BetaProjectItemFragment on ProjectNextItem {
     title
     createdAt
     updatedAt
+    creator {
+        login
+    }
     fieldValues(first: 20) {
         nodes {
             value
             projectField {
                 name
+                settings
             }
         }
+    }
+    project {
+        id
+        number
+        title
     }
     content {
         ... on Issue {
@@ -19,6 +28,7 @@ fragment BetaProjectItemFragment on ProjectNextItem {
             milestone {
                 number
                 title
+                dueOn
             }
         }
         ... on PullRequest {
@@ -37,6 +47,14 @@ fragment BetaProjectItemFragment on ProjectNextItem {
                 }
             }
         }
+        ... on Assignable {
+            assignees(first: 20) {
+                nodes {
+                    login
+                    name
+                }
+            }
+        }
         ... on RepositoryNode {
             repository {
                 owner {
@@ -48,6 +66,9 @@ fragment BetaProjectItemFragment on ProjectNextItem {
         }
         ... on UniformResourceLocatable {
             url
+        }
+        ... on Node {
+            id
         }
     }
 }
