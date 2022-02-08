@@ -77,7 +77,6 @@
                             <Frame>
                                 <LeftIndent>1</LeftIndent>
                                 <CustomItem>
-                                    <NewLine />
                                     <ExpressionBinding>
                                         <ScriptBlock>
                                                 $event = $_
