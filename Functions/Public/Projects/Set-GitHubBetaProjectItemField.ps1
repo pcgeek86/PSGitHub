@@ -51,7 +51,8 @@ function Set-GitHubBetaProjectItemField {
             }' `
             -Variables @{ projectId = $ProjectNodeId } `
             -BaseUri $BaseUri `
-            -Token $Token |
+            -Token $Token `
+            -ErrorAction Stop |
             ForEach-Object { $_.node.fields.nodes }
         # Parse JSON field
         foreach ($field in $fields) {
