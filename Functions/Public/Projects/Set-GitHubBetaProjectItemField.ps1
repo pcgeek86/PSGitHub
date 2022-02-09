@@ -8,10 +8,6 @@ function Set-GitHubBetaProjectItemField {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [ValidateNotNullOrEmpty()]
-        [string] $ProjectNodeId,
-
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [Alias('id')]
         [ValidateNotNullOrEmpty()]
         [string] $ItemNodeId,
@@ -32,28 +28,34 @@ function Set-GitHubBetaProjectItemField {
         [Uri] $BaseUri = [Uri]::new('https://api.github.com'),
         [Security.SecureString] $Token
     )
-    begin {
-        # Find the ID of the field by name
-        $fields = Invoke-GitHubGraphQlApi `
+    process {
+        # Get project for the item and find the ID of the field by name
+        $project = Invoke-GitHubGraphQlApi `
             -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
-            -Query 'query($projectId: ID!) {
-                node(id: $projectId) {
-                    ... on ProjectNext {
-                        fields(first: 20) {
-                            nodes {
-                                id
-                                name
-                                settings
+            -Query 'query($itemId: ID!) {
+                node(id: $itemId) {
+                    ... on ProjectNextItem {
+                        project {
+                            id
+                            fields(first: 20) {
+                                nodes {
+                                    id
+                                    name
+                                    settings
+                                }
                             }
                         }
                     }
                 }
             }' `
-            -Variables @{ projectId = $ProjectNodeId } `
+            -Variables @{ itemId = $ItemNodeId } `
             -BaseUri $BaseUri `
             -Token $Token `
             -ErrorAction Stop |
-            ForEach-Object { $_.node.fields.nodes }
+            ForEach-Object { $_.node.project }
+
+        $fields = $project.fields.nodes
+
         # Parse JSON field
         foreach ($field in $fields) {
             $field.settings = $field.settings | ConvertFrom-Json
@@ -63,10 +65,9 @@ function Set-GitHubBetaProjectItemField {
         if (!$field) {
             throw "Field name does not exist: `"$Name`". Existing fields are: $($fields | ForEach-Object { '"' + $_.name + '"' })"
         }
-    }
-    process {
+
         $update = @{
-            projectId = $ProjectNodeId
+            projectId = $project.id
             itemId = $ItemNodeId
             fieldId = $field.id
             value = $Value
