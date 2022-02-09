@@ -82,7 +82,7 @@ function Set-GitHubBetaProjectItemField {
             $update.value = $option.id
         }
 
-        Invoke-GitHubGraphQlApi `
+        $item = Invoke-GitHubGraphQlApi `
             -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
             -Query ('mutation($update: UpdateProjectNextItemFieldInput!) {
                 updateProjectNextItemField(input: $update) {
@@ -98,5 +98,26 @@ function Set-GitHubBetaProjectItemField {
             -BaseUri $BaseUri `
             -Token $Token |
             ForEach-Object { $_.updateProjectNextItemField.projectNextItem }
+
+        # Expose fields as ergonomic name=>value hashtable
+        $fieldHashTable = [ordered]@{ }
+        foreach ($fieldValue in $item.fieldValues.nodes) {
+            $fieldValue.projectField.settings = $fieldValue.projectField.settings | ConvertFrom-Json
+            $fieldSettings = $fieldValue.projectField.settings
+            $value = if ($fieldSettings -and $fieldSettings.PSObject.Properties['options']) {
+                ($fieldSettings.options | Where-Object { $_.id -eq $fieldValue.value }).Name
+            } else {
+                $fieldValue.value
+            }
+            $fieldHashTable[$fieldValue.projectField.name] = $value
+        }
+        Add-Member -InputObject $item -NotePropertyName 'Fields' -NotePropertyValue $fieldHashTable
+
+        if ($item.content) {
+            $item.content.labels = $item.content.labels.nodes
+            $item.content.assignees = $item.content.assignees.nodes
+        }
+
+        $item
     }
 }
