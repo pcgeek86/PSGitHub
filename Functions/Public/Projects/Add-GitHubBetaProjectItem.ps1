@@ -23,7 +23,7 @@ function Add-GitHubBetaProjectItem {
     )
 
     process {
-        Invoke-GitHubGraphQlApi `
+        $result = Invoke-GitHubGraphQlApi `
             -Headers @{ 'GraphQL-Features' = 'projects_next_graphql' } `
             -Query ('mutation($input: AddProjectNextItemInput!) {
                 addProjectNextItem(input: $input) {
@@ -40,7 +40,12 @@ function Add-GitHubBetaProjectItem {
                 }
             } `
             -BaseUri $BaseUri `
-            -Token $Token |
-            ForEach-Object { $_.addProjectNextItem.projectNextItem }
+            -Token $Token
+
+        $item = $result.addProjectNextItem.projectNextItem
+
+        Add-Member -InputObject $item -NotePropertyName 'ProjectNodeId' -NotePropertyValue $ProjectNodeId
+
+        $item
     }
 }
