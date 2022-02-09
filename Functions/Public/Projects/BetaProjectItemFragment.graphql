@@ -25,19 +25,40 @@ fragment BetaProjectItemFragment on ProjectNextItem {
             __typename
             number
             state
+            title
+            body
+            bodyText
+            author {
+                ... on Actor {
+                    login
+                    avatarUrl
+                }
+            }
             milestone {
                 number
                 title
                 dueOn
+                url
             }
         }
         ... on PullRequest {
             __typename
             number
             state
+            title
+            body
+            bodyText
+            author {
+                ... on Actor {
+                    login
+                    avatarUrl
+                }
+            }
             milestone {
                 number
                 title
+                dueOn
+                url
             }
         }
         ... on Labelable {
