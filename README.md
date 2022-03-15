@@ -7,6 +7,8 @@
 
 PowerShell module with commands to query and manage GitHub through its REST API.
 
+Adding a new message. My name is John McGovern and I want to help improve this project.
+
 ## Installation
 
 ![Install PSGitHub](https://raw.githubusercontent.com/pcgeek86/PSGitHub/master/Assets/psgithub.svg)
